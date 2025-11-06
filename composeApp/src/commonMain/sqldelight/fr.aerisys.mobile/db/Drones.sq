@@ -1,0 +1,49 @@
+-- Importer la définition de la table users pour la clé étrangère
+import com.example.db.users;
+
+-- =====================
+-- TABLE : DRONES
+-- =====================
+CREATE TABLE drones (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id), -- Clé étrangère
+    name TEXT NOT NULL,
+    mac_address TEXT,
+    ip_address TEXT,
+    flight_mode TEXT,
+    motor_power INTEGER,
+    altitude_limit INTEGER,
+    added_at TEXT,
+    updated_at TEXT
+);
+
+-- 🔹 CREATE
+insertDrone:
+INSERT INTO drones (user_id, name, mac_address, ip_address, flight_mode, motor_power, altitude_limit, added_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- 🔹 READ
+selectAllDrones:
+SELECT * FROM drones;
+
+selectDroneById:
+SELECT * FROM drones
+WHERE id = ?;
+
+selectDronesByUserId:
+SELECT * FROM drones
+WHERE user_id = ?;
+
+-- 🔹 UPDATE
+updateDrone:
+UPDATE drones
+SET name = ?, mac_address = ?, ip_address = ?, flight_mode = ?, motor_power = ?, altitude_limit = ?, updated_at = ?
+WHERE id = ?;
+
+-- 🔹 DELETE
+deleteDroneById:
+DELETE FROM drones
+WHERE id = ?;
+
+deleteAllDrones:
+DELETE FROM drones;

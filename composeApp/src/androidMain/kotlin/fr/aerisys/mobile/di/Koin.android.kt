@@ -5,6 +5,7 @@ import fr.aerisys.mobile.db.AerisysDatabase
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
+
 actual fun databaseModule() = module {
     single {
         //Penser à faire un Build -> "Compile all Sources" pour générer le MyDatabase
@@ -12,3 +13,4 @@ actual fun databaseModule() = module {
         AerisysDatabase(driver)
     }
 }
+
