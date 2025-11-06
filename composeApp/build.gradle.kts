@@ -50,6 +50,10 @@ kotlin {
             implementation("io.insert-koin:koin-compose-viewmodel-navigation:4.1.+")
             implementation("app.cash.sqldelight:runtime:2.1.0")
             implementation("app.cash.sqldelight:coroutines-extensions:2.1.0")
+            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.+")
+            implementation("io.coil-kt.coil3:coil-network-ktor3:3.2.0")
+            implementation("io.coil-kt.coil3:coil-compose:3.2.0")
         }
         iosMain.dependencies {
             implementation("app.cash.sqldelight:native-driver:2.1.0")
