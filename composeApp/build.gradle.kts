@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -29,6 +29,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.insert-koin:koin-android:4.1.+")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -39,6 +40,11 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation("androidx.navigation:navigation-compose:2.9.+")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.+")
+            implementation("io.insert-koin:koin-compose:4.1.+")
+            implementation("io.insert-koin:koin-compose-viewmodel:4.1.+")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation:4.1.+")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
