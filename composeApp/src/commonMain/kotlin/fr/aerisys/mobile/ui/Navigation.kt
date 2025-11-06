@@ -1,5 +1,7 @@
 package fr.aerisys.mobile.ui
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -20,30 +22,32 @@ class Routes {
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
 
-    val navHostController: NavHostController = rememberNavController()
-//    val homeViewModel: HomeViewModel = koinViewModel<HomeViewModel>()
+    val navHostController = rememberNavController()
 
-    NavHost(
-        navController = navHostController, startDestination = Routes.HomeRoute,
-        modifier = modifier
-    ) {
-        composable<Routes.HomeRoute> {
+    Scaffold { innerPadding ->
 
-            HomeScreen(
-//                mainViewModel = homeViewModel,
-            )
+        NavHost(
+            navController = navHostController,
+            startDestination = Routes.HomeRoute,
+            modifier = modifier.padding(innerPadding)
+        ) {
+
+            composable<Routes.HomeRoute> {
+                HomeScreen()
+            }
+
+            /*
+            composable<Routes.DetailRoute> {
+                val detailRoute = it.toRoute<Routes.DetailRoute>()
+                val weatherBean = mainViewModel.dataList.collectAsStateWithLifecycle()
+                    .value.first { w -> w.id == detailRoute.id }
+
+                DetailScreen(
+                    data = weatherBean,
+                    onBack = { navHostController.popBackStack() }
+                )
+            }
+            */
         }
-
-//        composable<Routes.DetailRoute> {
-//            val detailRoute = it.toRoute<Routes.DetailRoute>()
-//            val weatherBean = mainViewModel.dataList.collectAsStateWithLifecycle().value.first { it.id == detailRoute.id }
-//
-//            DetailScreen(
-//                data = weatherBean,
-//                onBack = {
-//                    navHostController.popBackStack()
-//                }
-//            )
-//        }
     }
 }
