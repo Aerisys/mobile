@@ -18,10 +18,10 @@ class Routes {
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = Routes.HomeRoute) {
         composable<Routes.HomeRoute> {
             HomeScreen({
-                navController.navigate("listDrone")
+                navController.navigate(Routes.DroneListRoute)
             })
         }
         composable<Routes.DroneListRoute> {
