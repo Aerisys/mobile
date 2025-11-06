@@ -1,0 +1,67 @@
+name: KMP Android Release
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # Auto-changelog + bump version + tag GIT
+      - name: Generate changelog and tag
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-file: CHANGELOG.md
+          tag-prefix: "v"
+          release-count: 0
+          skip-commit: false
+          skip-tag: false
+          preset: "angular"
+          version-file: "composeApp/build.gradle.kts"
+          version-path: "versionName"
+
+      # Build APK Release (module composeApp)
+      - name: Build release APK
+        run: ./gradlew :composeApp:assembleRelease --stacktrace
+
+      # Create GitHub Release with APK + Changelog
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: Release ${{ steps.changelog.outputs.tag }}
+          body_path: CHANGELOG.md
+          files: |
+            composeApp/build/outputs/apk/release/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
