@@ -1,7 +1,12 @@
 package fr.aerisys.mobile
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import fr.aerisys.mobile.ui.AppNavigation
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+
+import androidx.navigation.compose.rememberNavController
+import fr.aerisys.mobile.ui.AppNavHost
 import fr.aerisys.mobile.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -9,6 +14,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     AppTheme {
-        AppNavigation()
+        val navController = rememberNavController()
+
+        Surface(modifier = Modifier.fillMaxSize()) {
+            AppNavHost(navController = navController)
+        }
     }
 }
