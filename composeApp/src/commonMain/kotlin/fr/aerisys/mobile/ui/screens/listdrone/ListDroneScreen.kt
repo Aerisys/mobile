@@ -123,7 +123,7 @@ fun ListDroneScreen(
                                 Text(stringResource(Res.string.en_ok), color = Color(0xFF3DDC84))
 
                             }
-                            HorizontalDivider(thickness = 0.5.dp, color = Color.DarkGray)
+                            HorizontalDivider(Modifier,0.5.dp, Color.DarkGray)
                         }
                     }
                 }

@@ -4,18 +4,28 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import fr.aerisys.mobile.ui.screens.home.HomeScreen
 import fr.aerisys.mobile.ui.screens.listdrone.ListDroneScreen
+import fr.aerisys.mobile.ui.screens.Home.HomeScreen
+import fr.aerisys.mobile.ui.screens.ListDrone.ListDroneScreen
+import kotlinx.serialization.Serializable
+
+class Routes {
+    @Serializable
+    data object HomeRoute
+
+    @Serializable
+    data object ListDroneRoute
+}
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+        composable<Routes.HomeRoute> {
             HomeScreen({
                 navController.navigate("listDrone")
             })
         }
-        composable("listDrone") {
+        composable<Routes.ListDroneRoute> {
             ListDroneScreen(onBack = {navController.popBackStack()})
         }
     }
