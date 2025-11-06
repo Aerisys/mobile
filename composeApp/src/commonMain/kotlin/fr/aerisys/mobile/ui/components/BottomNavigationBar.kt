@@ -1,5 +1,8 @@
 package fr.aerisys.mobile.ui.screens.components
 
+import aerisys.composeapp.generated.resources.Res
+import aerisys.composeapp.generated.resources.en_controller
+import aerisys.composeapp.generated.resources.en_drone
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.SettingsRemote
@@ -10,22 +13,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 
 /* TODO: Ajouter des paramétres */
 @Composable
 fun BottomNavigationBar() {
-    NavigationBar(containerColor = Color(0xFF2A2A2A), tonalElevation = 10.dp) {
+    NavigationBar(tonalElevation = 10.dp) {
         NavigationBarItem(
             selected = true,
             onClick = { /* TODO: stay */ },
-            icon = { Icon(Icons.Default.Flight, contentDescription = "Drone", tint = Color.White) },
-            label = { Text("Drone", color = Color.White) }
+            icon = { Icon(Icons.Default.Flight, contentDescription = stringResource(Res.string.en_drone), tint = Color.White) },
+            label = { Text(stringResource(Res.string.en_drone)) }
         )
         NavigationBarItem(
             selected = false,
             onClick = { /* TODO: navigate controller */ },
-            icon = { Icon(Icons.Default.SettingsRemote, contentDescription = "Controller", tint = Color.White) },
-            label = { Text("Controller", color = Color.White) }
+            icon = { Icon(Icons.Default.SettingsRemote, contentDescription = stringResource(Res.string.en_controller), tint = Color.White) },
+            label = { Text(stringResource(Res.string.en_controller)) }
         )
     }
 }

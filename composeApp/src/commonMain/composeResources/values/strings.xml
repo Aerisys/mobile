@@ -4,4 +4,7 @@
     <string name="en_name">Name</string>
     <string name="en_status">Status</string>
     <string name="en_ok">OK</string>
+
+    <string name="en_drone">Drone</string>
+    <string name="en_controller">Controller</string>
 </resources>
