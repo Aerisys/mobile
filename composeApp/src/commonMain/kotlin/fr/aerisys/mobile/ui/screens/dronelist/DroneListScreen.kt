@@ -1,4 +1,4 @@
-package fr.aerisys.mobile.ui.screens.listdrone
+package fr.aerisys.mobile.ui.screens.dronelist
 
 import aerisys.composeapp.generated.resources.Res
 import aerisys.composeapp.generated.resources.en_name
@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListDroneScreen(
+fun DroneListScreen(
     onBack: ()-> Unit={},
     viewModel: MainViewModel = viewModel()
 ) {
