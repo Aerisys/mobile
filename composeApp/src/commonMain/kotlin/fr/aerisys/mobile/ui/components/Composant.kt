@@ -1,2 +1,2 @@
-package fr.aerisys.mobile.ui.screens.components
+package fr.aerisys.mobile.ui.components
 

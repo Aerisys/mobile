@@ -1,4 +1,4 @@
-package fr.aerisys.mobile.ui.screens.components
+package fr.aerisys.mobile.ui.components
 
 import aerisys.composeapp.generated.resources.Res
 import aerisys.composeapp.generated.resources.en_controller
