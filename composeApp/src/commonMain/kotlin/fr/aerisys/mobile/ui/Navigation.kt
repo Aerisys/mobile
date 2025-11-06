@@ -4,11 +4,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.aerisys.mobile.ui.screens.HomeScreen
+import fr.aerisys.mobile.viewModel.MainViewModel
 import kotlinx.serialization.Serializable
 
 class Routes {
@@ -20,7 +20,7 @@ class Routes {
 }
 
 @Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
+fun AppNavigation(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
 
     val navHostController = rememberNavController()
 
@@ -33,7 +33,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         ) {
 
             composable<Routes.HomeRoute> {
-                HomeScreen()
+                HomeScreen(mainViewModel = mainViewModel)
             }
 
             /*

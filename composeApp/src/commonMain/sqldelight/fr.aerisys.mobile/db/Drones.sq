@@ -1,6 +1,3 @@
--- Importer la définition de la table users pour la clé étrangère
-import com.example.db.users;
-
 -- =====================
 -- TABLE : DRONES
 -- =====================
@@ -13,14 +10,31 @@ CREATE TABLE drones (
     flight_mode TEXT,
     motor_power INTEGER,
     altitude_limit INTEGER,
+    firmware_version TEXT,
+    firmware_last_uptimestamp TEXT,
     added_at TEXT,
     updated_at TEXT
 );
 
 -- 🔹 CREATE
 insertDrone:
-INSERT INTO drones (user_id, name, mac_address, ip_address, flight_mode, motor_power, altitude_limit, added_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO drones (
+    user_id,
+    name,
+    mac_address,
+    ip_address,
+    flight_mode,
+    motor_power,
+    altitude_limit,
+    firmware_version,
+    firmware_last_uptimestamp,
+    added_at,
+    updated_at
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+
+
 
 -- 🔹 READ
 selectAllDrones:
@@ -37,7 +51,15 @@ WHERE user_id = ?;
 -- 🔹 UPDATE
 updateDrone:
 UPDATE drones
-SET name = ?, mac_address = ?, ip_address = ?, flight_mode = ?, motor_power = ?, altitude_limit = ?, updated_at = ?
+SET name = ?,
+    mac_address = ?,
+    ip_address = ?,
+    flight_mode = ?,
+    motor_power = ?,
+    altitude_limit = ?,
+    firmware_version = ?,
+    firmware_last_uptimestamp = ?,
+    updated_at = ?
 WHERE id = ?;
 
 -- 🔹 DELETE

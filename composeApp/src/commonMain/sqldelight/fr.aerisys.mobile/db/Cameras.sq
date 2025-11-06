@@ -1,6 +1,3 @@
--- Importer la définition de la table users pour la clé étrangère
-import com.example.db.users;
-
 -- =====================
 -- TABLE : CAMERAS
 -- =====================
@@ -11,13 +8,24 @@ CREATE TABLE cameras (
     mac_address TEXT,
     image_format TEXT,
     image_quality TEXT,
-    image_dimension TEXT
+    image_dimension TEXT,
+    firmware_version TEXT,
+    firmware_last_update TEXT
 );
 
 -- 🔹 CREATE
 insertCamera:
-INSERT INTO cameras (user_id, ip_address, mac_address, image_format, image_quality, image_dimension)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO cameras (
+    user_id,
+    ip_address,
+    mac_address,
+    image_format,
+    image_quality,
+    image_dimension,
+    firmware_version,
+    firmware_last_update
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 -- 🔹 READ
 selectAllCameras:
@@ -34,7 +42,13 @@ WHERE user_id = ?;
 -- 🔹 UPDATE
 updateCamera:
 UPDATE cameras
-SET ip_address = ?, mac_address = ?, image_format = ?, image_quality = ?, image_dimension = ?
+SET ip_address = ?,
+    mac_address = ?,
+    image_format = ?,
+    image_quality = ?,
+    image_dimension = ?,
+    firmware_version = ?,
+    firmware_last_update = ?
 WHERE id = ?;
 
 -- 🔹 DELETE
