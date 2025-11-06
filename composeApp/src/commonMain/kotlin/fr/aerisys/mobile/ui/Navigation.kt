@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import fr.aerisys.mobile.ui.screens.homeScreen.HomeScreen
-import fr.aerisys.mobile.ui.screens.listDrone.ListDroneScreen
+import fr.aerisys.mobile.ui.screens.Home.HomeScreen
+import fr.aerisys.mobile.ui.screens.ListDrone.ListDroneScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {

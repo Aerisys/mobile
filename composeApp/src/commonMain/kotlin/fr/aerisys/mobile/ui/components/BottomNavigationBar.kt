@@ -1,12 +1,16 @@
-package fr.aerisys.mobile.ui.screens.composantExterne
+package fr.aerisys.mobile.ui.screens.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.SettingsRemote
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
 /* TODO: Ajouter des paramétres */
 @Composable
 fun BottomNavigationBar() {
