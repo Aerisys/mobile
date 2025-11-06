@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,7 +55,7 @@ fun ListDroneScreen(
                 title = { Text("Drones list", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 actions = {
@@ -103,7 +105,7 @@ fun ListDroneScreen(
                         Spacer(Modifier.width(24.dp))
                     }
 
-                    Divider(color = Color.DarkGray, thickness = 1.dp)
+                    HorizontalDivider(Modifier,1.dp, Color.DarkGray)
 
                     LazyColumn {
                         items(drones) { drone ->
@@ -118,7 +120,7 @@ fun ListDroneScreen(
                                 Text("OK", color = Color(0xFF3DDC84))
 
                             }
-                            Divider(color = Color.DarkGray, thickness = 0.5.dp)
+                            HorizontalDivider(Modifier,0.5.dp, Color.DarkGray)
                         }
                     }
                 }
