@@ -10,7 +10,14 @@ import fr.aerisys.mobile.ui.screens.listDrone.ListDroneScreen
 @Composable
 fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
-        composable("listDrone") { ListDroneScreen(navController) }
+        composable("home") {
+            HomeScreen({
+                navController.navigate("listDrone")
+            })
+        }
+        composable("listDrone") {
+            ListDroneScreen(onBack = {navController.popBackStack()})
+        }
     }
 }
+

@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(onClickDrone: ()-> Unit={}) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Accueil") }) }
     ) { padding ->
@@ -23,7 +23,7 @@ fun HomeScreen(navController: NavController) {
         ) {
             Text("Bienvenue dans l’application Drone !")
             Spacer(Modifier.height(16.dp))
-            Button(onClick = { navController.navigate("listDrone") }) {
+            Button(onClick = { onClickDrone() }) {
                 Text("Voir la liste des drones")
             }
         }

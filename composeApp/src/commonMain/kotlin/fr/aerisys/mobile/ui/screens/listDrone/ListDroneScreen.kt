@@ -24,7 +24,7 @@ import fr.aerisys.mobile.ui.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListDroneScreen(
-    navController: NavController,
+    onBack: ()-> Unit={},
     viewModel: MainViewModel = viewModel()
 ) {
     val drones = viewModel.drones
@@ -35,7 +35,7 @@ fun ListDroneScreen(
             TopAppBar(
                 title = { Text("Drones list", color = Color.White) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
