@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Aerisys</string>
+
+    <string name="en_name">Name</string>
+    <string name="en_status">Status</string>
+    <string name="en_ok">OK</string>
 </resources>

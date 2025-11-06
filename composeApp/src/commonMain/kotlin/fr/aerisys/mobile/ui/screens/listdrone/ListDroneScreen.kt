@@ -1,5 +1,9 @@
 package fr.aerisys.mobile.ui.screens.listdrone
 
+import aerisys.composeapp.generated.resources.Res
+import aerisys.composeapp.generated.resources.en_name
+import aerisys.composeapp.generated.resources.en_ok
+import aerisys.composeapp.generated.resources.en_status
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +22,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.aerisys.mobile.ui.screens.components.BottomNavigationBar
 import fr.aerisys.mobile.ui.viewmodel.MainViewModel
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,8 +103,8 @@ fun ListDroneScreen(
                             .padding(bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Name", color = Color.Gray, fontSize = 14.sp)
-                        Text("Status", color = Color.Gray, fontSize = 14.sp)
+                        Text(stringResource(Res.string.en_name), color = Color.Gray, fontSize = 14.sp)
+                        Text(stringResource(Res.string.en_status), color = Color.Gray, fontSize = 14.sp)
                         Spacer(Modifier.width(24.dp))
                     }
 
@@ -116,10 +120,10 @@ fun ListDroneScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(drone.name, color = Color.White, fontWeight = FontWeight.SemiBold)
-                                Text("OK", color = Color(0xFF3DDC84))
+                                Text(stringResource(Res.string.en_ok), color = Color(0xFF3DDC84))
 
                             }
-                            Divider(color = Color.DarkGray, thickness = 0.5.dp)
+                            HorizontalDivider(thickness = 0.5.dp, color = Color.DarkGray)
                         }
                     }
                 }
