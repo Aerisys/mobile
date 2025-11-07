@@ -36,7 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.aerisys.mobile.ui.components.BottomNavigationBar
-import fr.aerisys.mobile.ui.viewmodel.MainViewModel
+import fr.aerisys.mobile.viewModel.MainViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +46,7 @@ fun DroneListScreen(
     viewModel: MainViewModel = viewModel()
 ) {
     val drones = viewModel.drones
+
 
     Scaffold(
         topBar = {
