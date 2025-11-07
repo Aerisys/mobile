@@ -15,18 +15,19 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
-            isStatic = true
-            linkerOpts("-lsqlite3")
+            isStatic = false
+            linkerOpts("-lsqlite3", "-L/usr/lib")
         }
     }
-    
+
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
