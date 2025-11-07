@@ -1,7 +1,6 @@
 package fr.aerisys.mobile.di
 
 import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
-import fr.aerisys.mobile.viewModel.MainViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
