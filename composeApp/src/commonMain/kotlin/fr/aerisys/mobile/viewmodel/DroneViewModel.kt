@@ -25,9 +25,39 @@ class DroneViewModel(
         this.errorMessage.value = errorMessage
         drones.value =
             listOf(
-                Drone(1, "DJI Mini 4 Pro"),
-                Drone(2, "Parrot Anafi"),
-                Drone(3, "Autel Evo Lite+")
+                Drone(
+                    1,
+                    100,
+                    "DJI Mini 4 Pro",
+                    "AA:BB:CC:DD:01",
+                    "192.168.1.1",
+                    "Auto",
+                    80,
+                    120,
+                    "2024-10-20"
+                ),
+                Drone(
+                    2,
+                    100,
+                    "Parrot Anafi",
+                    "AA:BB:CC:DD:02",
+                    "192.168.1.2",
+                    "Manual",
+                    60,
+                    100,
+                    "2024-09-14"
+                ),
+                Drone(
+                    3,
+                    100,
+                    "Autel Evo Lite+",
+                    "AA:BB:CC:DD:03",
+                    "192.168.1.3",
+                    "GPS",
+                    70,
+                    150,
+                    "2024-09-01"
+                ),
             )
     }
     fun loadDrones(): Job {
@@ -37,7 +67,7 @@ class DroneViewModel(
         return viewModelScope.launch(dispatcher) {
             try {
                 val result = queries.selectAllDrones().executeAsList()
-                drones.value = result.map { Drone(it.id, it.name) }
+                drones.value = result.map { Drone(it.id, name = it.name) }
             } catch (e: Exception) {
                 errorMessage.value = e.message ?: "Erreur inconnue"
             } finally {
@@ -52,7 +82,7 @@ class DroneViewModel(
         return viewModelScope.launch(dispatcher) {
             try {
                 val result = queries.selectDroneById(idDrone).executeAsList()
-                drones.value = result.map { Drone(it.id, it.name) }
+                drones.value = result.map { Drone(it.id,  name=it.name) }
             } catch (e: Exception) {
                 errorMessage.value = e.message ?: "Erreur inconnue"
             } finally {
