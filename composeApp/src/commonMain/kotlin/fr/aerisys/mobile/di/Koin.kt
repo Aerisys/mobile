@@ -1,25 +1,22 @@
 package fr.aerisys.mobile.di
 
-import fr.aerisys.mobile.viewModel.MainViewModel
 import fr.aerisys.mobile.model.KtorCameraClient
 import fr.aerisys.mobile.viewModel.CameraViewModel
+import fr.aerisys.mobile.viewModel.MainViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 expect fun databaseModule(): Module
-val viewModelModule = module {
-    factory {
-        MainViewModel(get())
-        CameraViewModel(get())
-    }
-}
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
     startKoin {
@@ -42,4 +39,11 @@ val apiModule = module {
     }
 
     singleOf(::KtorCameraClient)
+}
+
+val viewModelModule = module {
+    factory { Dispatchers.IO }
+
+    viewModelOf(::MainViewModel)
+    viewModelOf(::CameraViewModel)
 }

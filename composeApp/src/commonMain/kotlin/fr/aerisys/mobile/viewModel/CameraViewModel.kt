@@ -21,7 +21,6 @@ class CameraViewModel(
         this.runInProgress.value = runInProgress
         this.errorMessage.value = errorMessage
 
-        cameras.value = listOf(
-        )
+        cameras.value = listOf()
     }
 }
