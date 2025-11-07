@@ -45,6 +45,21 @@ class DroneViewModel(
             }
         }
     }
+    fun loadDroneById(idDrone: Long): Job {
+        runInProgress.value = true
+        errorMessage.value = ""
+
+        return viewModelScope.launch(dispatcher) {
+            try {
+                val result = queries.selectDroneById(idDrone).executeAsList()
+                drones.value = result.map { Drone(it.id, it.name) }
+            } catch (e: Exception) {
+                errorMessage.value = e.message ?: "Erreur inconnue"
+            } finally {
+                runInProgress.value = false
+            }
+        }
+    }
 
     fun addDrone(drone: Drone) {
         runInProgress.value = true

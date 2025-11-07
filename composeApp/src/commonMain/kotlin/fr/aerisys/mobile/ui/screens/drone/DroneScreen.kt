@@ -1,7 +1,11 @@
 package fr.aerisys.mobile.ui.screens.drone
 
+
 import aerisys.composeapp.generated.resources.Res
+import aerisys.composeapp.generated.resources.back
 import aerisys.composeapp.generated.resources.delete
+import aerisys.composeapp.generated.resources.drone
+import aerisys.composeapp.generated.resources.name
 import aerisys.composeapp.generated.resources.validate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,18 +56,21 @@ fun DroneScreen(
     isAdd: Boolean,
     drone: Drone,
     viewModel: DroneViewModel = koinViewModel<DroneViewModel>(),
+    onDeleteBack: () -> Unit = {},
     onBack: () -> Unit = {}
 ) {
     var name by remember { mutableStateOf(drone.name) }
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
 
+
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Drone Details") },
+                title = { Text(stringResource(Res.string.drone)) },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.back))
                     }
                 }
             )
@@ -79,7 +87,7 @@ fun DroneScreen(
                 OutlinedTextField(
                     value = drone.id.toString(),
                     onValueChange = {},
-                    label = { Text("ID") },
+                    label = { Text("") },
                     enabled = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -90,7 +98,7 @@ fun DroneScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(Res.string.name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -116,7 +124,10 @@ fun DroneScreen(
                     // Bouton Supprimer
                     MyButton(
                         text = stringResource(Res.string.delete),
-                        onClick = {  },
+                        onClick = {
+                                    viewModel.deleteDrone(drone)
+                                    onDeleteBack()
+                                  },
                         color = Color(0xFFF44336), // rouge
                         modifier = Modifier.fillMaxWidth()
                     )

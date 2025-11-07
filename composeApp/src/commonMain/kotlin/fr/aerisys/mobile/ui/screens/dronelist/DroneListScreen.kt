@@ -4,6 +4,7 @@ import aerisys.composeapp.generated.resources.Res
 import aerisys.composeapp.generated.resources.name
 import aerisys.composeapp.generated.resources.ok
 import aerisys.composeapp.generated.resources.status
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,15 +50,12 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DroneListScreen(
-    onBack: ()-> Unit={},
-    addDrone: (Int?)-> Unit={},
+    onBack: () -> Unit = {},
+    addDrone: (Long?) -> Unit = {},
+    openDrone: (Long) -> Unit = {},
     viewModel: DroneViewModel = koinViewModel<DroneViewModel>()
 ) {
-    LaunchedEffect(Unit) {
-        // ✅ Code exécuté une seule fois
-        viewModel.loadDrones()
-    }
-
+    LaunchedEffect(Unit) { viewModel.loadDrones() }
 
     val list = viewModel.drones.collectAsStateWithLifecycle().value
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
@@ -96,53 +94,66 @@ fun DroneListScreen(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(padding)
         ) {
-            Spacer(Modifier.height(20.dp))
 
-            Card(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.medium
-            ) {
+            if (runInProgress) {
                 Column(
-                    Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        Modifier
+                    androidx.compose.material3.CircularProgressIndicator()
+                    Spacer(Modifier.height(12.dp))
+                    Text("Chargement...")
+                }
+                return@Column
+            }
+
+            if (!errorMessage.isNullOrEmpty()) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(list.size) { index ->
+
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .clickable { openDrone(list[index].id) },
+                        shape = MaterialTheme.shapes.medium
                     ) {
-                        Text(stringResource(Res.string.name))
-                        Text(stringResource(Res.string.status))
-                        Spacer(Modifier.width(24.dp))
-                    }
-
-                    HorizontalDivider(Modifier, 1.dp)
-
-                    LazyColumn {
-                        items(list.size) {
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(list[it].name, fontWeight = FontWeight.SemiBold)
-                                Text(stringResource(Res.string.ok), color = Color.Green)
-
-                            }
-                            HorizontalDivider(Modifier,0.5.dp)
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                list[index].name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "OK",
+                                color = Color.Green,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
                         }
                     }
                 }
@@ -150,3 +161,4 @@ fun DroneListScreen(
         }
     }
 }
+
