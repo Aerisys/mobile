@@ -11,8 +11,6 @@ import org.koin.compose.koinInject
 @Preview
 fun App() {
     AppTheme {
-        val mainViewModel: MainViewModel = koinInject()
-        AppNavigation(mainViewModel = mainViewModel)
+        AppNavigation()
     }
-
 }

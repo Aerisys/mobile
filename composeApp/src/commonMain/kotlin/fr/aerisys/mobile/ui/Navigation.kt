@@ -4,25 +4,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import fr.aerisys.mobile.ui.screens.CameraScreen
 import fr.aerisys.mobile.ui.screens.HomeScreen
+import fr.aerisys.mobile.viewModel.CameraViewModel
 import fr.aerisys.mobile.viewModel.MainViewModel
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
 
 class Routes {
     @Serializable
     data object HomeRoute
 
     @Serializable
-    data class DetailRoute(val id: Int)
+    data class CameraRoute(val id: Long)
 }
 
 @Composable
-fun AppNavigation(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
+fun AppNavigation(modifier: Modifier = Modifier) {
 
     val navHostController = rememberNavController()
+    val cameraViewModel = koinViewModel<CameraViewModel>()
+    val mainViewModel = koinViewModel<MainViewModel>()
 
     Scaffold { innerPadding ->
 
@@ -36,18 +43,16 @@ fun AppNavigation(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
                 HomeScreen(mainViewModel = mainViewModel)
             }
 
-            /*
-            composable<Routes.DetailRoute> {
-                val detailRoute = it.toRoute<Routes.DetailRoute>()
-                val weatherBean = mainViewModel.dataList.collectAsStateWithLifecycle()
-                    .value.first { w -> w.id == detailRoute.id }
+            composable<Routes.CameraRoute> {
+                val cameraRoute = it.toRoute<Routes.CameraRoute>()
+                val weatherBean = cameraViewModel.cameras.collectAsStateWithLifecycle()
+                    .value.first { w -> w.id == cameraRoute.id }
 
-                DetailScreen(
-                    data = weatherBean,
-                    onBack = { navHostController.popBackStack() }
+                CameraScreen(
+                    cameraBean = weatherBean,
                 )
             }
-            */
+
         }
     }
 }

@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("plugin.serialization") version "2.1.0"
     id("app.cash.sqldelight") version "2.1.0"
 }
 
@@ -54,6 +54,10 @@ kotlin {
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.+")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.2.0")
             implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+            // Ktor (call api / http client)
+            implementation("io.ktor:ktor-client-okhttp:3.2.2")
+            implementation("io.ktor:ktor-client-content-negotiation:3.2.2")
+            implementation ("io.ktor:ktor-client-logging:3.2.2") //log
         }
         iosMain.dependencies {
             implementation("app.cash.sqldelight:native-driver:2.1.0")
