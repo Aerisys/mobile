@@ -2,17 +2,15 @@ package fr.aerisys.mobile.model
 
 data class CameraBean(
     val id: Long,
-    val userId: Long,
+    val user_id: Long,
     val name: String,
-    val macAddress: String,
-    val ipAddress: String,
-    val flightMode: String,
-    val motorPower: Int,
-    val altitudeLimit: Int,
-    val firmwareVersion: String,
-    val firmwareUpdatedAt: Int, // timestamp
-    val addedAt: Int, // timestamp
-    val updatedAt: Int // timestamp
+    val mac_address: String,
+    val ip_address: String,
+    val image_format: String,
+    val image_quality: String,
+    val image_dimension: String,
+    val firmware_version: String,
+    val firmware_last_update: Int, // timestamp
 )
 
 data class DroneBean(

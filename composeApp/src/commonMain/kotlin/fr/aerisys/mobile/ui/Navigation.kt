@@ -38,7 +38,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable<Routes.CameraRoute> {
             val cameraRoute = it.toRoute<Routes.CameraRoute>()
-            val cameraBean = cameraViewModel.cameras.collectAsStateWithLifecycle()
+            val cameraBean = cameraViewModel.camerasList.collectAsStateWithLifecycle()
                 .value.first { w -> w.id == cameraRoute.id }
 
             CameraScreen(
