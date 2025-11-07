@@ -1,9 +1,7 @@
 package fr.aerisys.mobile.ui.screens.dronelist
 
 import aerisys.composeapp.generated.resources.Res
-import aerisys.composeapp.generated.resources.name
-import aerisys.composeapp.generated.resources.ok
-import aerisys.composeapp.generated.resources.status
+import aerisys.composeapp.generated.resources.drone_list
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,7 +19,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,8 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import fr.aerisys.mobile.di.droneViewModelModule
 import fr.aerisys.mobile.ui.components.navbar.BottomNavigationBar
 import fr.aerisys.mobile.ui.components.navbar.NavBarType
 import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
@@ -64,7 +57,7 @@ fun DroneListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Drones list") },
+                title = { Text(stringResource(Res.string.drone_list)) },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -114,9 +107,9 @@ fun DroneListScreen(
                 return@Column
             }
 
-            if (!errorMessage.isNullOrEmpty()) {
+            if (errorMessage.isNotEmpty()) {
                 Text(
-                    text = errorMessage ?: "",
+                    text = errorMessage,
                     color = Color.Red,
                     modifier = Modifier
                         .fillMaxWidth()
