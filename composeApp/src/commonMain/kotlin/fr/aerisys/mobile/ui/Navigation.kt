@@ -5,6 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import fr.aerisys.mobile.model.Drone
+import fr.aerisys.mobile.ui.screens.drone.DroneScreen
 import fr.aerisys.mobile.ui.screens.dronelist.DroneListScreen
 import fr.aerisys.mobile.ui.screens.home.HomeScreen
 import kotlinx.serialization.Serializable
@@ -15,6 +18,9 @@ class Routes {
 
     @Serializable
     data object DroneListRoute
+
+    @Serializable
+    data class DroneRoute(val id: Int?)
 }
 
 @Composable
@@ -31,7 +37,24 @@ fun AppNavHost() {
             })
         }
         composable<Routes.DroneListRoute> {
-            DroneListScreen(onBack)
+            DroneListScreen(onBack = onBack,
+                addDrone = {navController.navigate(Routes.DroneRoute(it))} )
+        }
+        composable<Routes.DroneRoute> {
+            val idDrone= it.toRoute<Routes.DroneRoute>().id
+            var isAdd = true
+            val drone= Drone()
+            if(idDrone != null){
+                isAdd = false
+                //drone = ...
+                //val droned = mainViewModel.dataList.collectAsStateWithLifecycle().value.first { it.id == detailRoute.id }
+            }
+
+            DroneScreen(
+                isAdd= isAdd,
+                onBack = onBack,
+                drone = drone
+            )
         }
     }
 }
