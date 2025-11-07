@@ -1,21 +1,30 @@
-package fr.aerisys.mobile.ui.viewmodel
+package fr.aerisys.mobile.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateListOf
-import fr.aerisys.mobile.model.Drone
+import fr.aerisys.mobile.db.AerisysDatabase
 
-class MainViewModel : ViewModel() {
-
-    private val _drones = mutableStateListOf<Drone>()
-    val drones: List<Drone> get() = _drones
+class MainViewModel(
+    private val database: AerisysDatabase
+) : ViewModel() {
 
     init {
-        _drones.addAll(
-            listOf(
-                Drone(1, "DJI Mini 4 Pro"),
-                Drone(2, "Parrot Anafi"),
-                Drone(3, "Autel Evo Lite+")
-            )
+        insertAndDisplayUser()
+    }
+
+    private fun insertAndDisplayUser() {
+        val userQueries = database.usersQueries
+        val dronesQueries = database.dronesQueries
+
+        dronesQueries.deleteAllDrones()
+        userQueries.deleteAllUsers()
+
+       userQueries.insertUser(
+           username = "John Doe",
+           email = "john.doe@example.com",
+            password = "password123"
         )
+
+        val users = userQueries.selectAllUsers().executeAsList()
+        println("Users in database: $users")
     }
 }

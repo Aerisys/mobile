@@ -2,7 +2,7 @@ package fr.aerisys.mobile.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF6D5E0F)
+val primaryLight = Color(0xFF035A89)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFF8E287)
 val onPrimaryContainerLight = Color(0xFF534600)
@@ -110,7 +110,7 @@ val surfaceContainerLightHighContrast = Color(0xFFE8E2D4)
 val surfaceContainerHighLightHighContrast = Color(0xFFDAD4C6)
 val surfaceContainerHighestLightHighContrast = Color(0xFFCCC6B9)
 
-val primaryDark = Color(0xFFDBC66E)
+val primaryDark = Color(0xFF035A89)
 val onPrimaryDark = Color(0xFF3A3000)
 val primaryContainerDark = Color(0xFF534600)
 val onPrimaryContainerDark = Color(0xFFF8E287)

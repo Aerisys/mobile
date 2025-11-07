@@ -1,6 +1,6 @@
 package fr.aerisys.mobile.di
 
-import fr.aerisys.mobile.viewModel.MainViewModel
+import fr.aerisys.mobile.viewmodel.MainViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration

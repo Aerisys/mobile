@@ -1,9 +1,8 @@
 package fr.aerisys.mobile.ui.screens.dronelist
 
 import aerisys.composeapp.generated.resources.Res
-import aerisys.composeapp.generated.resources.en_name
-import aerisys.composeapp.generated.resources.en_ok
-import aerisys.composeapp.generated.resources.en_status
+import aerisys.composeapp.generated.resources.name
+import aerisys.composeapp.generated.resources.status
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -32,11 +30,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import fr.aerisys.mobile.ui.components.BottomNavigationBar
-import fr.aerisys.mobile.ui.viewmodel.MainViewModel
+import fr.aerisys.mobile.ui.components.navbar.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.navbar.NavBarType
+import fr.aerisys.mobile.viewmodel.MainViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +43,7 @@ fun DroneListScreen(
     onBack: ()-> Unit={},
     viewModel: MainViewModel = viewModel()
 ) {
-    val drones = viewModel.drones
+//    val drones = viewModel.drones
 
     Scaffold(
         topBar = {
@@ -64,7 +62,11 @@ fun DroneListScreen(
             )
         },
         bottomBar = {
-            BottomNavigationBar()
+            BottomNavigationBar(
+                barType = NavBarType.HOME,
+                currentRoute = "drone",
+                onNavEvent = {}
+            )
         }
     ) { padding ->
         Column(
@@ -93,28 +95,28 @@ fun DroneListScreen(
                             .padding(bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(stringResource(Res.string.en_name))
-                        Text(stringResource(Res.string.en_status))
+                        Text(stringResource(Res.string.name))
+                        Text(stringResource(Res.string.status))
                         Spacer(Modifier.width(24.dp))
                     }
 
                     HorizontalDivider(Modifier, 1.dp)
 
                     LazyColumn {
-                        items(drones) { drone ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(drone.name, fontWeight = FontWeight.SemiBold)
-                                Text(stringResource(Res.string.en_ok), color = Color.Green)
-
-                            }
-                            HorizontalDivider(Modifier,0.5.dp)
-                        }
+//                        items(drones) { drone ->
+//                            Row(
+//                                Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(vertical = 8.dp),
+//                                horizontalArrangement = Arrangement.SpaceBetween,
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                Text(drone.name, fontWeight = FontWeight.SemiBold)
+//                                Text(stringResource(Res.string.ok), color = Color.Green)
+//
+//                            }
+//                            HorizontalDivider(Modifier,0.5.dp)
+//                        }
                     }
                 }
             }
