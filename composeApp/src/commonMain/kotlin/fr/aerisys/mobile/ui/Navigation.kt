@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import fr.aerisys.mobile.ui.screens.dronelist.DroneListScreen
 import fr.aerisys.mobile.ui.screens.home.HomeScreen
 import kotlinx.serialization.Serializable
@@ -17,7 +18,8 @@ class Routes {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost() {
+    val navController = rememberNavController()
     val onBack: () -> Unit = {
         navController.popBackStack()
     }

@@ -16,10 +16,8 @@ import org.koin.compose.koinInject
 @Preview
 fun App() {
     AppTheme {
-        val navController = rememberNavController()
-
         Surface(modifier = Modifier.fillMaxSize()) {
-            AppNavHost(navController = navController)
+            AppNavHost()
         }
     }
 }
