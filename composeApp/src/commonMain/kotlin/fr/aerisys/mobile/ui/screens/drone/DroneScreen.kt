@@ -1,9 +1,8 @@
 package fr.aerisys.mobile.ui.screens.drone
 
 import aerisys.composeapp.generated.resources.Res
-import aerisys.composeapp.generated.resources.en_name
-import aerisys.composeapp.generated.resources.en_ok
-import aerisys.composeapp.generated.resources.en_status
+import aerisys.composeapp.generated.resources.delete
+import aerisys.composeapp.generated.resources.validate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,9 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,11 +37,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.aerisys.mobile.model.Drone
-import fr.aerisys.mobile.ui.components.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.MyButton
 import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -105,29 +100,26 @@ fun DroneScreen(
                     Text(errorMessage)
                 }
                 // Bouton Valider
-                Button(
+                MyButton(
+                    text = stringResource(Res.string.validate),
                     onClick = {
                         val droneSend = drone.copy(name = name)
                         if(isAdd){viewModel.addDrone(droneSend)}
                         else {viewModel.updateDrone(droneSend)}
                         onBack()},
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)), // bleu
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Valider", color = Color.White)
-                }
+                )
 
                 if(!isAdd){
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Bouton Supprimer
-                    Button(
+                    MyButton(
+                        text = stringResource(Res.string.delete),
                         onClick = {  },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)), // rouge
+                        color = Color(0xFFF44336), // rouge
                         modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Supprimer", color = Color.White)
-                    }
+                    )
                 }
             }
         }

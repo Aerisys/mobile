@@ -8,9 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import fr.aerisys.mobile.ui.AppNavHost
 import fr.aerisys.mobile.ui.theme.AppTheme
-import fr.aerisys.mobile.viewModel.MainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
 
 @Composable
 @Preview

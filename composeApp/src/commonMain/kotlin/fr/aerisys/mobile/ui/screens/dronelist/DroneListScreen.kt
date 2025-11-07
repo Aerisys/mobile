@@ -1,9 +1,9 @@
 package fr.aerisys.mobile.ui.screens.dronelist
 
 import aerisys.composeapp.generated.resources.Res
-import aerisys.composeapp.generated.resources.en_name
-import aerisys.composeapp.generated.resources.en_ok
-import aerisys.composeapp.generated.resources.en_status
+import aerisys.composeapp.generated.resources.name
+import aerisys.composeapp.generated.resources.ok
+import aerisys.composeapp.generated.resources.status
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.aerisys.mobile.di.droneViewModelModule
-import fr.aerisys.mobile.ui.components.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.navbar.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.navbar.NavBarType
 import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -79,7 +80,11 @@ fun DroneListScreen(
             )
         },
         bottomBar = {
-            BottomNavigationBar()
+            BottomNavigationBar(
+                barType = NavBarType.HOME,
+                currentRoute = "drone",
+                onNavEvent = {}
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -117,8 +122,8 @@ fun DroneListScreen(
                             .padding(bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(stringResource(Res.string.en_name))
-                        Text(stringResource(Res.string.en_status))
+                        Text(stringResource(Res.string.name))
+                        Text(stringResource(Res.string.status))
                         Spacer(Modifier.width(24.dp))
                     }
 
@@ -134,7 +139,7 @@ fun DroneListScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(list[it].name, fontWeight = FontWeight.SemiBold)
-                                Text(stringResource(Res.string.en_ok), color = Color.Green)
+                                Text(stringResource(Res.string.ok), color = Color.Green)
 
                             }
                             HorizontalDivider(Modifier,0.5.dp)

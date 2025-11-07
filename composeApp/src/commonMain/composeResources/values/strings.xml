@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">Aerisys</string>
 
-    <string name="en_name">Name</string>
-    <string name="en_status">Status</string>
-    <string name="en_ok">OK</string>
+    <string name="name">Name</string>
+    <string name="status">Status</string>
+    <string name="ok">OK</string>
 
-    <string name="en_drone">Drone</string>
-    <string name="en_controller">Controller</string>
+    <string name="drone">Drone</string>
+    <string name="controller">Controller</string>
+
+    <string name="graph">Graph</string>
+    <string name="third_dimension">3D</string>
+
+    <string name="delete">Supprimer</string>
+    <string name="validate">Valider</string>
 </resources>
