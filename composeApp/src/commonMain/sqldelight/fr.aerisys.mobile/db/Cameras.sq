@@ -10,7 +10,7 @@ CREATE TABLE cameras (
     image_quality TEXT,
     image_dimension TEXT,
     firmware_version TEXT,
-    firmware_last_update TEXT
+    firmware_last_update INTEGER
 );
 
 -- 🔹 CREATE
