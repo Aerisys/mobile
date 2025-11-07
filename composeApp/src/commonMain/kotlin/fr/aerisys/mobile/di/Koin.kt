@@ -41,6 +41,9 @@ val apiModule = module {
     singleOf(::KtorCameraClient)
 }
 
+fun initKoin(){
+
+}
 val viewModelModule = module {
     factory { Dispatchers.IO }
 

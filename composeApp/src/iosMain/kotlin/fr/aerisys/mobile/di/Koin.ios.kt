@@ -1,6 +1,6 @@
 package fr.aerisys.mobile.di
 
-fun initKoinSafe(): Boolean {
+fun doInitKoin(): Boolean {
     return try {
         initKoin {}
         true
