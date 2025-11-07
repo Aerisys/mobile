@@ -1,9 +1,10 @@
 package fr.aerisys.mobile.ui.screens.dronelist
 
 import aerisys.composeapp.generated.resources.Res
-import aerisys.composeapp.generated.resources.en_name
-import aerisys.composeapp.generated.resources.en_ok
-import aerisys.composeapp.generated.resources.en_status
+import aerisys.composeapp.generated.resources.name
+import aerisys.composeapp.generated.resources.ok
+import aerisys.composeapp.generated.resources.status
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,12 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,92 +31,129 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import fr.aerisys.mobile.ui.components.BottomNavigationBar
-import fr.aerisys.mobile.viewModel.MainViewModel
+import fr.aerisys.mobile.di.droneViewModelModule
+import fr.aerisys.mobile.ui.components.navbar.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.navbar.NavBarType
+import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DroneListScreen(
-    onBack: ()-> Unit={},
-    viewModel: MainViewModel = viewModel()
+    onBack: () -> Unit = {},
+    addDrone: (Long?) -> Unit = {},
+    openDrone: (Long) -> Unit = {},
+    viewModel: DroneViewModel = koinViewModel<DroneViewModel>()
 ) {
-    val drones = viewModel.drones
+    LaunchedEffect(Unit) { viewModel.loadDrones() }
 
+    val list = viewModel.drones.collectAsStateWithLifecycle().value
+    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+    val runInProgress by viewModel.runInProgress.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Drones list", color = Color.White) },
+                title = { Text("Drones list") },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: ajouter drone */ }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                    IconButton(onClick = { addDrone(null) }) {
+                        Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 },
             )
         },
         bottomBar = {
-            BottomNavigationBar()
-        }
+            BottomNavigationBar(
+                barType = NavBarType.HOME,
+                currentRoute = "drone",
+                onNavEvent = {}
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { addDrone(null) },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add Drone", tint = Color.White)
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(padding)
         ) {
-            Spacer(Modifier.height(20.dp))
 
-            Card(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.medium
-            ) {
+            if (runInProgress) {
                 Column(
-                    Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        Modifier
+                    androidx.compose.material3.CircularProgressIndicator()
+                    Spacer(Modifier.height(12.dp))
+                    Text("Chargement...")
+                }
+                return@Column
+            }
+
+            if (!errorMessage.isNullOrEmpty()) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(list.size) { index ->
+
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .clickable { openDrone(list[index].id) },
+                        shape = MaterialTheme.shapes.medium
                     ) {
-                        Text(stringResource(Res.string.en_name))
-                        Text(stringResource(Res.string.en_status))
-                        Spacer(Modifier.width(24.dp))
-                    }
-
-                    HorizontalDivider(Modifier, 1.dp)
-
-                    LazyColumn {
-                        items(drones) { drone ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(drone.name, fontWeight = FontWeight.SemiBold)
-                                Text(stringResource(Res.string.en_ok), color = Color.Green)
-
-                            }
-                            HorizontalDivider(Modifier,0.5.dp)
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                list[index].name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "OK",
+                                color = Color.Green,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
                         }
                     }
                 }
@@ -122,3 +161,4 @@ fun DroneListScreen(
         }
     }
 }
+
