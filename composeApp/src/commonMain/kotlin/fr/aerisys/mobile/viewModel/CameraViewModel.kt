@@ -22,29 +22,6 @@ class CameraViewModel(
         this.errorMessage.value = errorMessage
 
         cameras.value = listOf(
-            CameraBean(
-
-            )
         )
-    }
-
-    fun loadWeathers(cityName: String = "lyon"): Job {
-        runInProgress.value = true
-        errorMessage.value = ""
-        val job = viewModelScope.launch(Dispatchers.IO) {
-            try {
-                if (cityName.length < 3) {
-                    throw Exception("Il faut au moins 3 caratchères")
-                }
-                dataList.value = ktorWeatherAPI.loadWeathers(cityName)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                errorMessage.value = e.message ?: "Une erreur est survenue"
-            } finally {
-                runInProgress.value = false
-            }
-        }
-
-        return job
     }
 }
