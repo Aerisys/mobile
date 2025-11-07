@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.aerisys.mobile.model.Drone
 import fr.aerisys.mobile.ui.components.MyButton
+import fr.aerisys.mobile.ui.components.navbar.BottomNavigationBar
+import fr.aerisys.mobile.ui.components.navbar.NavBarType
 import fr.aerisys.mobile.ui.viewmodel.DroneViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,6 +65,13 @@ fun DroneHomeScreen(
                         Icon(Icons.Default.Edit, contentDescription = stringResource(Res.string.edit))
                     }
                 }
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                barType = NavBarType.DRONE,
+                currentRoute = "graph",
+                onNavEvent = {}
             )
         },
         content = { padding ->
