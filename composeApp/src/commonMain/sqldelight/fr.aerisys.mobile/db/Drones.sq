@@ -11,9 +11,9 @@ CREATE TABLE drones (
     motor_power INTEGER,
     altitude_limit INTEGER,
     firmware_version TEXT,
-    firmware_last_uptimestamp TEXT,
-    added_at TEXT,
-    updated_at TEXT
+    firmware_last_update INTEGER,
+    added_at INTEGER,
+    updated_at INTEGER
 );
 
 -- 🔹 CREATE
@@ -27,7 +27,7 @@ INSERT INTO drones (
     motor_power,
     altitude_limit,
     firmware_version,
-    firmware_last_uptimestamp,
+    firmware_last_update,
     added_at,
     updated_at
 )
@@ -58,7 +58,7 @@ SET name = ?,
     motor_power = ?,
     altitude_limit = ?,
     firmware_version = ?,
-    firmware_last_uptimestamp = ?,
+    firmware_last_update = ?,
     updated_at = ?
 WHERE id = ?;
 
