@@ -18,6 +18,10 @@ class Routes {
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
+    val onBack: () -> Unit = {
+        navController.popBackStack()
+    }
+
     NavHost(navController = navController, startDestination = Routes.HomeRoute) {
         composable<Routes.HomeRoute> {
             HomeScreen({
@@ -25,7 +29,7 @@ fun AppNavHost(navController: NavHostController) {
             })
         }
         composable<Routes.DroneListRoute> {
-            DroneListScreen(onBack = {navController.popBackStack()})
+            DroneListScreen(onBack)
         }
     }
 }
