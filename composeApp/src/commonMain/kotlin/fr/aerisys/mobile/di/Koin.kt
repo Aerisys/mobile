@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -13,7 +14,7 @@ expect fun databaseModule(): Module
 
 val droneViewModelModule = module {
     factory<CoroutineDispatcher> { Dispatchers.IO } // Fournit le dispatcher
-    factory { DroneViewModel(dispatcher = get(), myDatabase = get()) }
+    viewModelOf(::DroneViewModel)
 }
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
