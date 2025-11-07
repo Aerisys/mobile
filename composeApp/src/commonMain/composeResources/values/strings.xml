@@ -11,11 +11,13 @@
     <string name="graph">Graph</string>
     <string name="third_dimension">3D</string>
 
-    <string name="delete">Supprimer</string>
-    <string name="validate">Valider</string>
+    <string name="delete">Delete</string>
+    <string name="validate">Validate</string>
 
     <string name="back">Back</string>
     <string name="edit">Edit</string>
 
     <string name="id">ID</string>
+
+    <string name="drone_list">Drones list</string>
 </resources>

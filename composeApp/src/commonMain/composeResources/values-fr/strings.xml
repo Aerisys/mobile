@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Aerisys</string>
+
+    <string name="name">Nom</string>
+    <string name="status">Statut</string>
+    <string name="ok">OK</string>
+
+    <string name="drone">Drone</string>
+    <string name="controller">Manette</string>
+
+    <string name="graph">Graph</string>
+    <string name="third_dimension">3D</string>
+
+    <string name="delete">Supprimer</string>
+    <string name="validate">Valider</string>
+
+    <string name="back">Retour</string>
+    <string name="edit">Editer</string>
+
+    <string name="id">ID</string>
+
+    <string name="drone_list">Liste des drones</string>
+</resources>
