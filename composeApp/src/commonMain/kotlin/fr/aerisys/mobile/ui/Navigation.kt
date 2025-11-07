@@ -39,7 +39,7 @@ fun AppNavHost() {
         navController.popBackStack()
     }
 
-    NavHost(navController = navController, startDestination = Routes.HomeRoute) {
+    NavHost(navController = navController, startDestination = Routes.DroneListRoute) {
         composable<Routes.HomeRoute> {
             HomeScreen({
                 navController.navigate(Routes.DroneListRoute)
