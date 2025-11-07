@@ -2,8 +2,6 @@ package fr.aerisys.mobile.ui
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -72,7 +70,6 @@ fun AppNavHost() {
             val idDrone= it.toRoute<Routes.DroneHomeRoute>().id
             val drone = viewModel.drones.collectAsStateWithLifecycle().value.first(predicate = {it.id == idDrone})
             DroneHomeScreen(
-                viewModel = viewModel,
                 onBack = onBack,
                 drone = drone,
                 onEdit = {drone->navController.navigate(Routes.DroneRoute(drone.id))}

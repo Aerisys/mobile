@@ -50,8 +50,6 @@ fun DroneScreen(
     var name by remember { mutableStateOf(drone.name) }
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(

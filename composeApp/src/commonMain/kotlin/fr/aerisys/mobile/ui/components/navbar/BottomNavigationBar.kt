@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -39,11 +40,18 @@ fun BottomNavigationBar(
                     }
                 },
                 icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = stringResource(item.labelRes),
-                        tint = contentColor
-                    )
+                    when (val icon = item.icon) {
+                        is NavBarIcon.Vector -> Icon(
+                            imageVector = icon.icon,
+                            contentDescription = stringResource(item.labelRes),
+                            tint = contentColor
+                        )
+                        is NavBarIcon.Drawable -> Icon(
+                            painter = painterResource(icon.res),
+                            contentDescription = stringResource(item.labelRes),
+                            tint = contentColor
+                        )
+                    }
                 },
                 label = { Text(stringResource(item.labelRes)) }
             )

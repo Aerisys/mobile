@@ -6,11 +6,11 @@ import aerisys.composeapp.generated.resources.drone
 import aerisys.composeapp.generated.resources.graph
 import aerisys.composeapp.generated.resources.third_dimension
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SettingsRemote
 import androidx.compose.ui.graphics.vector.ImageVector
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 enum class NavBarType {
@@ -18,19 +18,24 @@ enum class NavBarType {
     DRONE
 }
 
+sealed class NavBarIcon {
+    data class Vector(val icon: ImageVector) : NavBarIcon()
+    data class Drawable(val res: DrawableResource) : NavBarIcon()
+}
+
 data class NavBarItem(
-    val icon: ImageVector,
+    val icon: NavBarIcon,
     val labelRes: StringResource,
     val route: String
 )
 
 val navBarItemsByType = mapOf(
     NavBarType.HOME to listOf(
-        NavBarItem(Icons.Default.Flight, Res.string.drone, "drone"),
-        NavBarItem(Icons.Default.SettingsRemote, Res.string.controller, "controller")
+        NavBarItem(NavBarIcon.Drawable(Res.drawable.drone), Res.string.drone, "drone"),
+        NavBarItem(NavBarIcon.Vector(Icons.Default.SettingsRemote), Res.string.controller, "controller")
     ),
     NavBarType.DRONE to listOf(
-        NavBarItem(Icons.Default.Settings, Res.string.graph, "graph"),
-        NavBarItem(Icons.Default.Info, Res.string.third_dimension, "3d")
+        NavBarItem(NavBarIcon.Vector(Icons.Default.Settings), Res.string.graph, "graph"),
+        NavBarItem(NavBarIcon.Vector(Icons.Default.Info), Res.string.third_dimension, "3d")
     )
 )
