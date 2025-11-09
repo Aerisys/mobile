@@ -1,18 +1,10 @@
 package fr.aerisys.mobile.viewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import fr.aerisys.mobile.model.CameraBean
-import fr.aerisys.mobile.model.KtorCameraClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
-class CameraViewModel(
-    val cameraClient: KtorCameraClient,
-) : ViewModel() {
+class CameraViewModel() : ViewModel() {
     val cameras = MutableStateFlow(emptyList<CameraBean>())
     val runInProgress = MutableStateFlow(false)
     val errorMessage = MutableStateFlow("")
@@ -23,28 +15,19 @@ class CameraViewModel(
 
         cameras.value = listOf(
             CameraBean(
-
+                id = 1,
+                name = "Camera 1",
+                ipAddress = "http://10.173.141.144/stream",
+                userId = 45,
+                macAddress = "00:1A:7D:DA:71:13",
+                flightMode = "acrobat",
+                motorPower = 10,
+                altitudeLimit = 2000,
+                firmwareVersion = "v1.0.0",
+                firmwareUpdatedAt = 1254587,
+                addedAt = 454989,
+                updatedAt = 89789465
             )
         )
-    }
-
-    fun loadWeathers(cityName: String = "lyon"): Job {
-        runInProgress.value = true
-        errorMessage.value = ""
-        val job = viewModelScope.launch(Dispatchers.IO) {
-            try {
-                if (cityName.length < 3) {
-                    throw Exception("Il faut au moins 3 caratchères")
-                }
-                dataList.value = ktorWeatherAPI.loadWeathers(cityName)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                errorMessage.value = e.message ?: "Une erreur est survenue"
-            } finally {
-                runInProgress.value = false
-            }
-        }
-
-        return job
     }
 }

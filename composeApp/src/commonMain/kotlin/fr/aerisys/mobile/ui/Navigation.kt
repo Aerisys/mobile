@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import fr.aerisys.mobile.ui.screens.CameraScreen
+import fr.aerisys.mobile.ui.screens.CameraStreamScreen
 import fr.aerisys.mobile.ui.screens.HomeScreen
 import fr.aerisys.mobile.viewModel.CameraViewModel
 import fr.aerisys.mobile.viewModel.MainViewModel
@@ -29,30 +29,25 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
     val navHostController = rememberNavController()
     val cameraViewModel = koinViewModel<CameraViewModel>()
-    val mainViewModel = koinViewModel<MainViewModel>()
 
-    Scaffold { innerPadding ->
+    NavHost(
+        navController = navHostController,
+        startDestination = Routes.HomeRoute,
+        modifier = modifier
+    ) {
 
-        NavHost(
-            navController = navHostController,
-            startDestination = Routes.HomeRoute,
-            modifier = modifier.padding(innerPadding)
-        ) {
+        composable<Routes.HomeRoute> {
+            HomeScreen()
+        }
 
-            composable<Routes.HomeRoute> {
-                HomeScreen(mainViewModel = mainViewModel)
-            }
+        composable<Routes.CameraRoute> {
+            val cameraRoute = it.toRoute<Routes.CameraRoute>()
+            val cameraBean = cameraViewModel.cameras.collectAsStateWithLifecycle()
+                .value.first { w -> w.id == cameraRoute.id }
 
-            composable<Routes.CameraRoute> {
-                val cameraRoute = it.toRoute<Routes.CameraRoute>()
-                val weatherBean = cameraViewModel.cameras.collectAsStateWithLifecycle()
-                    .value.first { w -> w.id == cameraRoute.id }
-
-                CameraScreen(
-                    cameraBean = weatherBean,
-                )
-            }
-
+            CameraStreamScreen(
+                cameraBean = cameraBean,
+            )
         }
     }
 }

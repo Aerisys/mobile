@@ -1,7 +1,8 @@
-package fr.aerisys.mobile.model
+package fr.aerisys.mobile.di
 
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import fr.aerisys.mobile.db.AerisysDatabase
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual fun databaseModule() = module {

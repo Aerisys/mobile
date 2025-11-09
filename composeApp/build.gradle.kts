@@ -33,6 +33,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("io.insert-koin:koin-android:4.1.+")
             implementation("app.cash.sqldelight:android-driver:2.1.0")
+
+            implementation("io.ktor:ktor-client-okhttp:3.2.2")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -54,13 +56,18 @@ kotlin {
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.+")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.2.0")
             implementation("io.coil-kt.coil3:coil-compose:3.2.0")
-            // Ktor (call api / http client)
-            implementation("io.ktor:ktor-client-okhttp:3.2.2")
+            // Ktor Client
+            implementation("io.ktor:ktor-client-core:3.2.2")
             implementation("io.ktor:ktor-client-content-negotiation:3.2.2")
-            implementation ("io.ktor:ktor-client-logging:3.2.2") //log
+            implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.2")
+            implementation("io.ktor:ktor-client-logging:3.2.2")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
         }
         iosMain.dependencies {
             implementation("app.cash.sqldelight:native-driver:2.1.0")
+
+            implementation("io.ktor:ktor-client-darwin:3.2.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
