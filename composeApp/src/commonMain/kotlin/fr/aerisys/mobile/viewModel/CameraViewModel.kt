@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import fr.aerisys.mobile.model.CameraBean
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class CameraViewModel() : ViewModel() {
     val camerasList = MutableStateFlow(emptyList<CameraBean>())
@@ -91,7 +92,7 @@ class CameraViewModel() : ViewModel() {
         )
     }
 
-    open fun CameraListLoad(name: String = ""): Job = viewModelScope.launch {
+    fun CameraListLoad(name: String = ""): Job = viewModelScope.launch {
         runInProgress.value = true
         errorMessage.value = ""
 
