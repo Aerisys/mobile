@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import fr.aerisys.mobile.ui.screens.CameraScreen
+import fr.aerisys.mobile.ui.screens.CameraStreamScreen
 import fr.aerisys.mobile.ui.screens.HomeScreen
 import fr.aerisys.mobile.viewModel.CameraViewModel
 import kotlinx.serialization.Serializable
@@ -41,7 +41,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             val cameraBean = cameraViewModel.camerasList.collectAsStateWithLifecycle()
                 .value.first { w -> w.id == cameraRoute.id }
 
-            CameraScreen(
+            CameraStreamScreen(
                 cameraBean = cameraBean,
             )
         }

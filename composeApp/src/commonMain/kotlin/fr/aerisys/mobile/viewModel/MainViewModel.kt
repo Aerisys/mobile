@@ -18,9 +18,9 @@ class MainViewModel(
         dronesQueries.deleteAllDrones()
         userQueries.deleteAllUsers()
 
-       userQueries.insertUser(
-           username = "John Doe",
-           email = "john.doe@example.com",
+        userQueries.insertUser(
+            username = "John Doe",
+            email = "john.doe@example.com",
             password = "password123"
         )
 

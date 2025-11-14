@@ -1,6 +1,7 @@
 package fr.aerisys.mobile.di
 
-import fr.aerisys.mobile.model.KtorCameraClient
+import fr.aerisys.mobile.model.KtorCameraStreamClient
+import fr.aerisys.mobile.viewModel.CameraStreamViewModel
 import fr.aerisys.mobile.viewModel.CameraViewModel
 import fr.aerisys.mobile.viewModel.MainViewModel
 import io.ktor.client.HttpClient
@@ -38,7 +39,7 @@ val apiModule = module {
         }
     }
 
-    singleOf(::KtorCameraClient)
+    singleOf(::KtorCameraStreamClient)
 }
 
 fun initKoin(){
@@ -49,4 +50,5 @@ val viewModelModule = module {
 
     viewModelOf(::MainViewModel)
     viewModelOf(::CameraViewModel)
+    viewModelOf(::CameraStreamViewModel)
 }
