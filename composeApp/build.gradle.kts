@@ -62,7 +62,6 @@ kotlin {
             implementation("io.ktor:ktor-client-content-negotiation:3.2.2")
             implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.2")
             implementation("io.ktor:ktor-client-logging:3.2.2")
-
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
         }
         iosMain.dependencies {
