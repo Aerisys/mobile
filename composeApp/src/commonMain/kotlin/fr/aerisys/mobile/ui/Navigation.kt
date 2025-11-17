@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import fr.aerisys.mobile.ui.screens.AccountScreen
 import fr.aerisys.mobile.ui.screens.CameraDetailsScreen
 import fr.aerisys.mobile.ui.screens.CameraStreamScreen
 import fr.aerisys.mobile.ui.screens.HomeScreen
@@ -17,10 +18,12 @@ import org.koin.compose.viewmodel.koinViewModel
 class Routes {
     @Serializable
     data object HomeRoute
-
     @Serializable
     data class CameraStreamRoute(val id: Long)
+    @Serializable
     data class CameraDetailsRoute(val id: Long)
+    @Serializable
+    data class AccountRoute(val id: Long)
 }
 
 @Composable
@@ -56,6 +59,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             CameraStreamScreen(
                 cameraBean = cameraBean,
             )
+        }
+
+        composable<Routes.AccountRoute> {
+            AccountScreen()
         }
     }
 }
