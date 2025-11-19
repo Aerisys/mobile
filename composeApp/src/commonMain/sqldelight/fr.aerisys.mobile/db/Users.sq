@@ -8,12 +8,12 @@ CREATE TABLE users (
     created_at TEXT
 );
 
--- 🔹 CREATE
+--  CREATE
 insertUser:
 INSERT INTO users (username, email, password)
 VALUES (?, ?, ?);
 
--- 🔹 READ
+-- READ
 selectAllUsers:
 SELECT * FROM users;
 
@@ -25,13 +25,18 @@ selectUserByEmail:
 SELECT * FROM users
 WHERE email = ?;
 
--- 🔹 UPDATE
+loginUserByEmailAndPassword:
+SELECT * FROM users
+WHERE email = ?
+AND password = ?;
+
+--  UPDATE
 updateUser:
 UPDATE users
 SET username = ?, email = ?, password = ?
 WHERE id = ?;
 
--- 🔹 DELETE
+--  DELETE
 deleteUserById:
 DELETE FROM users
 WHERE id = ?;

@@ -3,6 +3,7 @@ package fr.aerisys.mobile.ui.screens
 import aerisys.composeapp.generated.resources.Res
 import aerisys.composeapp.generated.resources.icon_skylab_light_old_logo
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,15 +39,13 @@ fun AccountScreen(userViewModel: UserViewModel = koinViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(Color.Black)
+            .background(Color.Black)
             .padding()
             .padding(top = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Column(
-
-        ) {
+        Column {
             Image(
                 painter = painterResource(Res.drawable.icon_skylab_light_old_logo),
                 contentDescription = "Logo Aerisys",
@@ -82,8 +81,8 @@ fun CreateAccount(email: String, userViewModel: UserViewModel) {
     var username by remember { mutableStateOf("") }
     var firstPassword by remember { mutableStateOf("") }
     var secondPassword by remember { mutableStateOf("") }
+    var errorPasswords by remember { mutableStateOf<String?>(null) }
 
-    val errorPasswords = firstPassword.isNotEmpty() && firstPassword == secondPassword && (firstPassword.length <= 6)
 
     Text("Entrer un pseudo")
     TextField(
@@ -106,20 +105,30 @@ fun CreateAccount(email: String, userViewModel: UserViewModel) {
         onValueChange = { secondPassword = it },
         label = { Text("Mot de passe") },
         visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
-        isError = errorPasswords,
     )
 
-    if (errorPasswords) {
-        Text("Les mots de passe ne correspondent pas.", color = Color.Red)
+    errorPasswords?.let {
+        Text(it, color = Color.Red)
     }
+
+
     Button(
         onClick = {
-            var userCreation = userViewModel.createUser(email, firstPassword, username)
+            errorPasswords = when {
+                firstPassword.isEmpty() ->
+                    "Le mot de passe est vide"
+                secondPassword.isEmpty() ->
+                    "Le second mot de passe est vide"
+                firstPassword != secondPassword ->
+                    "Les mots de passe ne correspondent pas"
+                else -> null
+            }
+            if (errorPasswords == null){
+            val userCreation = userViewModel.createUser(email, firstPassword, username)
             if(userCreation != null) {
                 println("User created: ${userCreation.let { email }}")
-            }
+            }}
         },
-        enabled = errorPasswords.not()
     ) {
         Text("Créer son compte")
     }
@@ -128,10 +137,37 @@ fun CreateAccount(email: String, userViewModel: UserViewModel) {
 @Composable
 fun Login(email: String, userViewModel: UserViewModel){
     var password by remember { mutableStateOf("") }
+    var errorPassword by remember { mutableStateOf<String?>(null) }
+
     TextField(
         value = password,
-        onValueChange = { password = it },
+        onValueChange = { password = it; errorPassword = null},
         label = { Text("Mot de passe") },
         visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
     )
+
+    errorPassword?.let {
+        Text(it, color = Color.Red)
+    }
+
+    Button(
+        onClick = {
+            errorPassword = when {
+                password.isEmpty() ->
+                    "Le mot de passe est vide"
+                else -> null
+            }
+            if (errorPassword == null) {
+                val userLog = userViewModel.login(email, password)
+                if (userLog == null) {
+                    errorPassword = "vérifier votre mot de passe"
+                } else {
+                    println("Utilisateur connecté")
+                }
+            }
+        },
+    ) {
+        Text("Se connecter")
+    }
+
 }
