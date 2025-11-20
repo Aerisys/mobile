@@ -2,30 +2,12 @@ package fr.aerisys.mobile.viewModel
 
 import androidx.lifecycle.ViewModel
 import fr.aerisys.mobile.db.AerisysDatabase
+import fr.aerisys.mobile.utils.Hashing
 import fraerisysmobile.db.Users
 
 class UserViewModel(
     private val database: AerisysDatabase
 ) : ViewModel() {
-
-//    init {
-////        insertAndDisplayUser()
-//    }
-
-//    private fun insertAndDisplayUser() {
-//        val userQueries = database.usersQueries
-//        userQueries.deleteAllUsers()
-//
-//        userQueries.insertUser(
-//            username = "John Doe",
-//            email = "john.doe@example.com",
-//            password = "password123"
-//        )
-//
-//        val users = userQueries.selectAllUsers().executeAsList()
-//        println("Users in database: $users")
-//    }
-
 
     fun checkEmail(email: String): Users? {
         val userQueries = database.usersQueries
@@ -34,16 +16,18 @@ class UserViewModel(
 
     fun createUser(email: String, password : String, username : String) : Users? {
         val userQueries = database.usersQueries
+        val hashedPassword = Hashing.hashPassword(password)
         userQueries.insertUser(
             username = username,
             email = email,
-            password = password
+            password = hashedPassword
         )
         return userQueries.selectUserByEmail(email).executeAsOneOrNull()
     }
 
     fun login(email: String, password: String): Users? {
         val userQueries = database.usersQueries
-        return userQueries.loginUserByEmailAndPassword(email, password).executeAsOneOrNull()
+        val hashedPassword = Hashing.hashPassword(password)
+        return userQueries.loginUserByEmailAndPassword(email, hashedPassword).executeAsOneOrNull()
     }
 }
