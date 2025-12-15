@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'core/routes/app_router.dart';
+import 'core/themes/app_theme.dart';
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -14,10 +18,11 @@ class HereBro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Here Bro',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const Scaffold(body: Center(child: Text('Hello, World!'))),
+    return MaterialApp.router(
+      title: 'HereBrp',
+      themeMode: ThemeMode.dark,
+      darkTheme: AppTheme.darkTheme,
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
     );
   }
