@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../presentation/views/contact_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/login_page.dart';
+import '../../presentation/views/register_page.dart';
 import 'app_routes.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -11,18 +12,19 @@ final GoRouter appRouter = GoRouter(
   redirect: (context, state) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    
+
     final String location = state.uri.toString();
-    final bool isGoingToLogin = location == AppRoutes.login;
-    
-    if (!isLoggedIn && !isGoingToLogin) {
-    return AppRoutes.login;
+    final bool isGoingToAuth =
+        location == AppRoutes.login || location == AppRoutes.register;
+
+    if (!isLoggedIn && !isGoingToAuth) {
+      return AppRoutes.login;
     }
-    
-    if (isLoggedIn && isGoingToLogin) {
-    return AppRoutes.home;
+
+    if (isLoggedIn && isGoingToAuth) {
+      return AppRoutes.home;
     }
-    
+
     return null;
   },
   routes: [
@@ -30,6 +32,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.login,
       name: 'login',
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.register,
+      name: 'register',
+      builder: (context, state) => const RegisterPage(),
     ),
     GoRoute(
       path: AppRoutes.home,

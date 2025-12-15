@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart'; // 1. Import Firebase Core
 import 'core/routes/app_router.dart';
 import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
-import 'presentation/view_model/login_view_model.dart';
+import 'presentation/view_model/auth_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +22,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => LoginViewModel(),
+      create: (context) => AuthViewModel(),
       child: const HereBro(),
     ),
   );

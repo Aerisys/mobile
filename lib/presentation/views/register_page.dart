@@ -3,21 +3,23 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../view_model/auth_view_model.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -35,18 +37,18 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Icon(
-                  Icons.lock_person_outlined,
+                  Icons.person_add_outlined,
                   size: 100,
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  "Bienvenue",
+                  "Créer un compte",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Connectez-vous pour continuer",
+                  "Inscrivez-vous pour commencer",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -71,17 +73,20 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: "Mot de passe",
                     prefixIcon: Icon(Icons.lock_outlined),
                     border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.visibility_off_outlined),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "Confirmer le mot de passe",
+                    prefixIcon: Icon(Icons.lock_reset_outlined),
+                    border: OutlineInputBorder(),
                   ),
                 ),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text("Mot de passe oublié ?"),
-                  ),
-                ),
                 const SizedBox(height: 24),
 
                 FilledButton.icon(
@@ -90,7 +95,17 @@ class _LoginPageState extends State<LoginPage> {
                       : () async {
                     FocusScope.of(context).unfocus();
 
-                    final bool success = await context.read<AuthViewModel>().login(
+                    if (_passwordController.text != _confirmPasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Les mots de passe ne correspondent pas.", style: TextStyle(color: Colors.white)),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    final bool success = await context.read<AuthViewModel>().register(
                       _emailController.text,
                       _passwordController.text,
                     );
@@ -100,12 +115,15 @@ class _LoginPageState extends State<LoginPage> {
                     if (success) {
                       if (!context.mounted) return;
                       context.go('/home');
-                    }
-                    else {
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(viewModel.errorMessage!,
-                              style: const TextStyle(color: Colors.white)),
-                              backgroundColor: Colors.red)
+                        SnackBar(
+                          content: Text(
+                              viewModel.errorMessage ?? "Erreur inconnue",
+                              style: const TextStyle(color: Colors.white)
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     }
                   },
@@ -118,20 +136,20 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                   )
-                      : const Icon(Icons.login),
-                  label: Text(viewModel.isLoading ? "Connexion..." : "Se connecter"),
+                      : const Icon(Icons.check_circle_outline),
+                  label: Text(viewModel.isLoading ? "Création..." : "S'inscrire"),
                 ),
                 const SizedBox(height: 16),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Pas encore de compte ?"),
+                    const Text("Déjà un compte ?"),
                     TextButton(
                       onPressed: () {
-                        context.go('/register');
+                        context.go('/login');
                       },
-                      child: const Text("S'inscrire"),
+                      child: const Text("Se connecter"),
                     ),
                   ],
                 ),
