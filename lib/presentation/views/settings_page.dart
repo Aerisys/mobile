@@ -142,7 +142,6 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 24),
             const Divider(),
 
-            // BOUTON DECONNEXION
             TextButton.icon(
                 onPressed: () async {
                   final bool? confirm = await showDialog<bool>(
