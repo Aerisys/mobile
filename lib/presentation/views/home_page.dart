@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../view_model/auth_view_model.dart'; // Vérifie le chemin
+
+import '../../core/routes/app_routes.dart';
+import '../view_model/auth_view_model.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,7 +21,9 @@ class HomePage extends StatelessWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text("Déconnexion"),
-                  content: const Text("Voulez-vous vraiment vous déconnecter ?"),
+                  content: const Text(
+                    "Voulez-vous vraiment vous déconnecter ?",
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
@@ -27,7 +31,10 @@ class HomePage extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
-                      child: const Text("Se déconnecter", style: TextStyle(color: Colors.red)),
+                      child: const Text(
+                        "Se déconnecter",
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
                   ],
                 ),
@@ -37,16 +44,14 @@ class HomePage extends StatelessWidget {
                 await context.read<AuthViewModel>().logout();
 
                 if (context.mounted) {
-                  context.go('/login');
+                  context.go(AppRoutes.login);
                 }
               }
             },
           ),
         ],
       ),
-      body: const Center(
-        child: Text("Bienvenue sur HereBro !"),
-      ),
+      body: const Center(child: Text("Bienvenue sur HereBro !")),
     );
   }
 }
