@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  User? get currentUser => _auth.currentUser;
 
   Future<bool> login(String email, String password) async {
     _isLoading = true;
@@ -78,7 +84,7 @@ class AuthViewModel extends ChangeNotifier {
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      
+
       notifyListeners();
       return true;
 
@@ -118,5 +124,39 @@ class AuthViewModel extends ChangeNotifier {
     await _auth.signOut();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', false);
+  }
+
+  Future<bool> updateProfile({required String newName, File? newImageFile}) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw Exception("Utilisateur non connecté");
+
+      if (newImageFile != null) {
+        final ref = _storage.ref().child('profile_images').child('${user.uid}.jpg');
+        await ref.putFile(newImageFile);
+        final imageUrl = await ref.getDownloadURL();
+        await user.updatePhotoURL(imageUrl);
+      }
+
+      if (newName != user.displayName) {
+        await user.updateDisplayName(newName);
+      }
+
+      await user.reload();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = "Erreur mise à jour : $e";
+      notifyListeners();
+      return false;
+    }
   }
 }

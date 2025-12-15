@@ -13,33 +13,10 @@ class HomePage extends StatelessWidget {
         title: const Text("Accueil"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              final bool? confirm = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Déconnexion"),
-                  content: const Text("Voulez-vous vraiment vous déconnecter ?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text("Annuler"),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text("Se déconnecter", style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                ),
-              );
-
-              if (confirm == true && context.mounted) {
-                await context.read<AuthViewModel>().logout();
-
-                if (context.mounted) {
-                  context.go('/login');
-                }
-              }
+            icon: const Icon(Icons.settings),
+            tooltip: "Paramètres",
+            onPressed: () {
+              context.push('/settings');
             },
           ),
         ],
