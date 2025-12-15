@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/routes/app_routes.dart';
 import '../view_model/auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,10 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(
-                  Icons.lock_person_outlined,
-                  size: 100,
-                ),
+                const Icon(Icons.lock_person_outlined, size: 100),
                 const SizedBox(height: 24),
                 Text(
                   "Bienvenue",
@@ -88,38 +87,45 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: viewModel.isLoading
                       ? null
                       : () async {
-                    FocusScope.of(context).unfocus();
+                          FocusScope.of(context).unfocus();
 
-                    final bool success = await context.read<AuthViewModel>().login(
-                      _emailController.text,
-                      _passwordController.text,
-                    );
+                          final bool success = await context
+                              .read<AuthViewModel>()
+                              .login(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
 
-                    if (!context.mounted) return;
+                          if (!context.mounted) return;
 
-                    if (success) {
-                      if (!context.mounted) return;
-                      context.go('/home');
-                    }
-                    else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(viewModel.errorMessage!,
-                              style: const TextStyle(color: Colors.white)),
-                              backgroundColor: Colors.red)
-                      );
-                    }
-                  },
+                          if (success) {
+                            if (!context.mounted) return;
+                            context.go(AppRoutes.home);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  viewModel.errorMessage!,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                   icon: viewModel.isLoading
                       ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.login),
-                  label: Text(viewModel.isLoading ? "Connexion..." : "Se connecter"),
+                  label: Text(
+                    viewModel.isLoading ? "Connexion..." : "Se connecter",
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -129,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text("Pas encore de compte ?"),
                     TextButton(
                       onPressed: () {
-                        context.go('/register');
+                        context.go(AppRoutes.register);
                       },
                       child: const Text("S'inscrire"),
                     ),

@@ -1,8 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
+
+import '../../core/routes/app_routes.dart';
 import '../view_model/auth_view_model.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -49,10 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final user = viewModel.currentUser;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mon Profil"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Mon Profil"), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -75,7 +75,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: Colors.blue,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ],
@@ -112,30 +116,49 @@ class _SettingsPageState extends State<SettingsPage> {
                 onPressed: viewModel.isLoading
                     ? null
                     : () async {
-                  final success = await context.read<AuthViewModel>().updateProfile(
-                    newName: _nameController.text,
-                    newImageFile: _selectedImage,
-                  );
+                        final success = await context
+                            .read<AuthViewModel>()
+                            .updateProfile(
+                              newName: _nameController.text,
+                              newImageFile: _selectedImage,
+                            );
 
-                  if (mounted) {
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Profil mis à jour !"), backgroundColor: Colors.green),
-                      );
-                      setState(() {
-                        _selectedImage = null;
-                      });
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(viewModel.errorMessage!), backgroundColor: Colors.red),
-                      );
-                    }
-                  }
-                },
+                        if (mounted) {
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Profil mis à jour !"),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            setState(() {
+                              _selectedImage = null;
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(viewModel.errorMessage!),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
                 icon: viewModel.isLoading
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
                     : const Icon(Icons.save),
-                label: Text(viewModel.isLoading ? "Enregistrement..." : "Sauvegarder les modifications"),
+                label: Text(
+                  viewModel.isLoading
+                      ? "Enregistrement..."
+                      : "Sauvegarder les modifications",
+                ),
               ),
             ),
 
@@ -143,39 +166,44 @@ class _SettingsPageState extends State<SettingsPage> {
             const Divider(),
 
             TextButton.icon(
-                onPressed: () async {
-                  final bool? confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) =>
-                        AlertDialog(
-                          title: const Text("Déconnexion"),
-                          content: const Text(
-                              "Voulez-vous vraiment vous déconnecter ?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text("Annuler"),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: const Text("Se déconnecter",
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
+              onPressed: () async {
+                final bool? confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Déconnexion"),
+                    content: const Text(
+                      "Voulez-vous vraiment vous déconnecter ?",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Annuler"),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text(
+                          "Se déconnecter",
+                          style: TextStyle(color: Colors.red),
                         ),
-                  );
+                      ),
+                    ],
+                  ),
+                );
 
-                  if (confirm == true && context.mounted) {
-                    await context.read<AuthViewModel>().logout();
+                if (confirm == true && context.mounted) {
+                  await context.read<AuthViewModel>().logout();
 
-                    if (context.mounted) {
-                      context.go('/login');
-                    }
+                  if (context.mounted) {
+                    context.go(AppRoutes.login);
                   }
-                },
+                }
+              },
               icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text("Se déconnecter", style: TextStyle(color: Colors.red)),
-            )
+              label: const Text(
+                "Se déconnecter",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
           ],
         ),
       ),
@@ -189,6 +217,8 @@ class _SettingsPageState extends State<SettingsPage> {
     if (firebasePhotoUrl != null && firebasePhotoUrl.isNotEmpty) {
       return NetworkImage(firebasePhotoUrl);
     }
-    return const NetworkImage("https://ui-avatars.com/api/?name=User&background=random");
+    return const NetworkImage(
+      "https://ui-avatars.com/api/?name=User&background=random",
+    );
   }
 }

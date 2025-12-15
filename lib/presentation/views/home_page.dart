@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/routes/app_routes.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -14,14 +16,12 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.settings),
             tooltip: "Paramètres",
             onPressed: () {
-              context.push('/settings');
+              context.push(AppRoutes.settings);
             },
           ),
         ],
       ),
-      body: const Center(
-        child: Text("Bienvenue sur HereBro !"),
-      ),
+      body: const Center(child: Text("Bienvenue sur HereBro !")),
     );
   }
 }
