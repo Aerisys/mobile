@@ -19,7 +19,7 @@ class HereBro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'HereBrp',
+      title: 'HereBro',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.darkTheme,
       routerConfig: appRouter,
