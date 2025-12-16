@@ -45,4 +45,6 @@ app.*.map.json
 /android/app/release
 
 node_modules/
-firebase-debug.log
+
+# Firebase
+firebase_options.dart

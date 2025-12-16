@@ -1,6 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart'; // 1. Import Firebase Core
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -8,35 +7,25 @@ import 'package:provider/provider.dart';
 import 'core/routes/app_router.dart';
 import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
-import 'presentation/view_model/login_view_model.dart';
+import 'presentation/view_model/auth_view_model.dart';
+import 'presentation/view_model/contact_view_model.dart';
 import 'services/notification_service.dart';
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-
-  if (kDebugMode) {
-    print("Handling a background message: ${message.messageId}");
-  }
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  final messaging = FirebaseMessaging.instance;
-
-  await messaging.requestPermission(alert: true, badge: true, sound: true);
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  final token = await FirebaseMessaging.instance.getToken();
   final notificationService = NotificationService();
+  await notificationService.init();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    if (kDebugMode) {
-      print('Foreground message: ${message.messageId}');
-    }
-    notificationService.handleMessage(message);
+    notificationService.showNotification(message);
   });
 
   await SystemChrome.setPreferredOrientations([
@@ -47,8 +36,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider.value(value: notificationService),
-        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ContactViewModel()),
       ],
       child: const HereBro(),
     ),
