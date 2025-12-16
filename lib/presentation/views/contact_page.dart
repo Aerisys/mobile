@@ -122,27 +122,30 @@ class _ContactPageState extends State<ContactPage> {
             stream: context.read<ContactViewModel>().getFriendRequestsStream(),
             builder: (context, snapshotFriends) {
               return StreamBuilder<QuerySnapshot>(
-                  stream: context.read<ContactViewModel>().getLocationRequestsStream(),
-                  builder: (context, snapshotLoc) {
+                stream: context
+                    .read<ContactViewModel>()
+                    .getLocationRequestsStream(),
+                builder: (context, snapshotLoc) {
+                  int count = 0;
+                  if (snapshotFriends.hasData)
+                    count += snapshotFriends.data!.docs.length;
+                  if (snapshotLoc.hasData)
+                    count += snapshotLoc.data!.docs.length;
 
-                    int count = 0;
-                    if (snapshotFriends.hasData) count += snapshotFriends.data!.docs.length;
-                    if (snapshotLoc.hasData) count += snapshotLoc.data!.docs.length;
-
-                    return NavigationDestination(
-                      icon: Badge(
-                        isLabelVisible: count > 0,
-                        label: Text('$count'),
-                        child: const Icon(Icons.notifications_outlined),
-                      ),
-                      selectedIcon: Badge(
-                        isLabelVisible: count > 0,
-                        label: Text('$count'),
-                        child: const Icon(Icons.notifications),
-                      ),
-                      label: 'Demandes',
-                    );
-                  }
+                  return NavigationDestination(
+                    icon: Badge(
+                      isLabelVisible: count > 0,
+                      label: Text('$count'),
+                      child: const Icon(Icons.notifications_outlined),
+                    ),
+                    selectedIcon: Badge(
+                      isLabelVisible: count > 0,
+                      label: Text('$count'),
+                      child: const Icon(Icons.notifications),
+                    ),
+                    label: 'Demandes',
+                  );
+                },
               );
             },
           ),
@@ -157,14 +160,15 @@ class _ContactPageState extends State<ContactPage> {
     return StreamBuilder<List<String>>(
       stream: viewModel.getSharedWithIdsStream(),
       builder: (context, sharedSnapshot) {
-
         final sharedWithIds = sharedSnapshot.data ?? [];
 
         return StreamBuilder<QuerySnapshot>(
           stream: viewModel.getContactsStream(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-            if (snapshot.data!.docs.isEmpty) return _emptyState("Aucun ami", Icons.diversity_3);
+            if (!snapshot.hasData)
+              return const Center(child: CircularProgressIndicator());
+            if (snapshot.data!.docs.isEmpty)
+              return _emptyState("Aucun ami", Icons.diversity_3);
 
             final contacts = snapshot.data!.docs;
 
@@ -172,46 +176,77 @@ class _ContactPageState extends State<ContactPage> {
               padding: const EdgeInsets.only(bottom: 80),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
-                final contactDoc = contacts[index].data() as Map<String, dynamic>;
+                final contactDoc =
+                    contacts[index].data() as Map<String, dynamic>;
                 final friendUid = contactDoc['uid'];
 
                 final isSharing = sharedWithIds.contains(friendUid);
 
                 return StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance.collection('users').doc(friendUid).snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(friendUid)
+                      .snapshots(),
                   builder: (context, userSnapshot) {
                     String displayName = contactDoc['displayName'] ?? "Inconnu";
                     String? photoURL = contactDoc['photoURL'];
 
                     if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                      final data = userSnapshot.data!.data() as Map<String, dynamic>;
+                      final data =
+                          userSnapshot.data!.data() as Map<String, dynamic>;
                       displayName = data['displayName'] ?? displayName;
                       photoURL = data['photoURL'] ?? photoURL;
                     }
 
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: photoURL != null ? NetworkImage(photoURL) : null,
+                        backgroundImage: photoURL != null
+                            ? NetworkImage(photoURL)
+                            : null,
                         child: photoURL == null
-                            ? Text(displayName.isNotEmpty ? displayName[0].toUpperCase() : "?")
+                            ? Text(
+                                displayName.isNotEmpty
+                                    ? displayName[0].toUpperCase()
+                                    : "?",
+                              )
                             : null,
                       ),
                       title: Text(displayName),
 
                       subtitle: isSharing
-                          ? const Row(children: [
-                        Icon(Icons.circle, size: 10, color: Colors.green),
-                        SizedBox(width: 4),
-                        Text("Voit votre position", style: TextStyle(color: Colors.green, fontSize: 12))
-                      ])
+                          ? const Row(
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  size: 10,
+                                  color: Colors.green,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  "Voit votre position",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )
                           : null,
 
                       trailing: IconButton(
                         icon: Icon(
-                          isSharing ? Icons.location_on : Icons.location_on_outlined,
+                          isSharing
+                              ? Icons.location_on
+                              : Icons.location_on_outlined,
                           color: isSharing ? Colors.green : Colors.blue,
                         ),
-                        onPressed: () => _showLocationMenu(context, viewModel, friendUid, displayName, isSharing),
+                        onPressed: () => _showLocationMenu(
+                          context,
+                          viewModel,
+                          friendUid,
+                          displayName,
+                          isSharing,
+                        ),
                       ),
                     );
                   },
@@ -230,11 +265,9 @@ class _ContactPageState extends State<ContactPage> {
     return StreamBuilder<QuerySnapshot>(
       stream: viewModel.getFriendRequestsStream(),
       builder: (context, snapshotFriends) {
-
         return StreamBuilder<QuerySnapshot>(
           stream: viewModel.getLocationRequestsStream(),
           builder: (context, snapshotLocation) {
-
             if (!snapshotFriends.hasData || !snapshotLocation.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -255,7 +288,10 @@ class _ContactPageState extends State<ContactPage> {
 
             // Cas vide
             if (mixedRequests.isEmpty) {
-              return _emptyState("Aucune demande en attente", Icons.notifications_off_outlined);
+              return _emptyState(
+                "Aucune demande en attente",
+                Icons.notifications_off_outlined,
+              );
             }
 
             return ListView.builder(
@@ -271,7 +307,11 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  Widget _buildRequestCard(BuildContext context, Map<String, dynamic> request, ContactViewModel viewModel) {
+  Widget _buildRequestCard(
+    BuildContext context,
+    Map<String, dynamic> request,
+    ContactViewModel viewModel,
+  ) {
     final uid = request['uid'];
     final name = request['displayName'] ?? "Inconnu";
     final photo = request['photoURL'];
@@ -293,7 +333,9 @@ class _ContactPageState extends State<ContactPage> {
 
     return Card(
       elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -305,7 +347,7 @@ class _ContactPageState extends State<ContactPage> {
                 backgroundImage: photo != null ? NetworkImage(photo) : null,
                 child: photo == null
                     ? Text(name.isNotEmpty ? name[0].toUpperCase() : "?")
-                    : null,              
+                    : null,
               ),
               Positioned(
                 bottom: -2,
@@ -318,10 +360,13 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                   child: Icon(typeIcon, size: 14, color: iconColor),
                 ),
-              )
+              ),
             ],
           ),
-          title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(
+            name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
 
           trailing: Row(
@@ -382,17 +427,31 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  void _showLocationMenu(BuildContext context, ContactViewModel viewModel, String friendUid, String name, bool isSharing) {
+  void _showLocationMenu(
+    BuildContext context,
+    ContactViewModel viewModel,
+    String friendUid,
+    String name,
+    bool isSharing,
+  ) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Gestion localisation avec $name", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(
+                "Gestion localisation avec $name",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
               const SizedBox(height: 16),
 
               ListTile(
@@ -400,9 +459,15 @@ class _ContactPageState extends State<ContactPage> {
                 title: const Text("Demander sa position"),
                 onTap: () async {
                   Navigator.pop(ctx);
-                  final success = await viewModel.sendLocationRequest(friendUid);
+                  final success = await viewModel.sendLocationRequest(
+                    friendUid,
+                  );
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(success ? "Demande envoyée" : "Erreur")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(success ? "Demande envoyée" : "Erreur"),
+                      ),
+                    );
                   }
                 },
               ),

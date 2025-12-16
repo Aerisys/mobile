@@ -14,9 +14,11 @@ class HomeViewModel extends CommonViewModel {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   LatLng? _currentPosition;
+
   LatLng? get currentPosition => _currentPosition;
 
   final Map<String, FriendLocation> _friendsData = {};
+
   List<FriendLocation> get friends => _friendsData.values.toList();
 
   StreamSubscription<Position>? _gpsSubscription;

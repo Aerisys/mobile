@@ -174,11 +174,11 @@ class ContactViewModel extends CommonViewModel {
           .collection('location_requests')
           .doc(currentUser.uid)
           .set({
-        'uid': currentUser.uid,
-        'displayName': currentUser.displayName ?? 'Inconnu',
-        'photoURL': currentUser.photoURL,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+            'uid': currentUser.uid,
+            'displayName': currentUser.displayName ?? 'Inconnu',
+            'photoURL': currentUser.photoURL,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
       return true;
     } catch (e) {
       errorMessage = e.toString();
@@ -187,16 +187,27 @@ class ContactViewModel extends CommonViewModel {
     }
   }
 
-  Future<void> acceptLocationRequest(String senderUid, Map<String, dynamic> requestData) async {
+  Future<void> acceptLocationRequest(
+    String senderUid,
+    Map<String, dynamic> requestData,
+  ) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
     final batch = _firestore.batch();
 
-    final requestRef = _firestore.collection('users').doc(currentUser.uid).collection('location_requests').doc(senderUid);
+    final requestRef = _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('location_requests')
+        .doc(senderUid);
     batch.delete(requestRef);
 
-    final trackingRef = _firestore.collection('users').doc(senderUid).collection('tracking').doc(currentUser.uid);
+    final trackingRef = _firestore
+        .collection('users')
+        .doc(senderUid)
+        .collection('tracking')
+        .doc(currentUser.uid);
     batch.set(trackingRef, {
       'uid': currentUser.uid,
       'displayName': currentUser.displayName,
@@ -204,7 +215,11 @@ class ContactViewModel extends CommonViewModel {
       'timestamp': FieldValue.serverTimestamp(),
     });
 
-    final sharedWithRef = _firestore.collection('users').doc(currentUser.uid).collection('shared_with').doc(senderUid);
+    final sharedWithRef = _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('shared_with')
+        .doc(senderUid);
     batch.set(sharedWithRef, {
       'uid': senderUid,
       'timestamp': FieldValue.serverTimestamp(),
@@ -220,10 +235,18 @@ class ContactViewModel extends CommonViewModel {
 
       final batch = _firestore.batch();
 
-      final trackingRef = _firestore.collection('users').doc(friendUid).collection('tracking').doc(currentUser.uid);
+      final trackingRef = _firestore
+          .collection('users')
+          .doc(friendUid)
+          .collection('tracking')
+          .doc(currentUser.uid);
       batch.delete(trackingRef);
 
-      final sharedWithRef = _firestore.collection('users').doc(currentUser.uid).collection('shared_with').doc(friendUid);
+      final sharedWithRef = _firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('shared_with')
+          .doc(friendUid);
       batch.delete(sharedWithRef);
 
       await batch.commit();
