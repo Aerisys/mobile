@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../core/di.dart';
 import '../../core/enums/auth_exception_code_enum.dart';
+import '../../core/enums/firestore_collection_enum.dart';
+import '../../core/enums/storage_child_enum.dart';
 import '../../core/services/auth_service.dart';
 import 'common_view_model.dart';
 
@@ -22,7 +26,7 @@ class AuthViewModel extends CommonViewModel {
 
     try {
       await _auth.signInWithEmail(email, password);
-
+      await _saveFcmToken();
       isLoading = false;
       return true;
     } on FirebaseAuthException catch (e) {
@@ -48,7 +52,7 @@ class AuthViewModel extends CommonViewModel {
 
       if (cred.user != null) {
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(FirestoreCollection.users.value)
             .doc(cred.user!.uid)
             .set({
               'uid': cred.user!.uid,
@@ -58,7 +62,7 @@ class AuthViewModel extends CommonViewModel {
               'createdAt': FieldValue.serverTimestamp(),
             });
       }
-
+      await _saveFcmToken();
       isLoading = false;
       return true;
     } on FirebaseAuthException catch (e) {
@@ -74,6 +78,23 @@ class AuthViewModel extends CommonViewModel {
 
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<void> _saveFcmToken() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token == null) return;
+
+    await _firestore.collection('users').doc(user.uid).set({
+      'fcmToken': token,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    if (kDebugMode) {
+      debugPrint('FCM token sauvegardé: $token');
+    }
   }
 
   Future<bool> updateProfile({
@@ -92,7 +113,7 @@ class AuthViewModel extends CommonViewModel {
       if (newImageFile != null) {
         final ref = _storage
             .ref()
-            .child('profile_images')
+            .child(StorageChild.profileImages.value)
             .child('${user.uid}.jpg');
         await ref.putFile(newImageFile);
         photoUrl = await ref.getDownloadURL();
@@ -114,7 +135,7 @@ class AuthViewModel extends CommonViewModel {
 
       if (firestoreData.isNotEmpty) {
         await _firestore
-            .collection('users')
+            .collection(FirestoreCollection.users.value)
             .doc(user.uid)
             .update(firestoreData);
       }
