@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       context.read<HomeViewModel>().init();
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
@@ -98,28 +98,31 @@ class _HomePageState extends State<HomePage> {
 
           if (homeViewModel.isLoading)
             const Positioned(
-                top: 100,
-                left: 0, right: 0,
-                child: Center(
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(height: 10),
-                            Text("Recherche GPS...")
-                          ],
-                        ),
-                      ),
-                    )
-                )
+              top: 100,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10),
+                        Text("Recherche GPS..."),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
 
           if (homeViewModel.errorMessage != null)
             Positioned(
-              top: 100, left: 20, right: 20,
+              top: 100,
+              left: 20,
+              right: 20,
               child: Card(
                 elevation: 4,
                 color: Colors.white,
@@ -128,7 +131,11 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.location_off, color: Colors.red, size: 40),
+                      const Icon(
+                        Icons.location_off,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 8),
                       Text(
                         homeViewModel.errorMessage!,
@@ -154,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                             label: const Text("Réessayer"),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
