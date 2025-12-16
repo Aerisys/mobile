@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import '../../core/di.dart';
+import '../../core/services/auth_service.dart';
+import 'common_view_model.dart';
 
-class ContactViewModel extends ChangeNotifier {
+class ContactViewModel extends CommonViewModel {
+  final IAuthService _auth = getIt<IAuthService>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
 
   Stream<QuerySnapshot> getContactsStream() {
     final user = _auth.currentUser;
@@ -30,7 +28,7 @@ class ContactViewModel extends ChangeNotifier {
   }
 
   Future<bool> sendFriendRequest(String email) async {
-    _errorMessage = null;
+    errorMessage = null;
     try {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception("Non connecté");
@@ -80,7 +78,7 @@ class ContactViewModel extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      _errorMessage = e.toString().replaceAll("Exception: ", "");
+      errorMessage = e.toString().replaceAll("Exception: ", "");
       notifyListeners();
       return false;
     }

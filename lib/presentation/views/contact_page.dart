@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import '../view_model/contact_view_model.dart';
+import '../view_models/contact_view_model.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
