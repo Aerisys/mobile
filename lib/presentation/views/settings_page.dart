@@ -123,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               newImageFile: _selectedImage,
                             );
 
-                        if (mounted) {
+                        if (context.mounted) {
                           if (success) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../core/di.dart';
 import '../../core/enums/auth_exception_code_enum.dart';
+import '../../core/enums/firestore_collection_enum.dart';
+import '../../core/enums/storage_child_enum.dart';
 import '../../core/services/auth_service.dart';
 import 'common_view_model.dart';
 
@@ -48,7 +50,7 @@ class AuthViewModel extends CommonViewModel {
 
       if (cred.user != null) {
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(FirestoreCollection.users.value)
             .doc(cred.user!.uid)
             .set({
               'uid': cred.user!.uid,
@@ -92,7 +94,7 @@ class AuthViewModel extends CommonViewModel {
       if (newImageFile != null) {
         final ref = _storage
             .ref()
-            .child('profile_images')
+            .child(StorageChild.profileImages.value)
             .child('${user.uid}.jpg');
         await ref.putFile(newImageFile);
         photoUrl = await ref.getDownloadURL();
@@ -114,7 +116,7 @@ class AuthViewModel extends CommonViewModel {
 
       if (firestoreData.isNotEmpty) {
         await _firestore
-            .collection('users')
+            .collection(FirestoreCollection.users.value)
             .doc(user.uid)
             .update(firestoreData);
       }

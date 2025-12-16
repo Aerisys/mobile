@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../view_models/contact_view_model.dart';
 
 class ContactPage extends StatefulWidget {
@@ -38,7 +39,10 @@ class _ContactPageState extends State<ContactPage> {
                   hintText: "exemple@gmail.com",
                   prefixIcon: Icon(Icons.mail_outline),
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ],
@@ -54,21 +58,26 @@ class _ContactPageState extends State<ContactPage> {
               final navigator = Navigator.of(context);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-              final success = await context.read<ContactViewModel>()
+              final success = await context
+                  .read<ContactViewModel>()
                   .sendFriendRequest(emailController.text);
 
               if (success) {
                 navigator.pop();
                 scaffoldMessenger.showSnackBar(
-                    const SnackBar(content: Text("Demande envoyée !"), backgroundColor: Colors.blue)
+                  const SnackBar(
+                    content: Text("Demande envoyée !"),
+                    backgroundColor: Colors.blue,
+                  ),
                 );
-              } else {
-                if(context.mounted) {
-                  final error = context.read<ContactViewModel>().errorMessage;
-                  scaffoldMessenger.showSnackBar(
-                      SnackBar(content: Text(error ?? "Erreur"), backgroundColor: Colors.red)
-                  );
-                }
+              } else if (context.mounted) {
+                final error = context.read<ContactViewModel>().errorMessage;
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(error ?? "Erreur"),
+                    backgroundColor: Colors.red,
+                  ),
+                );
               }
             },
             child: const Text("Envoyer"),
@@ -81,24 +90,18 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Communauté"),
-        centerTitle: false,
-      ),
+      appBar: AppBar(title: const Text("Communauté"), centerTitle: false),
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton.extended(
-        onPressed: () => _showAddDialog(context),
-        icon: const Icon(Icons.person_add),
-        label: const Text("Ajouter"),
-      )
+              onPressed: () => _showAddDialog(context),
+              icon: const Icon(Icons.person_add),
+              label: const Text("Ajouter"),
+            )
           : null,
 
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
-          _buildFriendsList(context),
-          _buildRequestsList(context),
-        ],
+        children: [_buildFriendsList(context), _buildRequestsList(context)],
       ),
 
       bottomNavigationBar: NavigationBar(
@@ -149,8 +152,12 @@ class _ContactPageState extends State<ContactPage> {
     return StreamBuilder<QuerySnapshot>(
       stream: viewModel.getContactsStream(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-        if (snapshot.data!.docs.isEmpty) return _emptyState("Aucun ami pour le moment", Icons.diversity_3);
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.data!.docs.isEmpty) {
+          return _emptyState("Aucun ami pour le moment", Icons.diversity_3);
+        }
 
         final contacts = snapshot.data!.docs;
 
@@ -164,19 +171,25 @@ class _ContactPageState extends State<ContactPage> {
             final oldPhoto = contactDoc['photoURL'];
 
             return StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance.collection('users').doc(friendUid).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(friendUid)
+                  .snapshots(),
               builder: (context, userSnapshot) {
                 String displayName = oldName;
                 String? photoURL = oldPhoto;
 
                 if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                  final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                  final userData =
+                      userSnapshot.data!.data() as Map<String, dynamic>;
                   final freshName = userData['displayName'] ?? "Inconnu";
                   final freshPhoto = userData['photoURL'];
 
                   if (freshName != oldName || freshPhoto != oldPhoto) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (context.mounted) viewModel.syncContactInfo(friendUid, userData);
+                      if (context.mounted) {
+                        viewModel.syncContactInfo(friendUid, userData);
+                      }
                     });
                   }
                   displayName = freshName;
@@ -185,12 +198,24 @@ class _ContactPageState extends State<ContactPage> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                      backgroundImage: photoURL != null ? NetworkImage(photoURL) : null,
-                      child: photoURL == null ? Text(displayName.isNotEmpty ? displayName[0] : "?") : null
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
+                    backgroundImage: photoURL != null
+                        ? NetworkImage(photoURL)
+                        : null,
+                    child: photoURL == null
+                        ? Text(displayName.isNotEmpty ? displayName[0] : "?")
+                        : null,
                   ),
-                  title: Text(displayName, style: const TextStyle(fontWeight: FontWeight.w500)),
-                  trailing: IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
+                  title: Text(
+                    displayName,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.chat_bubble_outline),
+                    onPressed: () {},
+                  ),
                 );
               },
             );
@@ -206,8 +231,15 @@ class _ContactPageState extends State<ContactPage> {
     return StreamBuilder<QuerySnapshot>(
       stream: viewModel.getRequestsStream(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-        if (snapshot.data!.docs.isEmpty) return _emptyState("Aucune demande en attente", Icons.notifications_off_outlined);
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.data!.docs.isEmpty) {
+          return _emptyState(
+            "Aucune demande en attente",
+            Icons.notifications_off_outlined,
+          );
+        }
 
         final requests = snapshot.data!.docs;
 
@@ -221,18 +253,32 @@ class _ContactPageState extends State<ContactPage> {
 
             return Card(
               elevation: 0,
-              color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+              color: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: senderPhoto != null ? NetworkImage(senderPhoto) : null,
-                    child: senderPhoto == null ? Text(senderName.isNotEmpty ? senderName[0] : "?") : null,
+                    backgroundImage: senderPhoto != null
+                        ? NetworkImage(senderPhoto)
+                        : null,
+                    child: senderPhoto == null
+                        ? Text(senderName.isNotEmpty ? senderName[0] : "?")
+                        : null,
                   ),
-                  title: Text(senderName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: const Text("veut vous ajouter en ami", style: TextStyle(fontSize: 12)),
+                  title: Text(
+                    senderName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: const Text(
+                    "veut vous ajouter en ami",
+                    style: TextStyle(fontSize: 12),
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -251,7 +297,8 @@ class _ContactPageState extends State<ContactPage> {
                           foregroundColor: Colors.white,
                         ),
                         icon: const Icon(Icons.check),
-                        onPressed: () => viewModel.acceptRequest(senderUid, request),
+                        onPressed: () =>
+                            viewModel.acceptRequest(senderUid, request),
                       ),
                     ],
                   ),
@@ -271,7 +318,13 @@ class _ContactPageState extends State<ContactPage> {
         children: [
           Icon(icon, size: 60, color: Colors.grey.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
-          Text(text, style: TextStyle(color: Colors.grey.withValues(alpha: 0.8), fontSize: 16)),
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.grey.withValues(alpha: 0.8),
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );
