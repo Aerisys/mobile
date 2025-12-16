@@ -10,10 +10,13 @@ import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
 import 'presentation/view_models/auth_view_model.dart';
 import 'presentation/view_models/contact_view_model.dart';
-import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.requestPermission(
@@ -21,18 +24,6 @@ void main() async {
     badge: true,
     sound: true,
   );
-  final token = await FirebaseMessaging.instance.getToken();
-  final notificationService = NotificationService();
-  await notificationService.init();
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    notificationService.showNotification(message);
-  });
-
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   configureDependencies();
