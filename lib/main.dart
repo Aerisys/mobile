@@ -7,6 +7,7 @@ import 'core/routes/app_router.dart';
 import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
 import 'presentation/view_model/auth_view_model.dart';
+import 'presentation/view_model/contact_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +22,11 @@ void main() async {
   ]);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthViewModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => ContactViewModel()),
+      ],
       child: const HereBro(),
     ),
   );

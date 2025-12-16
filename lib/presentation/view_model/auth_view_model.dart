@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -75,11 +76,21 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _auth.createUserWithEmailAndPassword(
+      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
 
+      if (cred.user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).set({
+          'uid': cred.user!.uid,
+          'email': email.trim(),
+          'displayName': '',
+          'photoURL': null,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+      
       _isLoading = false;
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
