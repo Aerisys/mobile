@@ -1,4 +1,4 @@
-import 'dart:async'; // Nécessaire pour gérer les abonnements manuels
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
@@ -117,23 +117,20 @@ class _HomePageState extends State<HomePage> {
   void _showFriendInfo(BuildContext context, String name, String? photoUrl) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-              child: photoUrl == null ? Text(name[0], style: const TextStyle(fontSize: 24)) : null,
-            ),
-            const SizedBox(width: 16),
-            Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ],
+      builder: (context) => SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                child: photoUrl == null ? Text(name[0], style: const TextStyle(fontSize: 24)) : null,
+              ),
+              const SizedBox(width: 16),
+              Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
         ),
       ),
     );
@@ -190,16 +187,20 @@ class _HomePageState extends State<HomePage> {
           ),
 
           Positioned(
-            bottom: 30 + MediaQuery.of(context).padding.bottom,
-            right: 20,
-            child: FloatingActionButton(
-              heroTag: "recenter",
-              child: const Icon(Icons.my_location),
-              onPressed: () {
-                if(homeViewModel.currentPosition != null) {
-                  _mapController.move(homeViewModel.currentPosition!, 16);
-                }
-              },
+            bottom: 20,
+            right: 0,
+            child: SafeArea(
+              minimum: const EdgeInsets.only(bottom: 30, right: 20),
+              child: FloatingActionButton(
+                heroTag: "recenter",
+                child: const Icon(Icons.my_location),
+                onPressed: () {
+                  if (homeViewModel.currentPosition != null) {
+                    _mapController.move(homeViewModel.currentPosition!, 16);
+                    _mapController.rotate(0.0);
+                  }
+                },
+              ),
             ),
           )
         ],
