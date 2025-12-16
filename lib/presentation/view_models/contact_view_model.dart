@@ -177,15 +177,29 @@ class ContactViewModel extends CommonViewModel {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
-    await _firestore
+    final batch = _firestore.batch();
+
+    final requestRef = _firestore
         .collection('users')
         .doc(currentUser.uid)
         .collection('location_requests')
-        .doc(senderUid)
-        .delete();
+        .doc(senderUid);
+    batch.delete(requestRef);
 
-    // 2. TODO: Enregistrer la permission dans une table 'permissions' ou 'active_shares'
-    // Pour l'instant on considère que c'est accepté
+    final trackingRef = _firestore
+        .collection('users')
+        .doc(senderUid)
+        .collection('tracking')
+        .doc(currentUser.uid);
+
+    batch.set(trackingRef, {
+      'uid': currentUser.uid,
+      'displayName': currentUser.displayName ?? 'Ami',
+      'photoURL': currentUser.photoURL,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    await batch.commit();
   }
 
   Future<void> refuseLocationRequest(String senderUid) async {

@@ -19,12 +19,10 @@ final GoRouter appRouter = GoRouter(
     final loggedIn = authNotifier.isAuthenticated;
     final loggingIn = state.matchedLocation == AppRoutes.login;
 
-    // Pas connecté et pas sur la page de login
     if (!loggedIn) {
       return loggingIn ? null : AppRoutes.login;
     }
 
-    // Connecté et sur la page de login
     if (loggingIn) {
       return AppRoutes.home;
     }

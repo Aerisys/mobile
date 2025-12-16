@@ -1,8 +1,10 @@
+import 'dart:async'; // Nécessaire pour gérer les abonnements manuels
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/routes/app_routes.dart';
 import '../view_models/home_view_model.dart';
 
@@ -16,6 +18,126 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
   bool _hasCenteredOnce = false;
+  final Map<String, Marker> _friendMarkers = {};
+
+  final List<StreamSubscription> _subscriptions = [];
+  StreamSubscription? _friendsListSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _startListeningToFriends();
+  }
+
+  @override
+  void dispose() {
+    _friendsListSubscription?.cancel();
+    for (var sub in _subscriptions) {
+      sub.cancel();
+    }
+    super.dispose();
+  }
+
+  void _startListeningToFriends() {
+    final viewModel = context.read<HomeViewModel>();
+
+    _friendsListSubscription = viewModel.getTrackingFriendsStream().listen((snapshot) {
+
+      for (var doc in snapshot.docs) {
+        final friendData = doc.data() as Map<String, dynamic>;
+        final friendUid = friendData['uid'];
+
+        if (_friendMarkers.containsKey(friendUid)) continue;
+
+        final sub = FirebaseFirestore.instance
+            .collection('users')
+            .doc(friendUid)
+            .snapshots()
+            .listen((userDoc) {
+
+          if (!userDoc.exists) return;
+          final userData = userDoc.data()!;
+
+          if (userData.containsKey('position')) {
+            final pos = userData['position'];
+            final LatLng position = LatLng(pos['lat'], pos['lng']);
+
+            final marker = _buildFriendMarker(
+                friendUid,
+                position,
+                userData['displayName'] ?? 'Ami',
+                userData['photoURL']
+            );
+
+            if (mounted) {
+              setState(() {
+                _friendMarkers[friendUid] = marker;
+              });
+            }
+          }
+        });
+
+        _subscriptions.add(sub);
+      }
+    });
+  }
+
+  Marker _buildFriendMarker(String uid, LatLng position, String name, String? photoUrl) {
+    return Marker(
+      point: position,
+      width: 50,
+      height: 50,
+      child: GestureDetector(
+        onTap: () => _showFriendInfo(context, name, photoUrl),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+                boxShadow: [const BoxShadow(blurRadius: 4, color: Colors.black26)],
+              ),
+              child: CircleAvatar(
+                radius: 18,
+                backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                backgroundColor: Colors.green,
+                child: photoUrl == null ? Text(name[0]) : null,
+              ),
+            ),
+            ClipPath(
+              clipper: _TriangleClipper(),
+              child: Container(color: Colors.white, width: 8, height: 6),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFriendInfo(BuildContext context, String name, String? photoUrl) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+              child: photoUrl == null ? Text(name[0], style: const TextStyle(fontSize: 24)) : null,
+            ),
+            const SizedBox(width: 16),
+            Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +151,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Carte"),
+        title: const Text("Accueil"),
+        elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.people),
-            tooltip: "Contacts",
-            onPressed: () {
-              context.push(AppRoutes.contact);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: "Paramètres",
-            onPressed: () {
-              context.push(AppRoutes.settings);
-            },
-          ),
+          IconButton(onPressed: () => context.push(AppRoutes.contact), icon: const Icon(Icons.people)),
+          IconButton(onPressed: () => context.push(AppRoutes.settings), icon: const Icon(Icons.settings)),
         ],
       ),
       body: Stack(
@@ -54,11 +165,7 @@ class _HomePageState extends State<HomePage> {
             options: const MapOptions(
               initialCenter: LatLng(48.8566, 2.3522),
               initialZoom: 13.0,
-              minZoom: 4.0,
-              maxZoom: 20.0,
-              interactionOptions: InteractionOptions(
-                flags: InteractiveFlag.all,
-              ),
+              interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
             ),
             children: [
               TileLayer(
@@ -72,116 +179,55 @@ class _HomePageState extends State<HomePage> {
                   if (homeViewModel.currentPosition != null)
                     Marker(
                       point: homeViewModel.currentPosition!,
-                      width: 60,
-                      height: 60,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 18,
-                            height: 18,
-                            decoration: const BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ],
-                      ),
+                      width: 60, height: 60,
+                      child: _buildMyMarker(),
                     ),
 
-                  // (Plus tard, on ajoutera ici les marqueurs des amis)
+                  ..._friendMarkers.values,
                 ],
               ),
             ],
           ),
 
-          if (homeViewModel.isLoading)
-            Positioned(
-              top: 16,
-              left: 16,
-              child: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      const BoxShadow(blurRadius: 4, color: Colors.black12)
-                    ],
-                  ),
-                  child: const Row(
-                    children: [
-                      SizedBox(width: 12,
-                          height: 12,
-                          child: CircularProgressIndicator(strokeWidth: 2)),
-                      SizedBox(width: 8),
-                      Text("Recherche GPS...", style: TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          if (homeViewModel.errorMessage != null)
-            Positioned(
-              bottom: 100,
-              left: 20,
-              right: 20,
-              child: SafeArea(
-                child: Card(
-                  color: Colors.red.withValues(alpha: 0.9),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      homeViewModel.errorMessage!,
-                      style: const TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
           Positioned(
-            bottom: 30,
+            bottom: 30 + MediaQuery.of(context).padding.bottom,
             right: 20,
-            child: SafeArea(
-              child: FloatingActionButton(
-                heroTag: "recenter_fab",
-                onPressed: () {
-                  if (homeViewModel.currentPosition != null) {
-                    _mapController.move(homeViewModel.currentPosition!, 16.0);
-                    _mapController.rotate(0.0);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Position inconnue pour le moment"))
-                    );
-                  }
-                },
-                child: const Icon(Icons.my_location),
-              ),
+            child: FloatingActionButton(
+              heroTag: "recenter",
+              child: const Icon(Icons.my_location),
+              onPressed: () {
+                if(homeViewModel.currentPosition != null) {
+                  _mapController.move(homeViewModel.currentPosition!, 16);
+                }
+              },
             ),
-          ),
+          )
         ],
       ),
     );
   }
+
+  Widget _buildMyMarker() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(width: 22, height: 22, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(blurRadius: 3)])),
+        Container(width: 16, height: 16, decoration: const BoxDecoration(color: Color(0xFF4285F4), shape: BoxShape.circle)),
+      ],
+    );
+  }
+}
+
+class _TriangleClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width / 2, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
