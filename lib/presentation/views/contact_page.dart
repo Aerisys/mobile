@@ -116,25 +116,30 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           StreamBuilder<QuerySnapshot>(
-            stream: context.read<ContactViewModel>().getRequestsStream(),
-            builder: (context, snapshot) {
-              int requestCount = 0;
-              if (snapshot.hasData) {
-                requestCount = snapshot.data!.docs.length;
-              }
+            stream: context.read<ContactViewModel>().getFriendRequestsStream(),
+            builder: (context, snapshotFriends) {
+              return StreamBuilder<QuerySnapshot>(
+                  stream: context.read<ContactViewModel>().getLocationRequestsStream(),
+                  builder: (context, snapshotLoc) {
 
-              return NavigationDestination(
-                icon: Badge(
-                  isLabelVisible: requestCount > 0,
-                  label: Text('$requestCount'),
-                  child: const Icon(Icons.notifications_outlined),
-                ),
-                selectedIcon: Badge(
-                  isLabelVisible: requestCount > 0,
-                  label: Text('$requestCount'),
-                  child: const Icon(Icons.notifications),
-                ),
-                label: 'Demandes',
+                    int count = 0;
+                    if (snapshotFriends.hasData) count += snapshotFriends.data!.docs.length;
+                    if (snapshotLoc.hasData) count += snapshotLoc.data!.docs.length;
+
+                    return NavigationDestination(
+                      icon: Badge(
+                        isLabelVisible: count > 0,
+                        label: Text('$count'),
+                        child: const Icon(Icons.notifications_outlined),
+                      ),
+                      selectedIcon: Badge(
+                        isLabelVisible: count > 0,
+                        label: Text('$count'),
+                        child: const Icon(Icons.notifications),
+                      ),
+                      label: 'Demandes',
+                    );
+                  }
               );
             },
           ),
@@ -189,8 +194,34 @@ class _ContactPageState extends State<ContactPage> {
                       backgroundImage: photoURL != null ? NetworkImage(photoURL) : null,
                       child: photoURL == null ? Text(displayName.isNotEmpty ? displayName[0] : "?") : null
                   ),
-                  title: Text(displayName, style: const TextStyle(fontWeight: FontWeight.w500)),
-                  trailing: IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}),
+                  title: Text(displayName,
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.location_on_outlined),
+                    onPressed: () async {
+                      final viewModel = context.read<ContactViewModel>();
+                      final success = await viewModel.sendLocationRequest(
+                          friendUid);
+
+                      if (context.mounted) {
+                        if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Demande de position envoyée !"),
+                                backgroundColor: Colors.green
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(viewModel.errorMessage ?? "Erreur lors de l'envoi"),
+                                backgroundColor: Colors.red
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
                 );
               },
             );
@@ -204,63 +235,136 @@ class _ContactPageState extends State<ContactPage> {
     final viewModel = context.read<ContactViewModel>();
 
     return StreamBuilder<QuerySnapshot>(
-      stream: viewModel.getRequestsStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-        if (snapshot.data!.docs.isEmpty) return _emptyState("Aucune demande en attente", Icons.notifications_off_outlined);
+      stream: viewModel.getFriendRequestsStream(),
+      builder: (context, snapshotFriends) {
 
-        final requests = snapshot.data!.docs;
+        return StreamBuilder<QuerySnapshot>(
+          stream: viewModel.getLocationRequestsStream(),
+          builder: (context, snapshotLocation) {
 
-        return ListView.builder(
-          itemCount: requests.length,
-          itemBuilder: (context, index) {
-            final request = requests[index].data() as Map<String, dynamic>;
-            final senderUid = request['uid'];
-            final senderName = request['displayName'] ?? "Inconnu";
-            final senderPhoto = request['photoURL'];
+            if (!snapshotFriends.hasData || !snapshotLocation.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-            return Card(
-              elevation: 0,
-              color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: senderPhoto != null ? NetworkImage(senderPhoto) : null,
-                    child: senderPhoto == null ? Text(senderName.isNotEmpty ? senderName[0] : "?") : null,
-                  ),
-                  title: Text(senderName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: const Text("veut vous ajouter en ami", style: TextStyle(fontSize: 12)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton.filledTonal(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.red.withValues(alpha: 0.1),
-                          foregroundColor: Colors.red,
-                        ),
-                        icon: const Icon(Icons.close),
-                        onPressed: () => viewModel.refuseRequest(senderUid),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton.filled(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                        ),
-                        icon: const Icon(Icons.check),
-                        onPressed: () => viewModel.acceptRequest(senderUid, request),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            final List<Map<String, dynamic>> mixedRequests = [];
+
+            for (var doc in snapshotFriends.data!.docs) {
+              final data = doc.data() as Map<String, dynamic>;
+              data['localType'] = 'friend';
+              mixedRequests.add(data);
+            }
+
+            for (var doc in snapshotLocation.data!.docs) {
+              final data = doc.data() as Map<String, dynamic>;
+              data['localType'] = 'location';
+              mixedRequests.add(data);
+            }
+
+            // Cas vide
+            if (mixedRequests.isEmpty) {
+              return _emptyState("Aucune demande en attente", Icons.notifications_off_outlined);
+            }
+
+            return ListView.builder(
+              itemCount: mixedRequests.length,
+              itemBuilder: (context, index) {
+                final request = mixedRequests[index];
+                return _buildRequestCard(context, request, viewModel);
+              },
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildRequestCard(BuildContext context, Map<String, dynamic> request, ContactViewModel viewModel) {
+    final uid = request['uid'];
+    final name = request['displayName'] ?? "Inconnu";
+    final photo = request['photoURL'];
+    final type = request['localType'];
+
+    String subtitle;
+    IconData typeIcon;
+    Color iconColor;
+
+    if (type == 'location') {
+      subtitle = "Veut connaître votre position";
+      typeIcon = Icons.location_on;
+      iconColor = Colors.blue;
+    } else {
+      subtitle = "Veut vous ajouter en ami";
+      typeIcon = Icons.person_add;
+      iconColor = Colors.orange;
+    }
+
+    return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListTile(
+          leading: Stack(
+            children: [
+              CircleAvatar(
+                backgroundImage: photo != null ? NetworkImage(photo) : null,
+                child: photo == null ? Text(name.isNotEmpty ? name[0] : "?") : null,
+              ),
+              Positioned(
+                bottom: -2,
+                right: -2,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(typeIcon, size: 14, color: iconColor),
+                ),
+              )
+            ],
+          ),
+          title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton.filledTonal(
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
+                  foregroundColor: Colors.red,
+                ),
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  if (type == 'location') {
+                    viewModel.refuseLocationRequest(uid);
+                  } else {
+                    viewModel.refuseFriendRequest(uid);
+                  }
+                },
+              ),
+              const SizedBox(width: 8),
+              IconButton.filled(
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  if (type == 'location') {
+                    viewModel.acceptLocationRequest(uid);
+                  } else {
+                    viewModel.acceptFriendRequest(uid, request);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

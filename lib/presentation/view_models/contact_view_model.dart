@@ -17,13 +17,23 @@ class ContactViewModel extends CommonViewModel {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getRequestsStream() {
+  Stream<QuerySnapshot> getFriendRequestsStream() {
     final user = _auth.currentUser;
     if (user == null) return const Stream.empty();
     return _firestore
         .collection('users')
         .doc(user.uid)
         .collection('friend_requests')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getLocationRequestsStream() {
+    final user = _auth.currentUser;
+    if (user == null) return const Stream.empty();
+    return _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('location_requests')
         .snapshots();
   }
 
@@ -84,7 +94,7 @@ class ContactViewModel extends CommonViewModel {
     }
   }
 
-  Future<void> acceptRequest(String senderUid, Map<String, dynamic> senderData) async {
+  Future<void> acceptFriendRequest(String senderUid, Map<String, dynamic> senderData) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
@@ -127,7 +137,7 @@ class ContactViewModel extends CommonViewModel {
     await batch.commit();
   }
 
-  Future<void> refuseRequest(String senderUid) async {
+  Future<void> refuseFriendRequest(String senderUid) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
@@ -135,6 +145,57 @@ class ContactViewModel extends CommonViewModel {
         .collection('users')
         .doc(currentUser.uid)
         .collection('friend_requests')
+        .doc(senderUid)
+        .delete();
+  }
+
+  Future<bool> sendLocationRequest(String friendUid) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) throw Exception("Non connecté");
+
+      await _firestore
+          .collection('users')
+          .doc(friendUid)
+          .collection('location_requests')
+          .doc(currentUser.uid)
+          .set({
+        'uid': currentUser.uid,
+        'displayName': currentUser.displayName ?? 'Inconnu',
+        'photoURL': currentUser.photoURL,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<void> acceptLocationRequest(String senderUid) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('location_requests')
+        .doc(senderUid)
+        .delete();
+
+    // 2. TODO: Enregistrer la permission dans une table 'permissions' ou 'active_shares'
+    // Pour l'instant on considère que c'est accepté
+  }
+
+  Future<void> refuseLocationRequest(String senderUid) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('location_requests') // On supprime de la bonne table
         .doc(senderUid)
         .delete();
   }

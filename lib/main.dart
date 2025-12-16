@@ -9,6 +9,7 @@ import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
 import 'presentation/view_models/auth_view_model.dart';
 import 'presentation/view_models/contact_view_model.dart';
+import 'presentation/view_models/home_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
       ],
       child: const HereBro(),
     ),
