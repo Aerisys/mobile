@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../core/routes/app_routes.dart';
 import '../view_models/home_view_model.dart';
 
@@ -60,11 +61,14 @@ class _HomePageState extends State<HomePage> {
             options: const MapOptions(
               initialCenter: LatLng(48.8566, 2.3522),
               initialZoom: 16.0,
-              interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
+              interactionOptions: InteractionOptions(
+                flags: InteractiveFlag.all,
+              ),
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                urlTemplate:
+                    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
                 userAgentPackageName: 'com.herebro',
               ),
@@ -173,13 +177,18 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Marker _buildFriendMarker(String uid, LatLng position, String name, String? photoUrl) {
+  Marker _buildFriendMarker(
+    String uid,
+    LatLng position,
+    String name,
+    String? photoUrl,
+  ) {
     return Marker(
       point: position,
       width: 50,
@@ -192,11 +201,15 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 2),
-                boxShadow: [const BoxShadow(blurRadius: 4, color: Colors.black26)],
+                boxShadow: [
+                  const BoxShadow(blurRadius: 4, color: Colors.black26),
+                ],
               ),
               child: CircleAvatar(
                 radius: 18,
-                backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                backgroundImage: photoUrl != null
+                    ? NetworkImage(photoUrl)
+                    : null,
                 backgroundColor: Colors.green,
                 child: photoUrl == null ? Text(name[0]) : null,
               ),
@@ -204,7 +217,7 @@ class _HomePageState extends State<HomePage> {
             ClipPath(
               clipper: _TriangleClipper(),
               child: Container(color: Colors.white, width: 8, height: 6),
-            )
+            ),
           ],
         ),
       ),
@@ -216,7 +229,8 @@ class _HomePageState extends State<HomePage> {
       alignment: Alignment.center,
       children: [
         Container(
-          width: 22, height: 22,
+          width: 22,
+          height: 22,
           decoration: const BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
@@ -224,8 +238,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Container(
-          width: 16, height: 16,
-          decoration: const BoxDecoration(color: Color(0xFF4285F4), shape: BoxShape.circle),
+          width: 16,
+          height: 16,
+          decoration: const BoxDecoration(
+            color: Color(0xFF4285F4),
+            shape: BoxShape.circle,
+          ),
         ),
       ],
     );
@@ -246,11 +264,21 @@ class _HomePageState extends State<HomePage> {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-                child: photoUrl == null ? Text(name[0], style: const TextStyle(fontSize: 24)) : null,
+                backgroundImage: photoUrl != null
+                    ? NetworkImage(photoUrl)
+                    : null,
+                child: photoUrl == null
+                    ? Text(name[0], style: const TextStyle(fontSize: 24))
+                    : null,
               ),
               const SizedBox(width: 16),
-              Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),

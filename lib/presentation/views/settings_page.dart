@@ -197,7 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   if (context.mounted) {
                     await context.read<AuthViewModel>().logout();
                   }
-                  
+
                   if (context.mounted) {
                     context.go(AppRoutes.login);
                   }
