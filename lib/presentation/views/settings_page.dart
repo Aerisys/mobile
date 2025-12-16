@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/routes/app_routes.dart';
-import '../view_model/auth_view_model.dart';
+import '../view_models/auth_view_model.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
