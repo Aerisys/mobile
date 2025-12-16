@@ -85,4 +85,23 @@ class ContactViewModel extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<void> syncContactInfo(String contactUid, Map<String, dynamic> freshData) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return;
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('contacts')
+          .doc(contactUid)
+          .update({
+        'displayName': freshData['displayName'],
+        'photoURL': freshData['photoURL'],
+      });
+    } catch (e) {
+      return;
+    }
+  }
 }

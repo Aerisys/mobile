@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -146,15 +147,30 @@ class AuthViewModel extends ChangeNotifier {
       final user = _auth.currentUser;
       if (user == null) throw Exception("Utilisateur non connecté");
 
+      String? photoUrl;
+      
       if (newImageFile != null) {
         final ref = _storage.ref().child('profile_images').child('${user.uid}.jpg');
         await ref.putFile(newImageFile);
-        final imageUrl = await ref.getDownloadURL();
-        await user.updatePhotoURL(imageUrl);
+        photoUrl = await ref.getDownloadURL();
+        await user.updatePhotoURL(photoUrl);
       }
 
       if (newName != user.displayName) {
         await user.updateDisplayName(newName);
+      }
+
+      final Map<String, dynamic> firestoreData = {};
+
+      if (newName.isNotEmpty) {
+        firestoreData['displayName'] = newName;
+      }
+      if (photoUrl != null) {
+        firestoreData['photoURL'] = photoUrl;
+      }
+
+      if (firestoreData.isNotEmpty) {
+        await _firestore.collection('users').doc(user.uid).update(firestoreData);
       }
 
       await user.reload();

@@ -98,27 +98,63 @@ class ContactPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = contacts[index].data() as Map<String, dynamic>;
 
-              final String name = (data['displayName'] != null && data['displayName'].isNotEmpty)
-                  ? data['displayName']
-                  : "Utilisateur sans nom";
-              final String email = data['email'] ?? "";
-              final String? photoURL = data['photoURL'];
+              final String friendUid = data['uid'];
+              final String oldName = data['displayName'] ?? "Sans nom";
+              final String? oldPhoto = data['photoURL'];
 
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: photoURL != null
-                      ? NetworkImage(photoURL)
-                      : null,
-                  child: photoURL == null ? Text(name[0].toUpperCase()) : null,
-                ),
-                title: Text(name),
-                subtitle: Text(email),
-                trailing: IconButton(
-                  icon: const Icon(Icons.chat_bubble_outline),
-                  onPressed: () {
-                    // TODO: Naviguer vers la page de chat plus tard
-                  },
-                ),
+              return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(friendUid)
+                    .snapshots(),
+                builder: (context, userSnapshot) {
+                  String displayName = oldName;
+                  String? photoURL = oldPhoto;
+                  String email = data['email'] ?? "";
+
+                  if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                    final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                    
+                    final String freshName = userData['displayName'] ?? "Sans nom";
+                    final String? freshPhoto = userData['photoURL'];
+
+                    if (freshName != oldName || freshPhoto != oldPhoto) {
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (context.mounted) {
+                          viewModel.syncContactInfo(friendUid, {
+                            'displayName': freshName,
+                            'photoURL': freshPhoto,
+                          });
+                        }
+                      });
+                    }
+
+                    displayName = freshName;
+                    photoURL = freshPhoto;
+                    email = userData['email'] ?? email;
+                  }
+
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.grey.shade800,
+                      backgroundImage: photoURL != null
+                          ? NetworkImage(photoURL)
+                          : null,
+                      child: photoURL == null ? Text(displayName.isNotEmpty
+                          ? displayName[0].toUpperCase()
+                          : "?") : null,
+                    ),
+                    title: Text(displayName),
+                    subtitle: Text(email),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.chat_bubble_outline),
+                      onPressed: () {
+                        // TODO: Chat
+                      },
+                    ),
+                  );
+                },
               );
             },
           );
