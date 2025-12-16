@@ -2,10 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class IAuthService {
   Stream<User?> get authStateChanges;
+
   Future<void> signInWithEmail(String email, String password);
+
   Future<void> signOut();
 
-  Future<void> createUserWithEmailAndPassword(String email, String password);
+  Future<UserCredential> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  );
 
   User? get currentUser;
 }
@@ -30,11 +35,11 @@ class FirebaseAuthService implements IAuthService {
   }
 
   @override
-  Future<void> createUserWithEmailAndPassword(
+  Future<UserCredential> createUserWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
+    return await _firebaseAuth.createUserWithEmailAndPassword(
       email: email.trim().toLowerCase(),
       password: password.trim(),
     );

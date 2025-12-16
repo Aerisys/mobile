@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -11,6 +12,7 @@ import 'common_view_model.dart';
 class AuthViewModel extends CommonViewModel {
   final IAuthService _auth = getIt<IAuthService>();
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   User? get currentUser => _auth.currentUser;
 
@@ -39,7 +41,24 @@ class AuthViewModel extends CommonViewModel {
     errorMessage = null;
 
     try {
-      await _auth.createUserWithEmailAndPassword(email, password);
+      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+
+      if (cred.user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(cred.user!.uid)
+            .set({
+              'uid': cred.user!.uid,
+              'email': email.trim(),
+              'displayName': '',
+              'photoURL': null,
+              'createdAt': FieldValue.serverTimestamp(),
+            });
+      }
+
       isLoading = false;
       return true;
     } on FirebaseAuthException catch (e) {
@@ -68,18 +87,36 @@ class AuthViewModel extends CommonViewModel {
       final user = _auth.currentUser;
       if (user == null) throw Exception("Utilisateur non connecté");
 
+      String? photoUrl;
+
       if (newImageFile != null) {
         final ref = _storage
             .ref()
             .child('profile_images')
             .child('${user.uid}.jpg');
         await ref.putFile(newImageFile);
-        final imageUrl = await ref.getDownloadURL();
-        await user.updatePhotoURL(imageUrl);
+        photoUrl = await ref.getDownloadURL();
+        await user.updatePhotoURL(photoUrl);
       }
 
       if (newName != user.displayName) {
         await user.updateDisplayName(newName);
+      }
+
+      final Map<String, dynamic> firestoreData = {};
+
+      if (newName.isNotEmpty) {
+        firestoreData['displayName'] = newName;
+      }
+      if (photoUrl != null) {
+        firestoreData['photoURL'] = photoUrl;
+      }
+
+      if (firestoreData.isNotEmpty) {
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .update(firestoreData);
       }
 
       await user.reload();

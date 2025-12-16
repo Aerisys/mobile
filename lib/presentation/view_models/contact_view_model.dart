@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
-class ContactViewModel extends ChangeNotifier {
+import '../../core/di.dart';
+import '../../core/services/auth_service.dart';
+import 'common_view_model.dart';
+
+class ContactViewModel extends CommonViewModel {
+  final IAuthService _auth = getIt<IAuthService>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
 
   Stream<QuerySnapshot> getContactsStream() {
     final user = _auth.currentUser;
@@ -25,9 +21,8 @@ class ContactViewModel extends ChangeNotifier {
   }
 
   Future<bool> addContactByEmail(String email) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+    isLoading = true;
+    errorMessage = null;
 
     try {
       final currentUser = _auth.currentUser;
@@ -67,26 +62,26 @@ class ContactViewModel extends ChangeNotifier {
           .collection('contacts')
           .doc(userToAddId)
           .set({
-        'uid': userToAddId,
-        'email': userToAdd['email'],
-        'displayName': userToAdd['displayName'] ?? 'Sans nom',
-        'photoURL': userToAdd['photoURL'],
-        'addedAt': FieldValue.serverTimestamp(),
-      });
+            'uid': userToAddId,
+            'email': userToAdd['email'],
+            'displayName': userToAdd['displayName'] ?? 'Sans nom',
+            'photoURL': userToAdd['photoURL'],
+            'addedAt': FieldValue.serverTimestamp(),
+          });
 
-      _isLoading = false;
-      notifyListeners();
+      isLoading = false;
       return true;
-
     } catch (e) {
-      _errorMessage = e.toString().replaceAll("Exception: ", "");
-      _isLoading = false;
-      notifyListeners();
+      errorMessage = e.toString().replaceAll("Exception: ", "");
+      isLoading = false;
       return false;
     }
   }
 
-  Future<void> syncContactInfo(String contactUid, Map<String, dynamic> freshData) async {
+  Future<void> syncContactInfo(
+    String contactUid,
+    Map<String, dynamic> freshData,
+  ) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
@@ -97,9 +92,9 @@ class ContactViewModel extends ChangeNotifier {
           .collection('contacts')
           .doc(contactUid)
           .update({
-        'displayName': freshData['displayName'],
-        'photoURL': freshData['photoURL'],
-      });
+            'displayName': freshData['displayName'],
+            'photoURL': freshData['photoURL'],
+          });
     } catch (e) {
       return;
     }

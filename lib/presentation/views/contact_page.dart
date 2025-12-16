@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_model/contact_view_model.dart';
+
+import '../view_models/contact_view_model.dart';
 
 class ContactPage extends StatelessWidget {
   const ContactPage({super.key});
@@ -33,18 +34,25 @@ class ContactPage extends StatelessWidget {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
 
               // Appel au ViewModel
-              final success = await context.read<ContactViewModel>()
+              final success = await context
+                  .read<ContactViewModel>()
                   .addContactByEmail(emailController.text);
 
               if (success) {
                 navigator.pop();
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(content: Text("Contact ajouté !"), backgroundColor: Colors.green),
+                  const SnackBar(
+                    content: Text("Contact ajouté !"),
+                    backgroundColor: Colors.green,
+                  ),
                 );
               } else {
                 final error = context.read<ContactViewModel>().errorMessage;
                 scaffoldMessenger.showSnackBar(
-                  SnackBar(content: Text(error ?? "Erreur"), backgroundColor: Colors.red),
+                  SnackBar(
+                    content: Text(error ?? "Erreur"),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             },
@@ -60,9 +68,7 @@ class ContactPage extends StatelessWidget {
     final viewModel = context.read<ContactViewModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mes Contacts"),
-      ),
+      appBar: AppBar(title: const Text("Mes Contacts")),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddContactDialog(context),
         child: const Icon(Icons.person_add),
@@ -83,7 +89,11 @@ class ContactPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.people_outline, size: 80, color: Colors.grey.shade600),
+                  Icon(
+                    Icons.people_outline,
+                    size: 80,
+                    color: Colors.grey.shade600,
+                  ),
                   const SizedBox(height: 16),
                   const Text("Aucun contact pour le moment"),
                 ],
@@ -113,13 +123,14 @@ class ContactPage extends StatelessWidget {
                   String email = data['email'] ?? "";
 
                   if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                    final userData = userSnapshot.data!.data() as Map<String, dynamic>;
-                    
-                    final String freshName = userData['displayName'] ?? "Sans nom";
+                    final userData =
+                        userSnapshot.data!.data() as Map<String, dynamic>;
+
+                    final String freshName =
+                        userData['displayName'] ?? "Sans nom";
                     final String? freshPhoto = userData['photoURL'];
 
                     if (freshName != oldName || freshPhoto != oldPhoto) {
-
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (context.mounted) {
                           viewModel.syncContactInfo(friendUid, {
@@ -141,9 +152,13 @@ class ContactPage extends StatelessWidget {
                       backgroundImage: photoURL != null
                           ? NetworkImage(photoURL)
                           : null,
-                      child: photoURL == null ? Text(displayName.isNotEmpty
-                          ? displayName[0].toUpperCase()
-                          : "?") : null,
+                      child: photoURL == null
+                          ? Text(
+                              displayName.isNotEmpty
+                                  ? displayName[0].toUpperCase()
+                                  : "?",
+                            )
+                          : null,
                     ),
                     title: Text(displayName),
                     subtitle: Text(email),
