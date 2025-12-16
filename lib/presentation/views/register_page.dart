@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/routes/app_routes.dart';
 import '../view_model/auth_view_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -13,7 +15,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -36,10 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(
-                  Icons.person_add_outlined,
-                  size: 100,
-                ),
+                const Icon(Icons.person_add_outlined, size: 100),
                 const SizedBox(height: 24),
                 Text(
                   "Créer un compte",
@@ -93,51 +93,59 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: viewModel.isLoading
                       ? null
                       : () async {
-                    FocusScope.of(context).unfocus();
+                          FocusScope.of(context).unfocus();
 
-                    if (_passwordController.text != _confirmPasswordController.text) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Les mots de passe ne correspondent pas.", style: TextStyle(color: Colors.white)),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
-                    }
+                          if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Les mots de passe ne correspondent pas.",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
 
-                    final bool success = await context.read<AuthViewModel>().register(
-                      _emailController.text,
-                      _passwordController.text,
-                    );
+                          final bool success = await context
+                              .read<AuthViewModel>()
+                              .register(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
 
-                    if (!context.mounted) return;
+                          if (!context.mounted) return;
 
-                    if (success) {
-                      if (!context.mounted) return;
-                      context.go('/home');
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              viewModel.errorMessage ?? "Erreur inconnue",
-                              style: const TextStyle(color: Colors.white)
-                          ),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
+                          if (success) {
+                            if (!context.mounted) return;
+                            context.go(AppRoutes.home);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  viewModel.errorMessage ?? "Erreur inconnue",
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                   icon: viewModel.isLoading
                       ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.check_circle_outline),
-                  label: Text(viewModel.isLoading ? "Création..." : "S'inscrire"),
+                  label: Text(
+                    viewModel.isLoading ? "Création..." : "S'inscrire",
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -147,7 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const Text("Déjà un compte ?"),
                     TextButton(
                       onPressed: () {
-                        context.go('/login');
+                        context.go(AppRoutes.login);
                       },
                       child: const Text("Se connecter"),
                     ),
