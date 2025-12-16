@@ -13,6 +13,13 @@ class HomePage extends StatelessWidget {
         title: const Text("Accueil"),
         actions: [
           IconButton(
+            icon: const Icon(Icons.people),
+            tooltip: "Contacts",
+            onPressed: () {
+              context.push('/contact');
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             tooltip: "Paramètres",
             onPressed: () {

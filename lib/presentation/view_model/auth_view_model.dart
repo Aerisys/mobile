@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -75,11 +77,21 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _auth.createUserWithEmailAndPassword(
+      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
 
+      if (cred.user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(cred.user!.uid).set({
+          'uid': cred.user!.uid,
+          'email': email.trim(),
+          'displayName': '',
+          'photoURL': null,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+      
       _isLoading = false;
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -135,15 +147,30 @@ class AuthViewModel extends ChangeNotifier {
       final user = _auth.currentUser;
       if (user == null) throw Exception("Utilisateur non connecté");
 
+      String? photoUrl;
+      
       if (newImageFile != null) {
         final ref = _storage.ref().child('profile_images').child('${user.uid}.jpg');
         await ref.putFile(newImageFile);
-        final imageUrl = await ref.getDownloadURL();
-        await user.updatePhotoURL(imageUrl);
+        photoUrl = await ref.getDownloadURL();
+        await user.updatePhotoURL(photoUrl);
       }
 
       if (newName != user.displayName) {
         await user.updateDisplayName(newName);
+      }
+
+      final Map<String, dynamic> firestoreData = {};
+
+      if (newName.isNotEmpty) {
+        firestoreData['displayName'] = newName;
+      }
+      if (photoUrl != null) {
+        firestoreData['photoURL'] = photoUrl;
+      }
+
+      if (firestoreData.isNotEmpty) {
+        await _firestore.collection('users').doc(user.uid).update(firestoreData);
       }
 
       await user.reload();
