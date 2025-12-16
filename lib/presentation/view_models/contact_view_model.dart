@@ -183,33 +183,51 @@ class ContactViewModel extends CommonViewModel {
     }
   }
 
-  Future<void> acceptLocationRequest(String senderUid) async {
+  Future<void> acceptLocationRequest(String senderUid, Map<String, dynamic> requestData) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) return;
 
     final batch = _firestore.batch();
 
-    final requestRef = _firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('location_requests')
-        .doc(senderUid);
+    final requestRef = _firestore.collection('users').doc(currentUser.uid).collection('location_requests').doc(senderUid);
     batch.delete(requestRef);
 
-    final trackingRef = _firestore
-        .collection('users')
-        .doc(senderUid)
-        .collection('tracking')
-        .doc(currentUser.uid);
-
+    final trackingRef = _firestore.collection('users').doc(senderUid).collection('tracking').doc(currentUser.uid);
     batch.set(trackingRef, {
       'uid': currentUser.uid,
-      'displayName': currentUser.displayName ?? 'Ami',
+      'displayName': currentUser.displayName,
       'photoURL': currentUser.photoURL,
       'timestamp': FieldValue.serverTimestamp(),
     });
 
+    final sharedWithRef = _firestore.collection('users').doc(currentUser.uid).collection('shared_with').doc(senderUid);
+    batch.set(sharedWithRef, {
+      'uid': senderUid,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
     await batch.commit();
+  }
+
+  Future<bool> stopSharingLocation(String friendUid) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) return false;
+
+      final batch = _firestore.batch();
+
+      final trackingRef = _firestore.collection('users').doc(friendUid).collection('tracking').doc(currentUser.uid);
+      batch.delete(trackingRef);
+
+      final sharedWithRef = _firestore.collection('users').doc(currentUser.uid).collection('shared_with').doc(friendUid);
+      batch.delete(sharedWithRef);
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      return false;
+    }
   }
 
   Future<void> refuseLocationRequest(String senderUid) async {
@@ -244,5 +262,17 @@ class ContactViewModel extends CommonViewModel {
     } catch (e) {
       return;
     }
+  }
+
+  Stream<List<String>> getSharedWithIdsStream() {
+    final user = _auth.currentUser;
+    if (user == null) return Stream.value([]);
+
+    return _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('shared_with')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
 }

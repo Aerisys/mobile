@@ -154,93 +154,67 @@ class _ContactPageState extends State<ContactPage> {
   Widget _buildFriendsList(BuildContext context) {
     final viewModel = context.read<ContactViewModel>();
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: viewModel.getContactsStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.data!.docs.isEmpty) {
-          return _emptyState("Aucun ami pour le moment", Icons.diversity_3);
-        }
+    return StreamBuilder<List<String>>(
+      stream: viewModel.getSharedWithIdsStream(),
+      builder: (context, sharedSnapshot) {
 
-        final contacts = snapshot.data!.docs;
+        final sharedWithIds = sharedSnapshot.data ?? [];
 
-        return ListView.builder(
-          padding: const EdgeInsets.only(bottom: 80),
-          itemCount: contacts.length,
-          itemBuilder: (context, index) {
-            final contactDoc = contacts[index].data() as Map<String, dynamic>;
-            final friendUid = contactDoc['uid'];
-            final oldName = contactDoc['displayName'] ?? "Inconnu";
-            final oldPhoto = contactDoc['photoURL'];
+        return StreamBuilder<QuerySnapshot>(
+          stream: viewModel.getContactsStream(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+            if (snapshot.data!.docs.isEmpty) return _emptyState("Aucun ami", Icons.diversity_3);
 
-            return StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(friendUid)
-                  .snapshots(),
-              builder: (context, userSnapshot) {
-                String displayName = oldName;
-                String? photoURL = oldPhoto;
+            final contacts = snapshot.data!.docs;
 
-                if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                  final userData =
-                      userSnapshot.data!.data() as Map<String, dynamic>;
-                  final freshName = userData['displayName'] ?? "Inconnu";
-                  final freshPhoto = userData['photoURL'];
+            return ListView.builder(
+              padding: const EdgeInsets.only(bottom: 80),
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contactDoc = contacts[index].data() as Map<String, dynamic>;
+                final friendUid = contactDoc['uid'];
 
-                  if (freshName != oldName || freshPhoto != oldPhoto) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (context.mounted) {
-                        viewModel.syncContactInfo(friendUid, userData);
-                      }
-                    });
-                  }
-                  displayName = freshName;
-                  photoURL = freshPhoto;
-                }
+                final isSharing = sharedWithIds.contains(friendUid);
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.primaryContainer,
-                    backgroundImage: photoURL != null
-                        ? NetworkImage(photoURL)
-                        : null,
-                    child: photoURL == null
-                        ? Text(displayName.isNotEmpty ? displayName[0] : "?")
-                        : null,
-                  ),
-                  title: Text(displayName,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.location_on_outlined),
-                    onPressed: () async {
-                      final viewModel = context.read<ContactViewModel>();
-                      final success = await viewModel.sendLocationRequest(
-                          friendUid);
+                return StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection('users').doc(friendUid).snapshots(),
+                  builder: (context, userSnapshot) {
+                    String displayName = contactDoc['displayName'] ?? "Inconnu";
+                    String? photoURL = contactDoc['photoURL'];
 
-                      if (context.mounted) {
-                        if (success) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Demande de position envoyée !"),
-                                backgroundColor: Colors.green
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(viewModel.errorMessage ?? "Erreur lors de l'envoi"),
-                                backgroundColor: Colors.red
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
+                    if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                      final data = userSnapshot.data!.data() as Map<String, dynamic>;
+                      displayName = data['displayName'] ?? displayName;
+                      photoURL = data['photoURL'] ?? photoURL;
+                    }
+
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: photoURL != null ? NetworkImage(photoURL) : null,
+                        child: photoURL == null
+                            ? Text(displayName.isNotEmpty ? displayName[0].toUpperCase() : "?")
+                            : null,
+                      ),
+                      title: Text(displayName),
+
+                      subtitle: isSharing
+                          ? const Row(children: [
+                        Icon(Icons.circle, size: 10, color: Colors.green),
+                        SizedBox(width: 4),
+                        Text("Voit votre position", style: TextStyle(color: Colors.green, fontSize: 12))
+                      ])
+                          : null,
+
+                      trailing: IconButton(
+                        icon: Icon(
+                          isSharing ? Icons.location_on : Icons.location_on_outlined,
+                          color: isSharing ? Colors.green : Colors.blue,
+                        ),
+                        onPressed: () => _showLocationMenu(context, viewModel, friendUid, displayName, isSharing),
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -329,7 +303,9 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               CircleAvatar(
                 backgroundImage: photo != null ? NetworkImage(photo) : null,
-                child: photo == null ? Text(name.isNotEmpty ? name[0] : "?") : null,
+                child: photo == null
+                    ? Text(name.isNotEmpty ? name[0].toUpperCase() : "?")
+                    : null,              
               ),
               Positioned(
                 bottom: -2,
@@ -374,7 +350,7 @@ class _ContactPageState extends State<ContactPage> {
                 icon: const Icon(Icons.check),
                 onPressed: () {
                   if (type == 'location') {
-                    viewModel.acceptLocationRequest(uid);
+                    viewModel.acceptLocationRequest(uid, request);
                   } else {
                     viewModel.acceptFriendRequest(uid, request);
                   }
@@ -402,6 +378,56 @@ class _ContactPageState extends State<ContactPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showLocationMenu(BuildContext context, ContactViewModel viewModel, String friendUid, String name, bool isSharing) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Gestion localisation avec $name", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const SizedBox(height: 16),
+
+              ListTile(
+                leading: const Icon(Icons.search, color: Colors.blue),
+                title: const Text("Demander sa position"),
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final success = await viewModel.sendLocationRequest(friendUid);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(success ? "Demande envoyée" : "Erreur")));
+                  }
+                },
+              ),
+
+              const Divider(),
+
+              if (isSharing)
+                ListTile(
+                  leading: const Icon(Icons.wrong_location, color: Colors.red),
+                  title: const Text("Arrêter de partager ma position"),
+                  subtitle: const Text("Il ne vous verra plus sur la carte"),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await viewModel.stopSharingLocation(friendUid);
+                  },
+                )
+              else
+                const ListTile(
+                  leading: Icon(Icons.info_outline, color: Colors.grey),
+                  title: Text("Vous ne partagez pas votre position"),
+                  subtitle: Text("Cet ami ne peut pas vous voir"),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

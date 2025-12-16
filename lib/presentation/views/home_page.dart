@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/routes/app_routes.dart';
 import '../view_models/home_view_model.dart';
 
@@ -18,68 +16,93 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
   bool _hasCenteredOnce = false;
-  final Map<String, Marker> _friendMarkers = {};
-
-  final List<StreamSubscription> _subscriptions = [];
-  StreamSubscription? _friendsListSubscription;
 
   @override
-  void initState() {
-    super.initState();
-    _startListeningToFriends();
-  }
+  Widget build(BuildContext context) {
+    final homeViewModel = context.watch<HomeViewModel>();
 
-  @override
-  void dispose() {
-    _friendsListSubscription?.cancel();
-    for (var sub in _subscriptions) {
-      sub.cancel();
+    if (homeViewModel.currentPosition != null && !_hasCenteredOnce) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _mapController.move(homeViewModel.currentPosition!, 16.0);
+        _hasCenteredOnce = true;
+      });
     }
-    super.dispose();
-  }
 
-  void _startListeningToFriends() {
-    final viewModel = context.read<HomeViewModel>();
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Accueil"),
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRoutes.contact),
+            icon: const Icon(Icons.people),
+          ),
+          IconButton(
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          FlutterMap(
+            mapController: _mapController,
+            options: const MapOptions(
+              initialCenter: LatLng(48.8566, 2.3522),
+              initialZoom: 16.0,
+              interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+                subdomains: const ['a', 'b', 'c', 'd'],
+                userAgentPackageName: 'com.herebro',
+              ),
 
-    _friendsListSubscription = viewModel.getTrackingFriendsStream().listen((snapshot) {
+              MarkerLayer(
+                markers: [
+                  if (homeViewModel.currentPosition != null)
+                    Marker(
+                      point: homeViewModel.currentPosition!,
+                      width: 60,
+                      height: 60,
+                      child: _buildMyMarker(),
+                    ),
 
-      for (var doc in snapshot.docs) {
-        final friendData = doc.data() as Map<String, dynamic>;
-        final friendUid = friendData['uid'];
+                  ...homeViewModel.friends.map((friend) {
+                    return _buildFriendMarker(
+                      friend.uid,
+                      friend.position,
+                      friend.displayName,
+                      friend.photoURL,
+                    );
+                  }),
+                ],
+              ),
+            ],
+          ),
 
-        if (_friendMarkers.containsKey(friendUid)) continue;
-
-        final sub = FirebaseFirestore.instance
-            .collection('users')
-            .doc(friendUid)
-            .snapshots()
-            .listen((userDoc) {
-
-          if (!userDoc.exists) return;
-          final userData = userDoc.data()!;
-
-          if (userData.containsKey('position')) {
-            final pos = userData['position'];
-            final LatLng position = LatLng(pos['lat'], pos['lng']);
-
-            final marker = _buildFriendMarker(
-                friendUid,
-                position,
-                userData['displayName'] ?? 'Ami',
-                userData['photoURL']
-            );
-
-            if (mounted) {
-              setState(() {
-                _friendMarkers[friendUid] = marker;
-              });
-            }
-          }
-        });
-
-        _subscriptions.add(sub);
-      }
-    });
+          Positioned(
+            bottom: 20,
+            right: 0,
+            child: SafeArea(
+              minimum: const EdgeInsets.only(bottom: 30, right: 20),
+              child: FloatingActionButton(
+                heroTag: "recenter",
+                child: const Icon(Icons.my_location),
+                onPressed: () {
+                  if (homeViewModel.currentPosition != null) {
+                    _mapController.move(homeViewModel.currentPosition!, 16);
+                    _mapController.rotate(0.0);
+                  }
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Marker _buildFriendMarker(String uid, LatLng position, String name, String? photoUrl) {
@@ -114,13 +137,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildMyMarker() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 22, height: 22,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [BoxShadow(blurRadius: 3)],
+          ),
+        ),
+        Container(
+          width: 16, height: 16,
+          decoration: const BoxDecoration(color: Color(0xFF4285F4), shape: BoxShape.circle),
+        ),
+      ],
+    );
+  }
+
   void _showFriendInfo(BuildContext context, String name, String? photoUrl) {
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) => SafeArea(
         child: Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(24),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               CircleAvatar(
                 radius: 30,
@@ -135,88 +183,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final homeViewModel = context.watch<HomeViewModel>();
-
-    if (homeViewModel.currentPosition != null && !_hasCenteredOnce) {
-      _mapController.move(homeViewModel.currentPosition!, 15.0);
-      _hasCenteredOnce = true;
-    }
-
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text("Accueil"),
-        elevation: 0,
-        actions: [
-          IconButton(onPressed: () => context.push(AppRoutes.contact), icon: const Icon(Icons.people)),
-          IconButton(onPressed: () => context.push(AppRoutes.settings), icon: const Icon(Icons.settings)),
-        ],
-      ),
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: const MapOptions(
-              initialCenter: LatLng(48.8566, 2.3522),
-              initialZoom: 13.0,
-              interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
-                subdomains: const ['a', 'b', 'c', 'd'],
-                userAgentPackageName: 'com.herebro',
-              ),
-
-              MarkerLayer(
-                markers: [
-                  if (homeViewModel.currentPosition != null)
-                    Marker(
-                      point: homeViewModel.currentPosition!,
-                      width: 60, height: 60,
-                      child: _buildMyMarker(),
-                    ),
-
-                  ..._friendMarkers.values,
-                ],
-              ),
-            ],
-          ),
-
-          Positioned(
-            bottom: 20,
-            right: 0,
-            child: SafeArea(
-              minimum: const EdgeInsets.only(bottom: 30, right: 20),
-              child: FloatingActionButton(
-                heroTag: "recenter",
-                child: const Icon(Icons.my_location),
-                onPressed: () {
-                  if (homeViewModel.currentPosition != null) {
-                    _mapController.move(homeViewModel.currentPosition!, 16);
-                    _mapController.rotate(0.0);
-                  }
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMyMarker() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(width: 22, height: 22, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(blurRadius: 3)])),
-        Container(width: 16, height: 16, decoration: const BoxDecoration(color: Color(0xFF4285F4), shape: BoxShape.circle)),
-      ],
-    );
-  }
 }
 
 class _TriangleClipper extends CustomClipper<Path> {
@@ -229,6 +195,7 @@ class _TriangleClipper extends CustomClipper<Path> {
     path.close();
     return path;
   }
+
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
