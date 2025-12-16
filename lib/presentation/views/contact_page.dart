@@ -221,7 +221,7 @@ class _ContactPageState extends State<ContactPage> {
 
             return Card(
               elevation: 0,
-              color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: Padding(
@@ -238,7 +238,7 @@ class _ContactPageState extends State<ContactPage> {
                     children: [
                       IconButton.filledTonal(
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.red.withOpacity(0.1),
+                          backgroundColor: Colors.red.withValues(alpha: 0.1),
                           foregroundColor: Colors.red,
                         ),
                         icon: const Icon(Icons.close),
@@ -269,9 +269,9 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: Colors.grey.withOpacity(0.5)),
+          Icon(icon, size: 60, color: Colors.grey.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
-          Text(text, style: TextStyle(color: Colors.grey.withOpacity(0.8), fontSize: 16)),
+          Text(text, style: TextStyle(color: Colors.grey.withValues(alpha: 0.8), fontSize: 16)),
         ],
       ),
     );
