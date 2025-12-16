@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'herebro-app.firebasestorage.app',
     iosBundleId: 'com.herebro.hereBro',
   );
+
 }
