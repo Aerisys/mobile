@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../core/di.dart';
 import '../../core/services/auth_service.dart';
+import '../../data/enums/firestore_collection_enum.dart';
 import '../../data/models/friend_location_model.dart';
 import 'common_view_model.dart';
 
@@ -58,9 +59,9 @@ class HomeViewModel extends CommonViewModel {
     final user = _auth.currentUser;
     if (user == null) return const Stream.empty();
     return _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(user.uid)
-        .collection('tracking')
+        .collection(FirestoreCollection.tracking.value)
         .snapshots();
   }
 
@@ -75,7 +76,6 @@ class HomeViewModel extends CommonViewModel {
 
         if (!serviceEnabled) {
           errorMessage = "Le service de localisation est désactivé.";
-          isLoading = false;
           return;
         }
       }
@@ -85,7 +85,6 @@ class HomeViewModel extends CommonViewModel {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           errorMessage = "Permission refusée. Impossible de vous localiser.";
-          isLoading = false;
           return;
         }
       }
@@ -93,7 +92,6 @@ class HomeViewModel extends CommonViewModel {
       if (permission == LocationPermission.deniedForever) {
         errorMessage =
             "Permission refusée définitivement. Allez dans les réglages.";
-        isLoading = false;
         return;
       }
 
@@ -104,10 +102,13 @@ class HomeViewModel extends CommonViewModel {
 
       final user = _auth.currentUser;
       if (user != null) {
-        _firestore.collection('users').doc(user.uid).update({
-          'position': {'lat': position.latitude, 'lng': position.longitude},
-          'lastUpdated': FieldValue.serverTimestamp(),
-        });
+        _firestore
+            .collection(FirestoreCollection.users.value)
+            .doc(user.uid)
+            .update({
+              'position': {'lat': position.latitude, 'lng': position.longitude},
+              'lastUpdated': FieldValue.serverTimestamp(),
+            });
       }
 
       errorMessage = null;
@@ -130,13 +131,16 @@ class HomeViewModel extends CommonViewModel {
                       _uploadIntervalSeconds) {
                 final u = _auth.currentUser;
                 if (u != null) {
-                  _firestore.collection('users').doc(u.uid).update({
-                    'position': {
-                      'lat': newPos.latitude,
-                      'lng': newPos.longitude,
-                    },
-                    'lastUpdated': FieldValue.serverTimestamp(),
-                  });
+                  _firestore
+                      .collection(FirestoreCollection.users.value)
+                      .doc(u.uid)
+                      .update({
+                        'position': {
+                          'lat': newPos.latitude,
+                          'lng': newPos.longitude,
+                        },
+                        'lastUpdated': FieldValue.serverTimestamp(),
+                      });
                   _lastUploadTime = now;
                 }
               }
@@ -160,9 +164,9 @@ class HomeViewModel extends CommonViewModel {
     if (user == null) return;
 
     _friendsListSubscription = _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(user.uid)
-        .collection('tracking')
+        .collection(FirestoreCollection.tracking.value)
         .snapshots()
         .listen((snapshot) {
           for (var doc in snapshot.docs) {
@@ -172,7 +176,7 @@ class HomeViewModel extends CommonViewModel {
             if (_friendsData.containsKey(friendUid)) continue;
 
             final sub = _firestore
-                .collection('users')
+                .collection(FirestoreCollection.users.value)
                 .doc(friendUid)
                 .snapshots()
                 .listen((userDoc) {
