@@ -1,28 +1,31 @@
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/views/contact_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/login_page.dart';
 import '../../presentation/views/register_page.dart';
 import '../../presentation/views/settings_page.dart';
+import '../di.dart';
+import '../notifiers/auth_notifier.dart';
+import '../services/auth_service.dart';
 import 'app_routes.dart';
 
+final authNotifier = AuthNotifier(getIt<IAuthService>());
+
 final GoRouter appRouter = GoRouter(
+  refreshListenable: authNotifier,
   initialLocation: AppRoutes.login,
   redirect: (context, state) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final loggedIn = authNotifier.isAuthenticated;
+    final loggingIn = state.matchedLocation == AppRoutes.login;
 
-    final String location = state.uri.toString();
-    final bool isGoingToAuth =
-        location == AppRoutes.login || location == AppRoutes.register;
-
-    if (!isLoggedIn && !isGoingToAuth) {
-      return AppRoutes.login;
+    // Pas connecté et pas sur la page de login
+    if (!loggedIn) {
+      return loggingIn ? null : AppRoutes.login;
     }
 
-    if (isLoggedIn && isGoingToAuth) {
+    // Connecté et sur la page de login
+    if (loggingIn) {
       return AppRoutes.home;
     }
 
