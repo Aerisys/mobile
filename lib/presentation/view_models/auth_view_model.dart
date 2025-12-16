@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../core/di.dart';
 import '../../core/enums/auth_exception_code_enum.dart';
@@ -24,7 +26,7 @@ class AuthViewModel extends CommonViewModel {
 
     try {
       await _auth.signInWithEmail(email, password);
-
+      await _saveFcmToken();
       isLoading = false;
       return true;
     } on FirebaseAuthException catch (e) {
@@ -60,7 +62,7 @@ class AuthViewModel extends CommonViewModel {
               'createdAt': FieldValue.serverTimestamp(),
             });
       }
-
+      await _saveFcmToken();
       isLoading = false;
       return true;
     } on FirebaseAuthException catch (e) {
@@ -76,6 +78,23 @@ class AuthViewModel extends CommonViewModel {
 
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<void> _saveFcmToken() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token == null) return;
+
+    await _firestore.collection('users').doc(user.uid).set({
+      'fcmToken': token,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    if (kDebugMode) {
+      debugPrint('FCM token sauvegardé: $token');
+    }
   }
 
   Future<bool> updateProfile({
