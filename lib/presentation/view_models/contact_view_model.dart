@@ -36,9 +36,9 @@ class ContactViewModel extends CommonViewModel {
     final user = _auth.currentUser;
     if (user == null) return const Stream.empty();
     return _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(user.uid)
-        .collection('location_requests')
+        .collection(FirestoreCollection.locationRequests.value)
         .snapshots();
   }
 
@@ -169,9 +169,9 @@ class ContactViewModel extends CommonViewModel {
       if (currentUser == null) throw Exception("Non connecté");
 
       await _firestore
-          .collection('users')
+          .collection(FirestoreCollection.users.value)
           .doc(friendUid)
-          .collection('location_requests')
+          .collection(FirestoreCollection.locationRequests.value)
           .doc(currentUser.uid)
           .set({
             'uid': currentUser.uid,
@@ -197,16 +197,16 @@ class ContactViewModel extends CommonViewModel {
     final batch = _firestore.batch();
 
     final requestRef = _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(currentUser.uid)
-        .collection('location_requests')
+        .collection(FirestoreCollection.locationRequests.value)
         .doc(senderUid);
     batch.delete(requestRef);
 
     final trackingRef = _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(senderUid)
-        .collection('tracking')
+        .collection(FirestoreCollection.tracking.value)
         .doc(currentUser.uid);
     batch.set(trackingRef, {
       'uid': currentUser.uid,
@@ -216,9 +216,9 @@ class ContactViewModel extends CommonViewModel {
     });
 
     final sharedWithRef = _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(currentUser.uid)
-        .collection('shared_with')
+        .collection(FirestoreCollection.sharedWith.value)
         .doc(senderUid);
     batch.set(sharedWithRef, {
       'uid': senderUid,
@@ -236,16 +236,16 @@ class ContactViewModel extends CommonViewModel {
       final batch = _firestore.batch();
 
       final trackingRef = _firestore
-          .collection('users')
+          .collection(FirestoreCollection.users.value)
           .doc(friendUid)
-          .collection('tracking')
+          .collection(FirestoreCollection.tracking.value)
           .doc(currentUser.uid);
       batch.delete(trackingRef);
 
       final sharedWithRef = _firestore
-          .collection('users')
+          .collection(FirestoreCollection.users.value)
           .doc(currentUser.uid)
-          .collection('shared_with')
+          .collection(FirestoreCollection.sharedWith.value)
           .doc(friendUid);
       batch.delete(sharedWithRef);
 
@@ -262,9 +262,11 @@ class ContactViewModel extends CommonViewModel {
     if (currentUser == null) return;
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(currentUser.uid)
-        .collection('location_requests') // On supprime de la bonne table
+        .collection(
+          FirestoreCollection.locationRequests.value,
+        ) // On supprime de la bonne table
         .doc(senderUid)
         .delete();
   }
@@ -296,9 +298,9 @@ class ContactViewModel extends CommonViewModel {
     if (user == null) return Stream.value([]);
 
     return _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.value)
         .doc(user.uid)
-        .collection('shared_with')
+        .collection(FirestoreCollection.sharedWith.value)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
