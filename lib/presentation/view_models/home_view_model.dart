@@ -19,8 +19,12 @@ class HomeViewModel extends CommonViewModel {
   final Map<String, FriendLocation> _friendsData = {};
   List<FriendLocation> get friends => _friendsData.values.toList();
 
+  DateTime? _lastUploadTime;
+  final int _uploadIntervalSeconds = 10;
+
   StreamSubscription<Position>? _gpsSubscription;
   StreamSubscription<QuerySnapshot>? _friendsListSubscription;
+  StreamSubscription<ServiceStatus>? _serviceStatusSubscription;
   final List<StreamSubscription> _individualSubscriptions = [];
 
   void init() {
@@ -28,6 +32,22 @@ class HomeViewModel extends CommonViewModel {
 
     _initLocation();
     _startTrackingFriends();
+
+    _serviceStatusSubscription = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      if (status == ServiceStatus.enabled) {
+        errorMessage = null;
+        _initLocation();
+      } else {
+        errorMessage = "Le GPS a été désactivé.";
+        stopTracking();
+      }
+    });
+  }
+
+  void retryLocation() {
+    errorMessage = null;
+    isLoading = true;
+    _initLocation();
   }
 
   Stream<QuerySnapshot> getTrackingFriendsStream() {
@@ -41,47 +61,86 @@ class HomeViewModel extends CommonViewModel {
   }
 
   Future<void> _initLocation() async {
-    final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    try {
+    isLoading = true;
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      errorMessage = "Le GPS est désactivé.";
-      isLoading = false;
-      return;
+      await Future.delayed(const Duration(milliseconds: 500));
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+      if (!serviceEnabled) {
+        errorMessage = "Le service de localisation est désactivé.";
+        isLoading = false;
+        return;
+      }
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        errorMessage = "Permission refusée.";
+        errorMessage = "Permission refusée. Impossible de vous localiser.";
         isLoading = false;
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      errorMessage = "Permission refusée définitivement.";
+      errorMessage = "Permission refusée définitivement. Allez dans les réglages.";
       isLoading = false;
       return;
     }
 
-    _gpsSubscription =
-        Geolocator.getPositionStream(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 20,
-          ),
-        ).listen((Position position) {
-          _currentPosition = LatLng(position.latitude, position.longitude);
+    Position? position = await Geolocator.getLastKnownPosition();
+    position ??= await Geolocator.getCurrentPosition();
 
-          final user = _auth.currentUser;
-          if (user != null) {
-            _firestore.collection('users').doc(user.uid).update({
-              'position': {'lat': position.latitude, 'lng': position.longitude},
-              'lastUpdated': FieldValue.serverTimestamp(),
-            });
-          }
-          isLoading = false;
-        });
+    _currentPosition = LatLng(position.latitude, position.longitude);
+
+    final user = _auth.currentUser;
+    if (user != null) {
+      _firestore.collection('users').doc(user.uid).update({
+        'position': {'lat': position.latitude, 'lng': position.longitude},
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+    }
+    
+    errorMessage = null;
+    isLoading = false;
+
+    _gpsSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 2,
+      ),
+    ).listen((Position newPos) {
+      _currentPosition = LatLng(newPos.latitude, newPos.longitude);
+      errorMessage = null;
+
+      final now = DateTime.now();
+      if (_lastUploadTime == null || now.difference(_lastUploadTime!).inSeconds >= _uploadIntervalSeconds) {
+        final u = _auth.currentUser;
+        if (u != null) {
+          _firestore.collection('users').doc(u.uid).update({
+            'position': {'lat': newPos.latitude, 'lng': newPos.longitude},
+            'lastUpdated': FieldValue.serverTimestamp(),
+          });
+          _lastUploadTime = now;
+        }
+      }
+    },
+      onError: (Object error) {
+        errorMessage = "Signal GPS perdu ou interrompu.";
+        isLoading = false;
+
+        Future.delayed(const Duration(seconds: 5), () => retryLocation());
+      },
+      cancelOnError: false
+    );
+    } catch (e) {
+      errorMessage = "Erreur GPS: $e";
+      isLoading = false;
+    }
   }
 
   void _startTrackingFriends() {
@@ -128,6 +187,7 @@ class HomeViewModel extends CommonViewModel {
   }
 
   Future<void> stopTracking() async {
+    await _serviceStatusSubscription?.cancel();
     await _gpsSubscription?.cancel();
     await _friendsListSubscription?.cancel();
     for (var sub in _individualSubscriptions) {

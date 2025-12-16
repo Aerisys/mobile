@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +18,14 @@ class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
   bool _hasCenteredOnce = false;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HomeViewModel>().init();
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
@@ -82,6 +91,71 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+
+          if (homeViewModel.isLoading)
+            const Positioned(
+                top: 100,
+                left: 0, right: 0,
+                child: Center(
+                    child: Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 10),
+                            Text("Recherche GPS...")
+                          ],
+                        ),
+                      ),
+                    )
+                )
+            ),
+
+          if (homeViewModel.errorMessage != null)
+            Positioned(
+              top: 100, left: 20, right: 20,
+              child: Card(
+                elevation: 4,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.location_off, color: Colors.red, size: 40),
+                      const SizedBox(height: 8),
+                      Text(
+                        homeViewModel.errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              await Geolocator.openLocationSettings();
+                            },
+                            child: const Text("Réglages"),
+                          ),
+                          const SizedBox(width: 16),
+                          FilledButton.icon(
+                            onPressed: () {
+                              context.read<HomeViewModel>().retryLocation();
+                            },
+                            icon: const Icon(Icons.refresh),
+                            label: const Text("Réessayer"),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
           Positioned(
             bottom: 20,

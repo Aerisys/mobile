@@ -42,13 +42,13 @@ class ContactViewModel extends CommonViewModel {
         .snapshots();
   }
 
-  /// Send a friend request to a user identified by their email.
   Future<bool> sendFriendRequest(String email) async {
     isLoading = true;
 
     try {
       final currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception("Non connecté");
+
       if (email.trim() == currentUser.email) {
         throw Exception("Impossible de s'ajouter soi-même");
       }
@@ -89,13 +89,13 @@ class ContactViewModel extends CommonViewModel {
           .doc(targetUid)
           .collection(FirestoreCollection.friendRequests.value)
           .doc(currentUser.uid)
-          .update({
+          .set({
             'uid': currentUser.uid,
             'displayName': currentUser.displayName ?? 'Inconnu',
             'photoURL': currentUser.photoURL,
             'email': currentUser.email,
             'timestamp': FieldValue.serverTimestamp(),
-          });
+          }, SetOptions(merge: true));
 
       isLoading = false;
       return true;
