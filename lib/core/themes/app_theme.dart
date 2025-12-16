@@ -60,6 +60,22 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.mainColor),
         ),
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.secondaryBackground,
+        indicatorColor: AppColors.mainColor,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: AppColors.black);
+          }
+          return const IconThemeData(color: AppColors.secondaryText);
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(color: AppColors.mainText, fontWeight: FontWeight.bold);
+          }
+          return const TextStyle(color: AppColors.secondaryText);
+        }),
+      ),
     );
   }
 }

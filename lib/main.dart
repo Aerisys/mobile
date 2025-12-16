@@ -1,14 +1,15 @@
-import 'package:firebase_core/firebase_core.dart'; // 1. Import Firebase Core
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'core/di.dart';
 import 'core/routes/app_router.dart';
 import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
-import 'presentation/view_model/auth_view_model.dart';
-import 'presentation/view_model/contact_view_model.dart';
+import 'presentation/view_models/auth_view_model.dart';
+import 'presentation/view_models/contact_view_model.dart';
 import 'services/notification_service.dart';
 
 void main() async {
@@ -33,11 +34,14 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  configureDependencies();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => ContactViewModel()),
+        ChangeNotifierProvider(create: (_) => getIt<AuthViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
       ],
       child: const HereBro(),
     ),

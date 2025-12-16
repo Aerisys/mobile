@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.people),
             tooltip: "Contacts",
             onPressed: () {
-              context.push('/contact');
+              context.push(AppRoutes.contact);
             },
           ),
           IconButton(
