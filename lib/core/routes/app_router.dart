@@ -1,6 +1,9 @@
 import 'package:go_router/go_router.dart';
 
+import '../../data/models/drone_model.dart';
 import '../../presentation/views/contact_page.dart';
+import '../../presentation/views/drone_details_page.dart';
+import '../../presentation/views/drone_list_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
@@ -68,6 +71,18 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.location,
       name: 'location',
       builder: (context, state) => const LocationPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.droneList,
+      name: 'droneList',
+      builder: (context, state) => const DroneListPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.droneDetails,
+      builder: (context, state) {
+        final drone = state.extra as DroneModel;
+        return DroneDetailsPage(drone: drone);
+      },
     ),
   ],
 );
