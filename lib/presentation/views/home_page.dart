@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                 urlTemplate:
                     'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
-                userAgentPackageName: 'com.herebro',
+                userAgentPackageName: 'fr.aerisys',
               ),
 
               MarkerLayer(

@@ -36,18 +36,18 @@ void main() async {
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
       ],
-      child: const HereBro(),
+      child: const Aerisys(),
     ),
   );
 }
 
-class HereBro extends StatelessWidget {
-  const HereBro({super.key});
+class Aerisys extends StatelessWidget {
+  const Aerisys({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'HereBro',
+      title: 'Aerisys',
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.darkTheme,
       routerConfig: appRouter,

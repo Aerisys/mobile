@@ -1,4 +1,4 @@
-package com.herebro.here_bro
+package fr.aerisys.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
