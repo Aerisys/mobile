@@ -10,6 +10,7 @@ import 'core/themes/app_theme.dart';
 import 'firebase_options.dart';
 import 'presentation/view_models/auth_view_model.dart';
 import 'presentation/view_models/contact_view_model.dart';
+import 'presentation/view_models/drone_view_model.dart';
 import 'presentation/view_models/home_view_model.dart';
 import 'presentation/view_models/map_view_model.dart';
 
@@ -36,6 +37,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<MapViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<DroneViewModel>())
       ],
       child: const Aerisys(),
     ),
