@@ -1,26 +1,79 @@
 {
   "project_info": {
-    "project_number": "479870007818",
-    "project_id": "herebro-app",
-    "storage_bucket": "herebro-app.firebasestorage.app"
+    "project_number": "417184109808",
+    "project_id": "aerisys-mobile",
+    "storage_bucket": "aerisys-mobile.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:479870007818:android:a1c56988f4d8a31f16fdf3",
+        "mobilesdk_app_id": "1:417184109808:android:41e01055a43101a648de35",
         "android_client_info": {
           "package_name": "com.herebro.here_bro"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "417184109808-n3qa0m93ra7fiq70nuugj9htdhrvb70l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHbm-IfMywNGHkcS7Qx_6uB58_WFspHj4"
+          "current_key": "AIzaSyBGQiI65hvV-PQFm7neLAkCD9NDy8Uwa-U"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417184109808-n3qa0m93ra7fiq70nuugj9htdhrvb70l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "417184109808-ati59c7bk76gf2uesu1at8gd5kvqnqlf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.aerisys.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417184109808:android:0fda09e98ea6c7a248de35",
+        "android_client_info": {
+          "package_name": "fr.aerisys.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417184109808-n3qa0m93ra7fiq70nuugj9htdhrvb70l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGQiI65hvV-PQFm7neLAkCD9NDy8Uwa-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417184109808-n3qa0m93ra7fiq70nuugj9htdhrvb70l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "417184109808-ati59c7bk76gf2uesu1at8gd5kvqnqlf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.aerisys.mobile"
+              }
+            }
+          ]
         }
       }
     }
