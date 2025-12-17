@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../presentation/views/contact_page.dart';
 import '../../presentation/views/home_page.dart';
+import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
 import '../../presentation/views/register_page.dart';
 import '../../presentation/views/settings_page.dart';
@@ -62,6 +63,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.settings,
       name: 'settings',
       builder: (context, state) => const SettingsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.location,
+      name: 'location',
+      builder: (context, state) => const LocationPage(),
     ),
   ],
 );

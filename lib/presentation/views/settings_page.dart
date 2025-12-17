@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/routes/app_routes.dart';
 import '../view_models/auth_view_model.dart';
-import '../view_models/home_view_model.dart';
+import '../view_models/map_view_model.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -192,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
 
                 if (confirm == true && context.mounted) {
-                  await context.read<HomeViewModel>().stopTracking();
+                  await context.read<MapViewModel>().stopTracking();
 
                   if (context.mounted) {
                     await context.read<AuthViewModel>().logout();
