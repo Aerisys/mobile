@@ -11,6 +11,7 @@ import 'firebase_options.dart';
 import 'presentation/view_models/auth_view_model.dart';
 import 'presentation/view_models/contact_view_model.dart';
 import 'presentation/view_models/home_view_model.dart';
+import 'presentation/view_models/map_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,6 @@ void main() async {
     sound: true,
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   configureDependencies();
 
   runApp(
@@ -34,6 +34,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<MapViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
       ],
       child: const Aerisys(),
