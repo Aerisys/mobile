@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/routes/app_routes.dart';
 import '../view_models/drone_view_model.dart';
 
 class DroneListPage extends StatefulWidget {
@@ -38,10 +39,7 @@ class _DroneListPageState extends State<DroneListPage> {
                   title: Text(drone.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("${drone.modelType} • ${drone.status}"),
                   trailing: Text("${drone.batteryLevel.toInt()}%"),
-                  onTap: () {
-                    // I will set this up next: navigate to details
-                    context.push('/drone/details', extra: drone);
-                  },
+                  onTap: () => context.push(AppRoutes.droneDetails),
                 ),
               );
             },
