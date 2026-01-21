@@ -18,4 +18,10 @@ class AppColors {
 
   static const Color mainColor = bleuAzur;
   static const Color secondaryColor = bleuArdoise;
+
+  static const Color brandBlue = Color(0xFF5591C4);
+  static const Color glassBackground = Color(0xB3000000); // Black with ~70% opacity
+  static const Color glassBorder = Colors.white10;
+  static const Color textWhite = Colors.white;
+  static const Color textWhite70 = Colors.white70;
 }
