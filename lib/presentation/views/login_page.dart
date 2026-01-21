@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(AppAssets.onlineBackground),
+                image: AssetImage(AppAssets.background),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                   Colors.black26, 
@@ -67,19 +67,14 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                    const SizedBox(height: 40),
-                   // Logo and Title
-                   const Icon(
-                    Icons.navigation_outlined, 
-                    size: 100,
-                    color: AppColors.textWhite,
-                  ),
+                  Image.asset(AppAssets.logo),
                   const Text(
                     'Connexion',
                     style: TextStyle(
                       fontFamily: 'Inter', 
                       fontSize: 40,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.textWhite,
+                      color: AppColors.mainText,
                       letterSpacing: 1.0,
                     ),
                   ),
@@ -91,9 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(24.0),
                     decoration: BoxDecoration(
-                      color: AppColors.glassBackground, // Semi-transparent black card
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.glassBorder),
                     ),
                     child: Column(
                       children: [
@@ -122,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                               child: Text(
                                 'Ou entrez vos identifiants',
-                                style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
+                                style: TextStyle(color: AppColors.mainText, fontSize: 12),
                               ),
                             ),
                             Expanded(child: Divider(color: Colors.white54)),
@@ -139,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             hintText: 'Email...',
                             filled: true,
-                            fillColor: AppColors.textWhite,
+                            fillColor: AppColors.mainText,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -151,11 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                         TextField(
                           controller: _passwordController,
                           obscureText: true,
-                          style: const TextStyle(color: AppColors.black),
+                          style: const TextStyle(color: AppColors.noirProfond),
                           decoration: InputDecoration(
                             hintText: 'Mot de passe...',
                             filled: true,
-                            fillColor: AppColors.textWhite,
+                            fillColor: AppColors.mainText,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -182,18 +175,18 @@ class _LoginPageState extends State<LoginPage> {
                                           _rememberMe = val ?? false;
                                         });
                                       },
-                                      side: const BorderSide(color: AppColors.textWhite70),
+                                      side: const BorderSide(color: AppColors.mainText),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text('Se rappeler de moi', style: TextStyle(color: AppColors.textWhite),),
+                                  const Text('Se rappeler de moi', style: TextStyle(color: AppColors.mainText),),
                                ],
                              ),
                              TextButton(
                               onPressed: () {}, // TODO: Forgot password
                               child: const Text(
                                 'Mot de passe oublié ?',
-                                style: TextStyle(color: AppColors.brandBlue), 
+                                style: TextStyle(color: AppColors.bleuAzur), 
                               ),
                              )
                           ],
@@ -228,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                                         SnackBar(
                                           content: Text(
                                             viewModel.errorMessage!,
-                                            style: const TextStyle(color: AppColors.textWhite),
+                                            style: const TextStyle(color: AppColors.mainText),
                                           ),
                                           backgroundColor: AppColors.error,
                                         ),
@@ -236,14 +229,14 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.brandBlue,
-                              foregroundColor: AppColors.textWhite,
+                              backgroundColor: AppColors.bleuAzur,
+                              foregroundColor: AppColors.mainText,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             child: viewModel.isLoading
-                              ? const CircularProgressIndicator(color: AppColors.textWhite)
+                              ? const CircularProgressIndicator(color: AppColors.mainText)
                               : const Text('Commencer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           ),
                         ),
@@ -254,13 +247,13 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Vous n'avez pas de compte ? ", style: TextStyle(color: AppColors.textWhite),),
+                            const Text("Vous n'avez pas de compte ? ", style: TextStyle(color: AppColors.mainText)),
                             GestureDetector(
                                onTap: () => context.go(AppRoutes.register),
                                child: const Text(
                                 'Créer', 
                                 style: TextStyle(
-                                  color: AppColors.brandBlue, 
+                                  color: AppColors.bleuAzur, 
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
@@ -300,8 +293,8 @@ class _SocialLoginButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textWhite,
-          foregroundColor: AppColors.black,
+          backgroundColor: AppColors.mainText,
+          foregroundColor: AppColors.noirProfond,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -318,7 +311,7 @@ class _SocialLoginButton extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: AppColors.noirProfond,
               ),
             ),
           ],

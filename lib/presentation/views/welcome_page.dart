@@ -13,21 +13,18 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                // Using a placeholder image that matches the "aerial coastal road" vibe
-                image: NetworkImage(AppAssets.onlineBackground),
+                image: AssetImage(AppAssets.background),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black26, // Adds a slight dark tint
+                  AppColors.noirProfond,
                   BlendMode.darken,
                 ),
               ),
             ),
           ),
-          // Gradient Overlay to ensure text readability
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -42,7 +39,6 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
           ),
-          // Content
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
@@ -50,13 +46,7 @@ class WelcomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 2),
-                  // Logo Placeholder
-                  // If you have the asset, replace this Icon with Image.asset('assets/logo.png')
-                  const Icon(
-                    Icons.navigation_outlined, // Closest material icon to the triangle shape
-                    size: 120,
-                    color: AppColors.textWhite,
-                  ),
+                  Image.asset(AppAssets.logo),
                   const SizedBox(height: 16),
                   
                   // Main Title
@@ -66,7 +56,7 @@ class WelcomePage extends StatelessWidget {
                       fontFamily: 'Inter', // Using system font effectively
                       fontSize: 40,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.textWhite,
+                      color: AppColors.mainText,
                       letterSpacing: 1.0,
                     ),
                   ),
@@ -80,7 +70,7 @@ class WelcomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textWhite,
+                      color: AppColors.mainText,
                       height: 1.2,
                     ),
                   ),
@@ -92,7 +82,7 @@ class WelcomePage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textWhite70,
+                      color: AppColors.mainText,
                       height: 1.4,
                     ),
                   ),
@@ -111,8 +101,8 @@ class WelcomePage extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.brandBlue, // Matches the blue from the image
-                        foregroundColor: AppColors.textWhite,
+                        backgroundColor: AppColors.mainColor, // Matches the blue from the image
+                        foregroundColor: AppColors.mainText,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
