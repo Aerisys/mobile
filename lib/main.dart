@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/di.dart';
 import 'core/routes/app_router.dart';
@@ -28,7 +29,8 @@ void main() async {
     sound: true,
   );
 
-  configureDependencies();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  configureDependencies(sharedPreferences);
 
   runApp(
     MultiProvider(
