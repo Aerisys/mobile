@@ -5,6 +5,7 @@ import 'app_colors.dart';
 class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
+      fontFamily: 'NeueHaasDisplay',
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.mainBackground,
       primaryColor: AppColors.mainColor,
@@ -12,15 +13,16 @@ class AppTheme {
         primary: AppColors.mainColor,
         secondary: AppColors.secondaryColor,
         error: AppColors.error,
-        surface: AppColors.secondaryBackground,
+        surface: AppColors.mainBackground,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.secondaryBackground,
+        backgroundColor: AppColors.mainBackground,
         elevation: 0,
         titleTextStyle: TextStyle(
-          color: AppColors.mainText,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+            color: AppColors.mainText,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'HansonBold'
         ),
         iconTheme: IconThemeData(color: AppColors.mainText),
       ),
@@ -29,13 +31,25 @@ class AppTheme {
         bodyMedium: TextStyle(color: AppColors.secondaryText),
         bodySmall: TextStyle(color: AppColors.secondaryText),
         titleLarge: TextStyle(
-          color: AppColors.mainText,
-          fontWeight: FontWeight.bold,
+            color: AppColors.mainText,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'HansonBold'
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+            backgroundColor: AppColors.mainColor,
+            foregroundColor: AppColors.blanc,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            padding: const EdgeInsets.all(10),
+            fixedSize: const Size(331, 40)
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.secondaryButton,
+          backgroundColor: AppColors.mainBackground,
           foregroundColor: AppColors.mainText,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -45,27 +59,25 @@ class AppTheme {
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.mainColor,
-        foregroundColor: AppColors.black,
+        foregroundColor: AppColors.noirProfond,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.secondaryBackground,
-        hintStyle: const TextStyle(color: AppColors.secondaryText),
+        fillColor: AppColors.blanc,
+        hintStyle: const TextStyle(color: AppColors.grisAnthracite),
+        labelStyle: const TextStyle(color: AppColors.noirProfond),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.grey1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.mainColor),
+          borderSide: BorderSide.none,
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.secondaryBackground,
+        backgroundColor: AppColors.mainBackground,
         indicatorColor: AppColors.mainColor,
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: AppColors.black);
+            return const IconThemeData(color: AppColors.noirProfond);
           }
           return const IconThemeData(color: AppColors.secondaryText);
         }),

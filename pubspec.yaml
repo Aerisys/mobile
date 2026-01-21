@@ -41,3 +41,51 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/HereBro.png
+    - assets/images/background.jpg
+  
+  fonts:
+    - family: HansonBold
+      fonts:
+        - asset: assets/fonts/Hanson-Bold.ttf
+    - family: NeueHaasDisplay
+      fonts:
+        - asset: assets/fonts/grotesk/NeueHaasDisplayBlack.ttf
+          weight: 900
+        - asset: assets/fonts/grotesk/NeueHaasDisplayBlackItalic.ttf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayBold.ttf
+          weight: 700
+        - asset: assets/fonts/grotesk/NeueHaasDisplayBoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayLight.ttf
+          weight: 300
+        - asset: assets/fonts/grotesk/NeueHaasDisplayLightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayMedium.ttf
+          weight: 500
+        - asset: assets/fonts/grotesk/NeueHaasDisplayMediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayRoman.ttf
+          weight: 400
+        - asset: assets/fonts/grotesk/NeueHaasDisplayRomanItalic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayThin.ttf
+          weight: 300
+        - asset: assets/fonts/grotesk/NeueHaasDisplayThinItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayXThin.ttf
+          weight: 200
+        - asset: assets/fonts/grotesk/NeueHaasDisplayXThinItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/grotesk/NeueHaasDisplayXXThin.ttf
+          weight: 100
+        - asset: assets/fonts/grotesk/NeueHaasDisplayXXThinItalic.ttf
+          weight: 100
+          style: italic
