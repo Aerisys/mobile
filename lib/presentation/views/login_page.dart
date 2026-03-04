@@ -40,10 +40,7 @@ class _LoginPageState extends State<LoginPage> {
               image: DecorationImage(
                 image: NetworkImage(AppAssets.onlineBackground),
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black26, 
-                  BlendMode.darken,
-                ),
+                colorFilter: ColorFilter.mode(Colors.black26, BlendMode.darken),
               ),
             ),
           ),
@@ -60,23 +57,26 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          
+
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 children: [
-                   const SizedBox(height: 40),
-                   // Logo and Title
-                   const Icon(
-                    Icons.navigation_outlined, 
+                  const SizedBox(height: 40),
+                  // Logo and Title
+                  const Icon(
+                    Icons.navigation_outlined,
                     size: 100,
                     color: AppColors.textWhite,
                   ),
                   const Text(
                     'Connexion',
                     style: TextStyle(
-                      fontFamily: 'Inter', 
+                      fontFamily: 'Inter',
                       fontSize: 40,
                       fontWeight: FontWeight.w900,
                       color: AppColors.textWhite,
@@ -91,7 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(24.0),
                     decoration: BoxDecoration(
-                      color: AppColors.glassBackground, // Semi-transparent black card
+                      color: AppColors
+                          .glassBackground, // Semi-transparent black card
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.glassBorder),
                     ),
@@ -102,7 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                           icon: FontAwesomeIcons.google,
                           text: 'Continuer avec Google',
                           onPressed: () {}, // TODO: Implement Google Sign In
-                          iconColor: Colors.red, // Approximation for Google logo color
+                          iconColor:
+                              Colors.red, // Approximation for Google logo color
                         ),
                         const SizedBox(height: 16),
                         _SocialLoginButton(
@@ -113,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         const SizedBox(height: 24),
-                        
+
                         // Divider
                         const Row(
                           children: [
@@ -122,7 +124,10 @@ class _LoginPageState extends State<LoginPage> {
                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                               child: Text(
                                 'Ou entrez vos identifiants',
-                                style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
+                                style: TextStyle(
+                                  color: AppColors.textWhite70,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                             Expanded(child: Divider(color: Colors.white54)),
@@ -140,7 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: 'Email...',
                             filled: true,
                             fillColor: AppColors.textWhite,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -156,7 +164,10 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: 'Mot de passe...',
                             filled: true,
                             fillColor: AppColors.textWhite,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -170,32 +181,44 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                             Row(
-                               children: [
+                            Expanded(
+                              child: Row(
+                                children: [
                                   SizedBox(
                                     height: 24,
                                     width: 24,
                                     child: Checkbox(
-                                      value: _rememberMe, 
+                                      value: _rememberMe,
                                       onChanged: (val) {
                                         setState(() {
                                           _rememberMe = val ?? false;
                                         });
                                       },
-                                      side: const BorderSide(color: AppColors.textWhite70),
+                                      side: const BorderSide(
+                                        color: AppColors.textWhite70,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text('Se rappeler de moi', style: TextStyle(color: AppColors.textWhite),),
-                               ],
-                             ),
-                             TextButton(
+                                  const Flexible(
+                                    child: Text(
+                                      'Se rappeler de moi',
+                                      style: TextStyle(
+                                        color: AppColors.textWhite,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton(
                               onPressed: () {}, // TODO: Forgot password
                               child: const Text(
                                 'Mot de passe oublié ?',
-                                style: TextStyle(color: AppColors.brandBlue), 
+                                style: TextStyle(color: AppColors.brandBlue),
                               ),
-                             )
+                            ),
                           ],
                         ),
 
@@ -224,11 +247,15 @@ class _LoginPageState extends State<LoginPage> {
                                       if (!context.mounted) return;
                                       context.go(AppRoutes.home);
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Text(
                                             viewModel.errorMessage!,
-                                            style: const TextStyle(color: AppColors.textWhite),
+                                            style: const TextStyle(
+                                              color: AppColors.textWhite,
+                                            ),
                                           ),
                                           backgroundColor: AppColors.error,
                                         ),
@@ -243,25 +270,36 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: viewModel.isLoading
-                              ? const CircularProgressIndicator(color: AppColors.textWhite)
-                              : const Text('Commencer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                ? const CircularProgressIndicator(
+                                    color: AppColors.textWhite,
+                                  )
+                                : const Text(
+                                    'Commencer',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
 
                         // Footer
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Vous n'avez pas de compte ? ", style: TextStyle(color: AppColors.textWhite),),
+                            const Text(
+                              "Vous n'avez pas de compte ? ",
+                              style: TextStyle(color: AppColors.textWhite),
+                            ),
                             GestureDetector(
-                               onTap: () => context.go(AppRoutes.register),
-                               child: const Text(
-                                'Créer', 
+                              onTap: () => context.go(AppRoutes.register),
+                              child: const Text(
+                                'Créer',
                                 style: TextStyle(
-                                  color: AppColors.brandBlue, 
-                                  fontWeight: FontWeight.bold
+                                  color: AppColors.brandBlue,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
