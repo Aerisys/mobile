@@ -25,11 +25,9 @@ class _GraphiqueView extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<GraphiqueViewModel>();
 
-    final widgets = _buildWidgets(vm);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Télémétrie"),
+        title: const Text("Télémétrie Drone"),
         actions: [
           IconButton(
             icon: const Icon(Icons.tune),
@@ -38,66 +36,53 @@ class _GraphiqueView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text("Sauvegarder les données ?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text("Non"),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text("Oui"),
-                    ),
-                  ],
-                ),
+              final path = await context.read<GraphiqueViewModel>().saveData();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("CSV sauvegardé dans : $path")),
               );
-
-              if (confirm == true) {
-                await context.read<GraphiqueViewModel>().saveData();
-              }
             },
           ),
         ],
       ),
-      body: ListView(padding: const EdgeInsets.all(12), children: widgets),
+      body: ReorderableListView(
+        padding: const EdgeInsets.all(12),
+        onReorder: vm.reorder,
+        children: vm.order.where((key) => vm.visible[key]!).map((key) {
+          return _buildCard(key, vm);
+        }).toList(),
+      ),
     );
   }
 
-  List<Widget> _buildWidgets(GraphiqueViewModel vm) {
-    final widgets = <Widget>[];
-
-    if (vm.visible["gyro"]!) {
-      widgets.add(
-        const _GraphCard(
+  Widget _buildCard(String key, GraphiqueViewModel vm) {
+    switch (key) {
+      case "gyro":
+        return _GraphCard(
+          key: ValueKey("gyro"),
           title: "Gyroscope",
           child: LineGraphWidget(type: GraphType.gyro),
-        ),
-      );
-    }
-
-    if (vm.visible["accel"]!) {
-      widgets.add(
-        const _GraphCard(
+        );
+      case "accel":
+        return _GraphCard(
+          key: ValueKey("accel"),
           title: "Accéléromètre",
           child: LineGraphWidget(type: GraphType.accel),
-        ),
-      );
+        );
+      case "motors":
+        return _GraphCard(
+          key: ValueKey("motors"),
+          title: "Moteurs",
+          child: const MotorBarWidget(),
+        );
+      case "battery":
+        return _GraphCard(
+          key: ValueKey("battery"),
+          title: "Batterie",
+          child: const BatteryBarWidget(),
+        );
+      default:
+        return SizedBox(key: ValueKey(key));
     }
-
-    if (vm.visible["motors"]!) {
-      widgets.add(const _GraphCard(title: "Moteurs", child: MotorBarWidget()));
-    }
-
-    if (vm.visible["battery"]!) {
-      widgets.add(
-        const _GraphCard(title: "Batterie", child: BatteryBarWidget()),
-      );
-    }
-
-    return widgets;
   }
 
   void _openSelector(BuildContext context) {
@@ -105,31 +90,55 @@ class _GraphiqueView extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (_) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              title: const Text("Gyroscope"),
-              value: vm.visible["gyro"]!,
-              onChanged: (v) => vm.toggle("gyro", v),
-            ),
-            SwitchListTile(
-              title: const Text("Accéléromètre"),
-              value: vm.visible["accel"]!,
-              onChanged: (v) => vm.toggle("accel", v),
-            ),
-            SwitchListTile(
-              title: const Text("Moteurs"),
-              value: vm.visible["motors"]!,
-              onChanged: (v) => vm.toggle("motors", v),
-            ),
-            SwitchListTile(
-              title: const Text("Batterie"),
-              value: vm.visible["battery"]!,
-              onChanged: (v) => vm.toggle("battery", v),
-            ),
-          ],
+        // On enveloppe le contenu du BottomSheet avec l'instance existante du VM
+        return ChangeNotifierProvider.value(
+          value: vm,
+          child: Consumer<GraphiqueViewModel>(
+            builder: (context, currentVm, child) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Affichage des graphiques",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Divider(),
+                    SwitchListTile(
+                      title: const Text("Gyroscope"),
+                      value: currentVm.visible["gyro"]!,
+                      onChanged: (v) => currentVm.toggle("gyro", v),
+                    ),
+                    SwitchListTile(
+                      title: const Text("Accéléromètre"),
+                      value: currentVm.visible["accel"]!,
+                      onChanged: (v) => currentVm.toggle("accel", v),
+                    ),
+                    SwitchListTile(
+                      title: const Text("Moteurs"),
+                      value: currentVm.visible["motors"]!,
+                      onChanged: (v) => currentVm.toggle("motors", v),
+                    ),
+                    SwitchListTile(
+                      title: const Text("Batterie"),
+                      value: currentVm.visible["battery"]!,
+                      onChanged: (v) => currentVm.toggle("battery", v),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -140,21 +149,25 @@ class _GraphCard extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const _GraphCard({required this.title, required this.child});
+  const _GraphCard({super.key, required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: GestureDetector(
-          onDoubleTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => Scaffold(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onDoubleTap: () {
+          final currentVm = context.read<GraphiqueViewModel>();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ChangeNotifierProvider.value(
+                value: currentVm,
+                child: Scaffold(
                   appBar: AppBar(title: Text(title)),
                   body: Padding(
                     padding: const EdgeInsets.all(16),
@@ -162,20 +175,29 @@ class _GraphCard extends StatelessWidget {
                   ),
                 ),
               ),
-            );
-          },
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const Icon(Icons.drag_handle, color: Colors.grey),
+                ],
               ),
-              const SizedBox(height: 10),
-              SizedBox(height: 220, child: child),
+              const SizedBox(height: 12),
+              SizedBox(height: 200, child: child),
             ],
           ),
         ),
