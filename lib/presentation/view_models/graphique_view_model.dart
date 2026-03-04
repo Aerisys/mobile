@@ -7,65 +7,52 @@ import 'package:flutter/material.dart';
 class GraphiqueViewModel extends ChangeNotifier {
   final Random _random = Random();
 
-  final List<List<FlSpot>> _lines = [];
-
-  List<List<FlSpot>> get lines => _lines;
+  static const int maxPoints = 30;
 
   int _time = 0;
   Timer? _timer;
 
+  /// valeur télémétrie
+  /// Gyro
+  final List<List<FlSpot>> gyro = [[], [], []];
+
+  /// Accéléromètre
+  final List<List<FlSpot>> accel = [[], [], []];
+
+  /// moteurs
+  final List<double> motors = [0, 0, 0, 0];
+
   GraphiqueViewModel() {
-    _init();
-  }
-
-  void _init() {
-    addLine();
-    addLine();
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (_) {
       _generateData();
     });
-  }
-
-  void addLine() {
-    _lines.add([FlSpot(_time.toDouble(), _random.nextDouble() * 10)]);
-    notifyListeners();
   }
 
   void _generateData() {
     _time++;
 
-    for (int i = 0; i < _lines.length; i++) {
-      final value = _random.nextDouble() * 10;
-      _lines[i].add(FlSpot(_time.toDouble(), value));
+    _updateLines(gyro);
+    _updateLines(accel);
 
-      if (_lines[i].length > 50) {
-        _lines[i].removeAt(0);
-      }
+    for (int i = 0; i < motors.length; i++) {
+      motors[i] = _random.nextDouble() * 100;
     }
 
     notifyListeners();
   }
 
-  List<LineChartBarData> buildChartLines() {
-    final colors = [
-      Colors.blue,
-      Colors.red,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-    ];
+  void _updateLines(List<List<FlSpot>> dataset) {
+    for (final line in dataset) {
+      line.add(FlSpot(_time.toDouble(), (_random.nextDouble() * 2) - 1));
 
-    return List.generate(_lines.length, (index) {
-      return LineChartBarData(
-        spots: _lines[index],
-        isCurved: true,
-        barWidth: 3,
-        color: colors[index % colors.length],
-        dotData: const FlDotData(show: false),
-      );
-    });
+      if (line.length > maxPoints) {
+        line.removeAt(0);
+      }
+    }
   }
+
+  double get minX => _time > maxPoints ? (_time - maxPoints).toDouble() : 0;
+  double get maxX => _time.toDouble();
 
   @override
   void dispose() {

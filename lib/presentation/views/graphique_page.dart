@@ -1,7 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../components/line_graph_widget.dart';
+import '../components/motor_bar_widget.dart';
 import '../view_models/graphique_view_model.dart';
 
 class GraphiquePage extends StatelessWidget {
@@ -21,43 +22,36 @@ class _GraphiqueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<GraphiqueViewModel>();
+    final vm = context.watch<GraphiqueViewModel>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Graphiques temps réel")),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<GraphiqueViewModel>().addLine();
-        },
-        child: const Icon(Icons.add),
-      ),
+      appBar: AppBar(title: const Text("Telemetry")),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: LineChart(
-          LineChartData(
-            minX: 0,
-            minY: 0,
-            maxY: 10,
-
-            lineBarsData: viewModel.buildChartLines(),
-
-            gridData: FlGridData(show: true),
-
-            borderData: FlBorderData(show: false),
-
-            titlesData: FlTitlesData(
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: true),
-              ),
-              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
-            ),
-
-            lineTouchData: LineTouchData(
-              touchTooltipData: LineTouchTooltipData(
-                getTooltipColor: (_) => Colors.black,
+        child: Column(
+          children: [
+            Expanded(
+              child: LineGraphWidget(
+                lines: vm.gyro,
+                minX: vm.minX,
+                maxX: vm.maxX,
               ),
             ),
-          ),
+
+            const SizedBox(height: 20),
+
+            Expanded(
+              child: LineGraphWidget(
+                lines: vm.accel,
+                minX: vm.minX,
+                maxX: vm.maxX,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            SizedBox(height: 200, child: MotorBarWidget(motors: vm.motors)),
+          ],
         ),
       ),
     );
