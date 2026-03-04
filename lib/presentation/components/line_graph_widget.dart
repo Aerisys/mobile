@@ -1,40 +1,53 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../view_models/graphique_view_model.dart';
 
 enum GraphType { gyro, accel }
 
 class LineGraphWidget extends StatelessWidget {
-  final GraphType type;
+  final List<List<FlSpot>> lines;
+  final double minX;
+  final double maxX;
 
-  const LineGraphWidget({super.key, required this.type});
+  const LineGraphWidget({
+    super.key,
+    required this.lines,
+    required this.minX,
+    required this.maxX,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<GraphiqueViewModel>();
-
-    final data = type == GraphType.gyro ? vm.gyro : vm.accel;
+    // évite le crash mostLeftSpot si jamais
+    if (lines.isEmpty || lines.every((l) => l.isEmpty)) {
+      return const Center(child: Text("En attente de données"));
+    }
 
     final colors = [Colors.blue, Colors.red, Colors.green];
 
     return LineChart(
       LineChartData(
-        minX: vm.minX,
-        maxX: vm.maxX,
+        minX: minX,
+        maxX: maxX,
         minY: -1.5,
         maxY: 1.5,
-
         gridData: FlGridData(show: true),
         borderData: FlBorderData(show: false),
+        lineBarsData: List.generate(lines.length, (i) {
+          final spots = lines[i];
+          // ne jamais donner une liste vide à fl_chart
+          if (spots.isEmpty) {
+            return LineChartBarData(
+              spots: const [FlSpot(0, 0)],
+              color: colors[i % colors.length],
+              dotData: const FlDotData(show: false),
+            );
+          }
 
-        lineBarsData: List.generate(data.length, (i) {
           return LineChartBarData(
-            spots: data[i],
+            spots: spots,
             isCurved: true,
             barWidth: 2,
-            color: colors[i],
+            color: colors[i % colors.length],
             dotData: const FlDotData(show: false),
           );
         }),

@@ -58,27 +58,30 @@ class _GraphiqueView extends StatelessWidget {
     switch (key) {
       case "gyro":
         return _GraphCard(
-          key: ValueKey("gyro"),
+          key: const ValueKey("gyro"),
           title: "Gyroscope",
-          child: LineGraphWidget(type: GraphType.gyro),
+          child: LineGraphWidget(lines: vm.gyro, minX: vm.minX, maxX: vm.maxX),
         );
+
       case "accel":
         return _GraphCard(
-          key: ValueKey("accel"),
+          key: const ValueKey("accel"),
           title: "Accéléromètre",
-          child: LineGraphWidget(type: GraphType.accel),
+          child: LineGraphWidget(lines: vm.accel, minX: vm.minX, maxX: vm.maxX),
         );
+
       case "motors":
         return _GraphCard(
-          key: ValueKey("motors"),
+          key: const ValueKey("motors"),
           title: "Moteurs",
-          child: const MotorBarWidget(),
+          child: MotorBarWidget(motors: vm.motors),
         );
+
       case "battery":
         return _GraphCard(
-          key: ValueKey("battery"),
+          key: const ValueKey("battery"),
           title: "Batterie",
-          child: const BatteryBarWidget(),
+          child: BatteryBarWidget(battery: vm.battery),
         );
       default:
         return SizedBox(key: ValueKey(key));

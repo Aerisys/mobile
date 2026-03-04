@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../view_models/graphique_view_model.dart';
 
 class BatteryBarWidget extends StatelessWidget {
-  const BatteryBarWidget({super.key});
+  final double battery; // 0..100
+
+  const BatteryBarWidget({super.key, required this.battery});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<GraphiqueViewModel>();
+    final v = (battery.clamp(0, 100)) / 100;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Niveau batterie"),
         const SizedBox(height: 8),
-        LinearProgressIndicator(value: vm.battery / 100, minHeight: 20),
+        LinearProgressIndicator(value: v, minHeight: 20),
         const SizedBox(height: 6),
-        Text("${vm.battery.toStringAsFixed(1)} %"),
+        Text("${battery.toStringAsFixed(1)} %"),
       ],
     );
   }
