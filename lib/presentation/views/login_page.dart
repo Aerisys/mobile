@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
+import '../../core/themes/app_colors.dart';
 import '../view_models/auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -28,122 +32,334 @@ class _LoginPageState extends State<LoginPage> {
     final viewModel = context.watch<AuthViewModel>();
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Icon(Icons.lock_person_outlined, size: 100),
-                const SizedBox(height: 24),
-                Text(
-                  "Bienvenue",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Connectez-vous pour continuer",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-
-                const SizedBox(height: 48),
-
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: "Email",
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: "Mot de passe",
-                    prefixIcon: Icon(Icons.lock_outlined),
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.visibility_off_outlined),
-                  ),
-                ),
-
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text("Mot de passe oublié ?"),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                FilledButton.icon(
-                  onPressed: viewModel.isLoading
-                      ? null
-                      : () async {
-                          FocusScope.of(context).unfocus();
-
-                          final bool success = await context
-                              .read<AuthViewModel>()
-                              .login(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-
-                          if (!context.mounted) return;
-
-                          if (success) {
-                            if (!context.mounted) return;
-                            context.go(AppRoutes.home);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  viewModel.errorMessage!,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                  icon: viewModel.isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Icon(Icons.login),
-                  label: Text(
-                    viewModel.isLoading ? "Connexion..." : "Se connecter",
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Pas encore de compte ?"),
-                    TextButton(
-                      onPressed: () {
-                        context.go(AppRoutes.register);
-                      },
-                      child: const Text("S'inscrire"),
-                    ),
-                  ],
-                ),
-              ],
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(AppAssets.onlineBackground),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(Colors.black26, BlendMode.darken),
+              ),
             ),
           ),
+          // Gradient Overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.0),
+                  Colors.black.withValues(alpha: 0.6),
+                ],
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 16.0,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 40),
+                  // Logo and Title
+                  const Icon(
+                    Icons.navigation_outlined,
+                    size: 100,
+                    color: AppColors.textWhite,
+                  ),
+                  const Text(
+                    'Connexion',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 40,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textWhite,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Main Card Container
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24.0),
+                    decoration: BoxDecoration(
+                      color: AppColors
+                          .glassBackground, // Semi-transparent black card
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.glassBorder),
+                    ),
+                    child: Column(
+                      children: [
+                        // Social Buttons
+                        _SocialLoginButton(
+                          icon: FontAwesomeIcons.google,
+                          text: 'Continuer avec Google',
+                          onPressed: () {}, // TODO: Implement Google Sign In
+                          iconColor:
+                              Colors.red, // Approximation for Google logo color
+                        ),
+                        const SizedBox(height: 16),
+                        _SocialLoginButton(
+                          icon: FontAwesomeIcons.apple,
+                          text: 'Continuer avec Apple',
+                          onPressed: () {}, // TODO: Implement Apple Sign In
+                          iconColor: Colors.black,
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Divider
+                        const Row(
+                          children: [
+                            Expanded(child: Divider(color: Colors.white54)),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                'Ou entrez vos identifiants',
+                                style: TextStyle(
+                                  color: AppColors.textWhite70,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            Expanded(child: Divider(color: Colors.white54)),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Input Fields
+                        TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Email...',
+                            filled: true,
+                            fillColor: AppColors.textWhite,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          style: const TextStyle(color: AppColors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Mot de passe...',
+                            filled: true,
+                            fillColor: AppColors.textWhite,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Options Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: Checkbox(
+                                      value: _rememberMe,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _rememberMe = val ?? false;
+                                        });
+                                      },
+                                      side: const BorderSide(
+                                        color: AppColors.textWhite70,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Flexible(
+                                    child: Text(
+                                      'Se rappeler de moi',
+                                      style: TextStyle(
+                                        color: AppColors.textWhite,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {}, // TODO: Forgot password
+                              child: const Text(
+                                'Mot de passe oublié ?',
+                                style: TextStyle(color: AppColors.brandBlue),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Action Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: viewModel.isLoading
+                                ? null
+                                : () async {
+                                    FocusScope.of(context).unfocus();
+
+                                    final bool success = await context
+                                        .read<AuthViewModel>()
+                                        .login(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                        );
+
+                                    if (!context.mounted) return;
+
+                                    if (success) {
+                                      if (!context.mounted) return;
+                                      context.go(AppRoutes.home);
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            viewModel.errorMessage!,
+                                            style: const TextStyle(
+                                              color: AppColors.textWhite,
+                                            ),
+                                          ),
+                                          backgroundColor: AppColors.error,
+                                        ),
+                                      );
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.brandBlue,
+                              foregroundColor: AppColors.textWhite,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: viewModel.isLoading
+                                ? const CircularProgressIndicator(
+                                    color: AppColors.textWhite,
+                                  )
+                                : const Text(
+                                    'Commencer',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Footer
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Vous n'avez pas de compte ? ",
+                              style: TextStyle(color: AppColors.textWhite),
+                            ),
+                            GestureDetector(
+                              onTap: () => context.go(AppRoutes.register),
+                              child: const Text(
+                                'Créer',
+                                style: TextStyle(
+                                  color: AppColors.brandBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SocialLoginButton extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
+  final Color iconColor;
+
+  const _SocialLoginButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.textWhite,
+          foregroundColor: AppColors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FaIcon(icon, color: iconColor),
+            const SizedBox(width: 12),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );

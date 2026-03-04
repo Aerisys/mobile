@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../core/routes/app_routes.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,10 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Aerisys Dashboard'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Aerisys Dashboard'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: GridView.count(
@@ -47,6 +45,13 @@ class HomePage extends StatelessWidget {
               color: Colors.orange,
               onTap: () => context.push(AppRoutes.contact),
             ),
+            _buildMenuButton(
+              context,
+              title: 'Graphique',
+              icon: Icons.contacts,
+              color: Colors.red,
+              onTap: () => context.push(AppRoutes.graphique),
+            ),
           ],
         ),
       ),
@@ -54,12 +59,12 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildMenuButton(
-      BuildContext context, {
-        required String title,
-        required IconData icon,
-        required Color color,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(15),
