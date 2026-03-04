@@ -4,6 +4,7 @@ import '../../data/models/drone_model.dart';
 import '../../presentation/views/contact_page.dart';
 import '../../presentation/views/drone_details_page.dart';
 import '../../presentation/views/drone_list_page.dart';
+import '../../presentation/views/graphique_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
@@ -16,7 +17,10 @@ import '../services/auth_service.dart';
 import '../services/preferences_service.dart';
 import 'app_routes.dart';
 
-final authNotifier = AuthNotifier(getIt<IAuthService>(), getIt<PreferencesService>());
+final authNotifier = AuthNotifier(
+  getIt<IAuthService>(),
+  getIt<PreferencesService>(),
+);
 
 final List<String> unauthenticatedRoutes = [
   AppRoutes.welcome,
@@ -69,6 +73,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.contact,
       name: 'contact',
       builder: (context, state) => const ContactPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.graphique,
+      name: 'graphique',
+      builder: (context, state) => const GraphiquePage(),
     ),
     GoRoute(
       path: AppRoutes.settings,
