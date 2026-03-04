@@ -59,12 +59,15 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 16.0,
-              ),
-              child: Column(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 16.0,
+                  ),
+                  child: Column(
                 children: [
                   const SizedBox(height: 40),
                   // Logo and Title
@@ -91,8 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(24.0),
                     decoration: BoxDecoration(
-                      color: AppColors
-                          .glassBackground, // Semi-transparent black card
+                      color: Colors.black, // Solid black card per mockup
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.glassBorder),
                     ),
@@ -309,6 +311,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
               ),
             ),
           ),

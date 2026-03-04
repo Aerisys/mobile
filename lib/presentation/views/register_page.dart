@@ -70,208 +70,213 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           
           SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Column(
-                children: [
-                   const SizedBox(height: 20),
-                   // Logo and Title
-                   const Icon(
-                    Icons.navigation_outlined, 
-                    size: 80,
-                    color: AppColors.textWhite,
-                  ),
-                  const Text(
-                    'Créer un\ncompte',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Inter', 
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textWhite,
-                      letterSpacing: 1.0,
-                      height: 1.0, 
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Main Card Container
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.glassBackground, // Semi-transparent black card
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.glassBorder),
-                    ),
-                    child: Column(
-                      children: [
-                         // Social Buttons
-                        _SocialLoginButton(
-                          icon: FontAwesomeIcons.google,
-                          text: 'Continuer avec Google',
-                          onPressed: () {}, // TODO: Implement Google Sign In
-                          iconColor: Colors.red, // Approximation for Google logo color
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                  child: Column(
+                    children: [
+                       const SizedBox(height: 20),
+                       // Logo and Title
+                       const Icon(
+                        Icons.navigation_outlined, 
+                        size: 80,
+                        color: AppColors.textWhite,
+                      ),
+                      const Text(
+                        'Créer un\ncompte',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Inter', 
+                          fontSize: 36,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.textWhite,
+                          letterSpacing: 1.0,
+                          height: 1.0, 
                         ),
-                        const SizedBox(height: 16),
-                        _SocialLoginButton(
-                          icon: FontAwesomeIcons.apple,
-                          text: 'Continuer avec Apple',
-                          onPressed: () {}, // TODO: Implement Apple Sign In
-                          iconColor: Colors.black,
-                        ),
+                      ),
 
-                        const SizedBox(height: 24),
-                        
-                        // Divider
-                        const Row(
+                      const SizedBox(height: 20),
+
+                      // Main Card Container
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black, // Solid black card per mockup
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.glassBorder),
+                        ),
+                        child: Column(
                           children: [
-                            Expanded(child: Divider(color: Colors.white54)),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                'Ou continuer avec email',
-                                style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
-                              ),
+                             // Social Buttons
+                            _SocialLoginButton(
+                              icon: FontAwesomeIcons.google,
+                              text: 'Continuer avec Google',
+                              onPressed: () {}, // TODO: Implement Google Sign In
+                              iconColor: Colors.red, // Approximation for Google logo color
                             ),
-                            Expanded(child: Divider(color: Colors.white54)),
-                          ],
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Form Fields
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                controller: _nameController,
-                                hintText: 'Nom',
-                              ),
+                            const SizedBox(height: 16),
+                            _SocialLoginButton(
+                              icon: FontAwesomeIcons.apple,
+                              text: 'Continuer avec Apple',
+                              onPressed: () {}, // TODO: Implement Apple Sign In
+                              iconColor: Colors.black,
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildTextField(
-                                controller: _firstNameController,
-                                hintText: 'Prénom',
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _emailController,
-                          hintText: 'Email',
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _dobController,
-                          hintText: 'Date de naissance',
-                          keyboardType: TextInputType.datetime,
-                           // Ideally use a date picker here
-                           readOnly: false, // Set to true if using date picker
-                        ),
-                         const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _passwordController,
-                          hintText: 'Mot de passe...',
-                          obscureText: true,
-                        ),
-                         const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _confirmPasswordController,
-                          hintText: 'confirmer mot de passe',
-                          obscureText: true,
-                        ),
 
-                        const SizedBox(height: 24),
-
-                        // Action Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: viewModel.isLoading
-                                ? null
-                                : () async {
-                                    FocusScope.of(context).unfocus();
-
-                                    if (_passwordController.text !=
-                                        _confirmPasswordController.text) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Les mots de passe ne correspondent pas.",
-                                            style: TextStyle(color: AppColors.textWhite),
-                                          ),
-                                          backgroundColor: AppColors.error,
-                                        ),
-                                      );
-                                      return;
-                                    }
-
-                                    final bool success = await context
-                                        .read<AuthViewModel>()
-                                        .register(
-                                          _emailController.text,
-                                          _passwordController.text,
-                                        );
-
-                                    if (!context.mounted) return;
-
-                                    if (success) {
-                                      if (!context.mounted) return;
-                                      context.go(AppRoutes.home);
-                                    } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            viewModel.errorMessage ?? "Erreur inconnue",
-                                            style: const TextStyle(color: AppColors.textWhite),
-                                          ),
-                                          backgroundColor: AppColors.error,
-                                        ),
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.brandBlue,
-                              foregroundColor: AppColors.textWhite,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: viewModel.isLoading
-                              ? const CircularProgressIndicator(color: AppColors.textWhite)
-                              : const Text('Commencer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                         // Footer
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Vous avez déjà un compte ? ", style: TextStyle(color: AppColors.textWhite),),
-                            GestureDetector(
-                               onTap: () => context.go(AppRoutes.login),
-                               child: const Text(
-                                'Se connecter', 
-                                style: TextStyle(
-                                  color: AppColors.brandBlue, 
-                                  fontWeight: FontWeight.bold
+                            const SizedBox(height: 24),
+                            
+                            // Divider
+                            const Row(
+                              children: [
+                                Expanded(child: Divider(color: Colors.white54)),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    'Ou continuer avec email',
+                                    style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
+                                  ),
                                 ),
+                                Expanded(child: Divider(color: Colors.white54)),
+                              ],
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Form Fields
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildTextField(
+                                    controller: _nameController,
+                                    hintText: 'Nom',
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _buildTextField(
+                                    controller: _firstNameController,
+                                    hintText: 'Prénom',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            _buildTextField(
+                              controller: _emailController,
+                              hintText: 'Email',
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildTextField(
+                              controller: _dobController,
+                              hintText: 'Date de naissance',
+                              keyboardType: TextInputType.datetime,
+                               // Ideally use a date picker here
+                               readOnly: false, // Set to true if using date picker
+                            ),
+                             const SizedBox(height: 16),
+                            _buildTextField(
+                              controller: _passwordController,
+                              hintText: 'Mot de passe...',
+                              obscureText: true,
+                            ),
+                             const SizedBox(height: 16),
+                            _buildTextField(
+                              controller: _confirmPasswordController,
+                              hintText: 'confirmer mot de passe',
+                              obscureText: true,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Action Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: viewModel.isLoading
+                                    ? null
+                                    : () async {
+                                        FocusScope.of(context).unfocus();
+
+                                        if (_passwordController.text !=
+                                            _confirmPasswordController.text) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Les mots de passe ne correspondent pas.",
+                                                style: TextStyle(color: AppColors.textWhite),
+                                              ),
+                                              backgroundColor: AppColors.error,
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        final bool success = await context
+                                            .read<AuthViewModel>()
+                                            .register(
+                                              _emailController.text,
+                                              _passwordController.text,
+                                            );
+
+                                        if (!context.mounted) return;
+
+                                        if (success) {
+                                          if (!context.mounted) return;
+                                          context.go(AppRoutes.home);
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                viewModel.errorMessage ?? "Erreur inconnue",
+                                                style: const TextStyle(color: AppColors.textWhite),
+                                              ),
+                                              backgroundColor: AppColors.error,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.brandBlue,
+                                  foregroundColor: AppColors.textWhite,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: viewModel.isLoading
+                                  ? const CircularProgressIndicator(color: AppColors.textWhite)
+                                  : const Text('Commencer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ),
                             ),
+                            const SizedBox(height: 24),
+
+                             // Footer
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Vous avez déjà un compte ? ", style: TextStyle(color: AppColors.textWhite),),
+                                GestureDetector(
+                                   onTap: () => context.go(AppRoutes.login),
+                                   child: const Text(
+                                    'Se connecter', 
+                                    style: TextStyle(
+                                      color: AppColors.brandBlue, 
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
                           ],
                         ),
-
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             )
           ),
