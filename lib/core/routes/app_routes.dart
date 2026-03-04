@@ -8,5 +8,6 @@ class AppRoutes {
   static const String droneList = '/drone';
   static const String droneDetails = '/drone-details';
   static const String welcome = '/welcome';
+  static const String permissions = '/permissions';
 
 }

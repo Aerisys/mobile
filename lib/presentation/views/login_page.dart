@@ -247,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                     if (success) {
                                       if (!context.mounted) return;
-                                      context.go(AppRoutes.home);
+                                      context.go(AppRoutes.permissions);
                                     } else {
                                       ScaffoldMessenger.of(
                                         context,

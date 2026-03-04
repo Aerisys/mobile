@@ -7,6 +7,7 @@ import '../../presentation/views/drone_list_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
+import '../../presentation/views/permissions_page.dart';
 import '../../presentation/views/register_page.dart';
 import '../../presentation/views/settings_page.dart';
 import '../../presentation/views/welcome_page.dart';
@@ -44,7 +45,8 @@ final GoRouter appRouter = GoRouter(
     }
 
     if (loggingIn) {
-      return AppRoutes.home;
+      // The user just logged in. Send them to permissions instead of home.
+      return AppRoutes.permissions;
     }
 
     return null;
@@ -96,6 +98,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.welcome,
       name: 'welcome',
       builder: (context, state) => const WelcomePage(),
+    ),
+    GoRoute(
+      path: AppRoutes.permissions,
+      name: 'permissions',
+      builder: (context, state) => const PermissionsPage(),
     ),
   ],
 );

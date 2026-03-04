@@ -226,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                         if (success) {
                                           if (!context.mounted) return;
-                                          context.go(AppRoutes.home);
+                                          context.go(AppRoutes.permissions);
                                         } else {
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
