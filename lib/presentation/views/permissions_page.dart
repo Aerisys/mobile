@@ -87,7 +87,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     // Navigate to the next loading step 
-                    context.go(AppRoutes.droneSearch);
+                    context.go(AppRoutes.remoteConnection);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.brandBlue,

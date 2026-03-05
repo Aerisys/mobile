@@ -43,7 +43,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkSlate,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         bottom: false, // Let the black bottom container go to the absolute bottom if needed
         child: Column(
@@ -59,7 +59,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                     Icon(
                       Icons.navigation_outlined, // Mimicking the arrow shape
                       size: 100,
-                      color: AppColors.textWhite,
+                      color: AppColors.brandBlue,
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -68,7 +68,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                         fontFamily: 'Inter',
                         fontSize: 36,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.textWhite,
+                        color: AppColors.brandBlue,
                         letterSpacing: 2.0,
                       ),
                     ),
@@ -83,7 +83,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  color: AppColors.black,
+                  color: AppColors.darkSlate,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),

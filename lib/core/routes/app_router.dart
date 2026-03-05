@@ -10,6 +10,7 @@ import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
 import '../../presentation/views/permissions_page.dart';
 import '../../presentation/views/register_page.dart';
+import '../../presentation/views/remote_connection_page.dart';
 import '../../presentation/views/settings_page.dart';
 import '../../presentation/views/welcome_page.dart';
 import '../di.dart';
@@ -24,6 +25,9 @@ final List<String> unauthenticatedRoutes = [
   AppRoutes.welcome,
   AppRoutes.login,
   AppRoutes.register,
+  AppRoutes.permissions,
+  AppRoutes.remoteConnection,
+  AppRoutes.droneSearch,
 ];
 
 final GoRouter appRouter = GoRouter(
@@ -104,6 +108,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.permissions,
       name: 'permissions',
       builder: (context, state) => const PermissionsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.remoteConnection,
+      name: 'remoteConnection',
+      builder: (context, state) => const RemoteConnectionPage(),
     ),
     GoRoute(
       path: AppRoutes.droneSearch,
