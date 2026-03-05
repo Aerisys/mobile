@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/di.dart';
 import '../components/battery_bar_widget.dart';
 import '../components/line_graph_widget.dart';
 import '../components/motor_bar_widget.dart';
@@ -12,7 +13,7 @@ class GraphiquePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => GraphiqueViewModel(),
+      create: (_) => getIt<GraphiqueViewModel>(),
       child: const _GraphiqueView(),
     );
   }
@@ -36,7 +37,7 @@ class _GraphiqueView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () async {
-              final path = await context.read<GraphiqueViewModel>().saveData();
+              final path = await getIt<GraphiqueViewModel>().saveData();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("CSV sauvegardé dans : $path")),
               );
@@ -163,7 +164,7 @@ class _GraphCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onDoubleTap: () {
-          final currentVm = context.read<GraphiqueViewModel>();
+          final currentVm = getIt<GraphiqueViewModel>();
 
           Navigator.push(
             context,
