@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 
 class PermissionsPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // The background color matches the slate blue in the mockup
-      backgroundColor: AppColors.darkSlate,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
@@ -32,21 +33,21 @@ class _PermissionsPageState extends State<PermissionsPage> {
               const SizedBox(height: 60),
 
               // Logo & Title
-              const Column(
+              Column(
                 children: [
-                  Icon(
-                    Icons.navigation_outlined, // Fallback icon mimicking the drone/arrow shape
-                    size: 80,
-                    color: AppColors.textWhite,
+                  Image.asset(
+                    AppAssets.logoAERISYS,
+                    color: AppColors.brandBlue,
+                    height: 80,
                   ),
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'Autorisations',
                     style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 32,
+                      fontFamily: 'Hanson',
+                      fontSize: 36,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.textWhite,
+                      color: AppColors.brandBlue,
                       letterSpacing: 1.0,
                     ),
                   ),
@@ -91,7 +92,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.brandBlue,
-                    foregroundColor: AppColors.textWhite,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -129,7 +130,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
               Text(
                 title,
                 style: const TextStyle(
-                  color: AppColors.textWhite,
+                  color: AppColors.brandBlue,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -138,7 +139,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
               Text(
                 subtitle,
                 style: const TextStyle(
-                  color: AppColors.textWhite70,
+                  color: AppColors.black,
                   fontSize: 13,
                 ),
               ),
@@ -150,7 +151,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
           value: value,
           onChanged: onChanged,
           activeTrackColor: AppColors.brandBlue,
-          inactiveTrackColor: AppColors.black.withValues(alpha: 0.45),
+          inactiveTrackColor: AppColors.black,
         ),
       ],
     );

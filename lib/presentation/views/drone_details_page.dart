@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 
@@ -35,9 +36,9 @@ class DroneDetailsPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Hero(
+                Hero(
                   tag: 'drone-icon',
-                  child: Icon(Icons.airplanemode_active, size: 120, color: AppColors.textWhite),
+                  child: Image.asset(AppAssets.droneDji, height: 120, fit: BoxFit.contain),
                 ),
                 const SizedBox(height: 10),
                 Text(

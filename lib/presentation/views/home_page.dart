@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -23,28 +24,28 @@ class HomePage extends StatelessWidget {
             _buildMenuButton(
               context,
               title: 'Drone Control',
-              icon: Icons.airplanemode_active,
+              iconWidget: Image.asset(AppAssets.droneDji, height: 50, fit: BoxFit.contain),
               color: AppColors.brandBlue,
               onTap: () => context.push(AppRoutes.droneList),
             ),
             _buildMenuButton(
               context,
               title: 'Location / Map',
-              icon: Icons.map,
+              iconWidget: const Icon(Icons.map, size: 50, color: AppColors.success),
               color: AppColors.success,
               onTap: () => context.push(AppRoutes.location),
             ),
             _buildMenuButton(
               context,
               title: 'Settings',
-              icon: Icons.settings,
+              iconWidget: const Icon(Icons.settings, size: 50, color: AppColors.textWhite70),
               color: AppColors.textWhite70,
               onTap: () => context.push(AppRoutes.settings),
             ),
             _buildMenuButton(
               context,
               title: 'Contacts',
-              icon: Icons.contacts,
+              iconWidget: const Icon(Icons.contacts, size: 50, color: AppColors.warning),
               color: AppColors.warning,
               onTap: () => context.push(AppRoutes.contact),
             ),
@@ -57,7 +58,7 @@ class HomePage extends StatelessWidget {
   Widget _buildMenuButton(
       BuildContext context, {
         required String title,
-        required IconData icon,
+        required Widget iconWidget,
         required Color color,
         required VoidCallback onTap,
       }) {
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: color),
+            iconWidget,
             const SizedBox(height: 12),
             Text(
               title,

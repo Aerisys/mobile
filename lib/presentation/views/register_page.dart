@@ -79,16 +79,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                        const SizedBox(height: 20),
                        // Logo and Title
-                       const Icon(
-                        Icons.navigation_outlined, 
-                        size: 80,
-                        color: AppColors.textWhite,
+                       Image.asset(
+                        AppAssets.logoAERISYS,
+                        height: 80,
                       ),
                       const Text(
                         'Créer un\ncompte',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Inter', 
+                          fontFamily: 'Hanson', 
                           fontSize: 36,
                           fontWeight: FontWeight.w900,
                           color: AppColors.textWhite,

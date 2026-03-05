@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 
 class DroneSearchPage extends StatefulWidget {
@@ -49,23 +50,23 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
         child: Column(
           children: [
             // Top section with logo perfectly centered
-            const Expanded(
+            Expanded(
               flex: 5,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // AERYSIS Logo
-                    Icon(
-                      Icons.navigation_outlined, // Mimicking the arrow shape
-                      size: 100,
+                    Image.asset(
+                      AppAssets.logoAERISYS,
                       color: AppColors.brandBlue,
+                      height: 80,
                     ),
-                    SizedBox(height: 8),
-                    Text(
+                    const SizedBox(height: 8),
+                    const Text(
                       'AERYSIS',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Hanson',
                         fontSize: 36,
                         fontWeight: FontWeight.w900,
                         color: AppColors.brandBlue,
@@ -133,7 +134,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.asset(
-                              'assets/images/drone-dji.png',
+                              AppAssets.droneDji,
                               height: 120,
                               fit: BoxFit.contain,
                             ),

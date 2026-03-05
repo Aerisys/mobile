@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 
 class RemoteConnectionPage extends StatelessWidget {
@@ -16,22 +17,22 @@ class RemoteConnectionPage extends StatelessWidget {
         child: Column(
           children: [
             // Top Section (White)
-            const Expanded(
+            Expanded(
               flex: 4,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.navigation_outlined, // Placeholder for Logo
-                      size: 100,
+                    Image.asset(
+                      AppAssets.logoAERISYS,
                       color: AppColors.brandBlue,
+                      height: 80,
                     ),
-                    SizedBox(height: 8),
-                    Text(
+                    const SizedBox(height: 8),
+                    const Text(
                       'AERYSIS',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Hanson',
                         fontSize: 36,
                         fontWeight: FontWeight.w900,
                         color: AppColors.brandBlue,

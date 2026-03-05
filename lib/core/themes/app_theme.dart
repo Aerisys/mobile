@@ -18,8 +18,9 @@ class AppTheme {
         backgroundColor: AppColors.black,
         elevation: 0,
         titleTextStyle: TextStyle(
+          fontFamily: 'Hanson',
           color: AppColors.textWhite,
-          fontSize: 20,
+          fontSize: 36,
           fontWeight: FontWeight.bold,
         ),
         iconTheme: IconThemeData(color: AppColors.textWhite),
@@ -29,6 +30,7 @@ class AppTheme {
         bodyMedium: TextStyle(color: AppColors.textWhite70),
         bodySmall: TextStyle(color: AppColors.textWhite70),
         titleLarge: TextStyle(
+          fontFamily: 'Hanson',
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../view_models/drone_view_model.dart';
 
@@ -36,7 +37,7 @@ class _DroneListPageState extends State<DroneListPage> {
               final drone = model.drones[index];
               return Card(
                 child: ListTile(
-                  leading: const Icon(Icons.airplanemode_active, color: AppColors.brandBlue),
+                  leading: Image.asset(AppAssets.droneDji, height: 40, fit: BoxFit.contain),
                   title: Text(drone.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("${drone.modelType} • ${drone.status}"),
                   trailing: Text("${drone.batteryLevel.toInt()}%"),

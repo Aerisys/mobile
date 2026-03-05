@@ -52,10 +52,10 @@ class WelcomePage extends StatelessWidget {
                   const Spacer(flex: 2),
                   // Logo Placeholder
                   // If you have the asset, replace this Icon with Image.asset('assets/logo.png')
-                  const Icon(
-                    Icons.navigation_outlined, // Closest material icon to the triangle shape
-                    size: 120,
-                    color: AppColors.textWhite,
+                  Image.asset(
+                    AppAssets.logoAERISYS,
+                    color: AppColors.brandBlue,
+                    height: 80,
                   ),
                   const SizedBox(height: 16),
                   
@@ -63,8 +63,8 @@ class WelcomePage extends StatelessWidget {
                   const Text(
                     'Bienvenue',
                     style: TextStyle(
-                      fontFamily: 'Inter', // Using system font effectively
-                      fontSize: 40,
+                      fontFamily: 'Hanson', // Using system font effectively
+                      fontSize: 36,
                       fontWeight: FontWeight.w900,
                       color: AppColors.textWhite,
                       letterSpacing: 1.0,

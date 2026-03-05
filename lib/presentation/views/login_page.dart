@@ -71,16 +71,15 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const SizedBox(height: 40),
                   // Logo and Title
-                  const Icon(
-                    Icons.navigation_outlined,
-                    size: 100,
-                    color: AppColors.textWhite,
+                  Image.asset(
+                    AppAssets.logoAERISYS,
+                    height: 80,
                   ),
                   const Text(
                     'Connexion',
                     style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 40,
+                      fontFamily: 'Hanson',
+                      fontSize: 36,
                       fontWeight: FontWeight.w900,
                       color: AppColors.textWhite,
                       letterSpacing: 1.0,
