@@ -43,4 +43,8 @@ class AppColors {
   static const Color glassBorder = Colors.white10;
   static const Color textWhite = Colors.white;
   static const Color textWhite70 = Colors.white70;
+  static const Color textSuccess = Colors.greenAccent;
+  
+  static const Color darkSlate = Color(0xFF3A4A5A);
+  static const Color black26 = Colors.black26;
 }

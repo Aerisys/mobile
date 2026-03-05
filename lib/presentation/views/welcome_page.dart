@@ -21,7 +21,7 @@ class WelcomePage extends StatelessWidget {
                 image: NetworkImage(AppAssets.onlineBackground),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black26, // Adds a slight dark tint
+                  AppColors.black26, // Adds a slight dark tint
                   BlendMode.darken,
                 ),
               ),
@@ -34,9 +34,9 @@ class WelcomePage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.0),
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.8),
+                  AppColors.black.withOpacity(0.0),
+                  AppColors.black.withOpacity(0.4),
+                  AppColors.black.withOpacity(0.8),
                 ],
                 stops: const [0.0, 0.6, 1.0],
               ),

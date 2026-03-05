@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_colors.dart';
 import '../view_models/auth_view_model.dart';
 import '../view_models/map_view_model.dart';
 
@@ -64,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   CircleAvatar(
                     radius: 60,
-                    backgroundColor: Colors.grey.shade800,
+                    backgroundColor: AppColors.darkGrey,
                     backgroundImage: _getProfileImage(user?.photoURL),
                   ),
                   Positioned(
@@ -73,12 +74,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
-                        color: Colors.blue,
+                        color: AppColors.primaryBlue,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
                         Icons.camera_alt,
-                        color: Colors.white,
+                        color: AppColors.textWhite,
                         size: 20,
                       ),
                     ),
@@ -129,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text("Profil mis à jour !"),
-                                backgroundColor: Colors.green,
+                                backgroundColor: AppColors.success,
                               ),
                             );
                             setState(() {
@@ -139,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(viewModel.errorMessage!),
-                                backgroundColor: Colors.red,
+                                backgroundColor: AppColors.error,
                               ),
                             );
                           }
@@ -150,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: AppColors.textWhite,
                           strokeWidth: 2,
                         ),
                       )
@@ -184,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         onPressed: () => Navigator.pop(context, true),
                         child: const Text(
                           "Se déconnecter",
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -203,10 +204,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
-              icon: const Icon(Icons.logout, color: Colors.red),
+              icon: const Icon(Icons.logout, color: AppColors.error),
               label: const Text(
                 "Se déconnecter",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: AppColors.error),
               ),
             ),
           ],

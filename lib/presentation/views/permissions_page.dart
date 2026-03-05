@@ -22,7 +22,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // The background color matches the slate blue in the mockup
-      backgroundColor: const Color(0xFF3A4A5A),
+      backgroundColor: AppColors.darkSlate,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
@@ -150,7 +150,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
           value: value,
           onChanged: onChanged,
           activeTrackColor: AppColors.brandBlue,
-          inactiveTrackColor: Colors.black45,
+          inactiveTrackColor: AppColors.black.withValues(alpha: 0.45),
         ),
       ],
     );

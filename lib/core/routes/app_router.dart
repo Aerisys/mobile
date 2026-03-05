@@ -4,6 +4,7 @@ import '../../data/models/drone_model.dart';
 import '../../presentation/views/contact_page.dart';
 import '../../presentation/views/drone_details_page.dart';
 import '../../presentation/views/drone_list_page.dart';
+import '../../presentation/views/drone_search_page.dart';
 import '../../presentation/views/home_page.dart';
 import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
@@ -103,6 +104,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.permissions,
       name: 'permissions',
       builder: (context, state) => const PermissionsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.droneSearch,
+      name: 'droneSearch',
+      builder: (context, state) => const DroneSearchPage(),
     ),
   ],
 );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,28 +24,28 @@ class HomePage extends StatelessWidget {
               context,
               title: 'Drone Control',
               icon: Icons.airplanemode_active,
-              color: Colors.blue,
+              color: AppColors.primaryBlue,
               onTap: () => context.push(AppRoutes.droneList),
             ),
             _buildMenuButton(
               context,
               title: 'Location / Map',
               icon: Icons.map,
-              color: Colors.green,
+              color: AppColors.success,
               onTap: () => context.push(AppRoutes.location),
             ),
             _buildMenuButton(
               context,
               title: 'Settings',
               icon: Icons.settings,
-              color: Colors.grey,
+              color: AppColors.grey2,
               onTap: () => context.push(AppRoutes.settings),
             ),
             _buildMenuButton(
               context,
               title: 'Contacts',
               icon: Icons.contacts,
-              color: Colors.orange,
+              color: AppColors.warning,
               onTap: () => context.push(AppRoutes.contact),
             ),
           ],

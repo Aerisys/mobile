@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 image: NetworkImage(AppAssets.onlineBackground),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black26, 
+                  AppColors.black26, 
                   BlendMode.darken,
                 ),
               ),
@@ -62,8 +62,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withValues(alpha: 0.0),
-                  Colors.black.withValues(alpha: 0.6),
+                  AppColors.black.withValues(alpha: 0.0),
+                  AppColors.black.withValues(alpha: 0.6),
                 ],
               ),
             ),
@@ -104,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(24.0),
                         decoration: BoxDecoration(
-                          color: Colors.black, // Solid black card per mockup
+                          color: AppColors.black, // Solid black card per mockup
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: AppColors.glassBorder),
                         ),
@@ -115,14 +115,14 @@ class _RegisterPageState extends State<RegisterPage> {
                               icon: FontAwesomeIcons.google,
                               text: 'Continuer avec Google',
                               onPressed: () {}, // TODO: Implement Google Sign In
-                              iconColor: Colors.red, // Approximation for Google logo color
+                              iconColor: AppColors.error, // Approximation for Google logo color
                             ),
                             const SizedBox(height: 16),
                             _SocialLoginButton(
                               icon: FontAwesomeIcons.apple,
                               text: 'Continuer avec Apple',
                               onPressed: () {}, // TODO: Implement Apple Sign In
-                              iconColor: Colors.black,
+                              iconColor: AppColors.black,
                             ),
 
                             const SizedBox(height: 24),
@@ -130,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             // Divider
                             const Row(
                               children: [
-                                Expanded(child: Divider(color: Colors.white54)),
+                                Expanded(child: Divider(color: AppColors.textWhite70)),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
@@ -138,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
                                   ),
                                 ),
-                                Expanded(child: Divider(color: Colors.white54)),
+                                Expanded(child: Divider(color: AppColors.textWhite70)),
                               ],
                             ),
 

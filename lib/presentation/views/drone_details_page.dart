@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 
 class DroneDetailsPage extends StatelessWidget {
@@ -20,11 +21,11 @@ class DroneDetailsPage extends StatelessWidget {
           Container(
             height: 300,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.blue.shade900, Colors.blue.shade400],
+                colors: [AppColors.darkBlue, AppColors.lightBlue],
               ),
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(40),
@@ -36,13 +37,13 @@ class DroneDetailsPage extends StatelessWidget {
               children: [
                 const Hero(
                   tag: 'drone-icon',
-                  child: Icon(Icons.airplanemode_active, size: 120, color: Colors.white),
+                  child: Icon(Icons.airplanemode_active, size: 120, color: AppColors.textWhite),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   drone.status.toUpperCase(),
                   style: const TextStyle(
-                    color: Colors.white70,
+                    color: AppColors.textWhite70,
                     letterSpacing: 2,
                     fontWeight: FontWeight.bold,
                   ),
@@ -62,7 +63,7 @@ class DroneDetailsPage extends StatelessWidget {
 
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.primaryBlue,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
@@ -80,26 +81,26 @@ class DroneDetailsPage extends StatelessWidget {
 
   Widget _buildInfoTile(String label, String value, IconData icon) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
-      title: Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
+      leading: Icon(icon, color: AppColors.primaryBlue),
+      title: Text(label, style: const TextStyle(color: AppColors.grey2, fontSize: 14)),
       subtitle: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }
 
   Widget _buildBatterySection(double level) {
-    Color color = level > 20 ? Colors.green : Colors.red;
+    Color color = level > 20 ? AppColors.success : AppColors.error;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text("Battery Health", style: TextStyle(color: Colors.grey)),
+          child: Text("Battery Health", style: TextStyle(color: AppColors.grey2)),
         ),
         ListTile(
           leading: Icon(Icons.battery_charging_full, color: color),
           title: LinearProgressIndicator(
             value: level / 100,
-            backgroundColor: Colors.grey.shade300,
+            backgroundColor: AppColors.lightGrey,
             color: color,
             minHeight: 10,
           ),

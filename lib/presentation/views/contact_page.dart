@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/themes/app_colors.dart';
 import '../view_models/contact_view_model.dart';
 
 class ContactPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               const Text(
                 "Entrez l'adresse email de la personne que vous souhaitez ajouter.",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: AppColors.grey2),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -67,7 +68,7 @@ class _ContactPageState extends State<ContactPage> {
                 scaffoldMessenger.showSnackBar(
                   const SnackBar(
                     content: Text("Demande envoyée !"),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.primaryBlue,
                   ),
                 );
               } else if (context.mounted) {
@@ -75,7 +76,7 @@ class _ContactPageState extends State<ContactPage> {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text(error ?? "Erreur"),
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               }
@@ -219,13 +220,13 @@ class _ContactPageState extends State<ContactPage> {
                                 Icon(
                                   Icons.circle,
                                   size: 10,
-                                  color: Colors.green,
+                                  color: AppColors.success,
                                 ),
                                 SizedBox(width: 4),
                                 Text(
                                   "Voit votre position",
                                   style: TextStyle(
-                                    color: Colors.green,
+                                    color: AppColors.success,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -238,7 +239,7 @@ class _ContactPageState extends State<ContactPage> {
                           isSharing
                               ? Icons.location_on
                               : Icons.location_on_outlined,
-                          color: isSharing ? Colors.green : Colors.blue,
+                          color: isSharing ? AppColors.success : AppColors.primaryBlue,
                         ),
                         onPressed: () => _showLocationMenu(
                           context,
@@ -324,11 +325,11 @@ class _ContactPageState extends State<ContactPage> {
     if (type == 'location') {
       subtitle = "Veut connaître votre position";
       typeIcon = Icons.location_on;
-      iconColor = Colors.blue;
+      iconColor = AppColors.primaryBlue;
     } else {
       subtitle = "Veut vous ajouter en ami";
       typeIcon = Icons.person_add;
-      iconColor = Colors.orange;
+      iconColor = AppColors.warning;
     }
 
     return Card(
@@ -374,8 +375,8 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               IconButton.filledTonal(
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withValues(alpha: 0.1),
-                  foregroundColor: Colors.red,
+                  backgroundColor: AppColors.error.withValues(alpha: 0.1),
+                  foregroundColor: AppColors.error,
                 ),
                 icon: const Icon(Icons.close),
                 onPressed: () {
@@ -389,8 +390,8 @@ class _ContactPageState extends State<ContactPage> {
               const SizedBox(width: 8),
               IconButton.filled(
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+                  backgroundColor: AppColors.success,
+                  foregroundColor: AppColors.textWhite,
                 ),
                 icon: const Icon(Icons.check),
                 onPressed: () {
@@ -413,12 +414,12 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: Colors.grey.withValues(alpha: 0.5)),
+          Icon(icon, size: 60, color: AppColors.grey1.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
             text,
             style: TextStyle(
-              color: Colors.grey.withValues(alpha: 0.8),
+              color: AppColors.grey1.withValues(alpha: 0.8),
               fontSize: 16,
             ),
           ),
@@ -455,7 +456,7 @@ class _ContactPageState extends State<ContactPage> {
               const SizedBox(height: 16),
 
               ListTile(
-                leading: const Icon(Icons.search, color: Colors.blue),
+                leading: const Icon(Icons.search, color: AppColors.primaryBlue),
                 title: const Text("Demander sa position"),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -476,7 +477,7 @@ class _ContactPageState extends State<ContactPage> {
 
               if (isSharing)
                 ListTile(
-                  leading: const Icon(Icons.wrong_location, color: Colors.red),
+                  leading: const Icon(Icons.wrong_location, color: AppColors.error),
                   title: const Text("Arrêter de partager ma position"),
                   subtitle: const Text("Il ne vous verra plus sur la carte"),
                   onTap: () async {
@@ -486,7 +487,7 @@ class _ContactPageState extends State<ContactPage> {
                 )
               else
                 const ListTile(
-                  leading: Icon(Icons.info_outline, color: Colors.grey),
+                  leading: Icon(Icons.info_outline, color: AppColors.grey2),
                   title: Text("Vous ne partagez pas votre position"),
                   subtitle: Text("Cet ami ne peut pas vous voir"),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import '../../core/themes/app_colors.dart';
 import '../view_models/map_view_model.dart';
 
 class LocationPage extends StatefulWidget {
@@ -53,7 +54,7 @@ class _LocationPageState extends State<LocationPage> {
                       point: model.currentPosition!,
                       width: 50,
                       height: 50,
-                      child: const Icon(Icons.my_location, color: Colors.blue, size: 30),
+                      child: const Icon(Icons.my_location, color: AppColors.primaryBlue, size: 30),
                     ),
 
                   // Friend/Drone markers from your ViewModel logic
@@ -61,7 +62,7 @@ class _LocationPageState extends State<LocationPage> {
                     point: friend.position,
                     width: 50,
                     height: 50,
-                    child: const Icon(Icons.location_on, color: Colors.red, size: 30),
+                    child: const Icon(Icons.location_on, color: AppColors.error, size: 30),
                   )),
                 ],
               ),
