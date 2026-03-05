@@ -73,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   // Logo and Title
                   Image.asset(
                     AppAssets.logoAERISYS,
+                    color: AppColors.white,
                     height: 80,
                   ),
                   const Text(
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             hintText: 'Email...',
                             filled: true,
-                            fillColor: AppColors.textWhite,
+                            fillColor: AppColors.textWhite70,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 16,
