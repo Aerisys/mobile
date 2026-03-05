@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
               context,
               title: 'Drone Control',
               icon: Icons.airplanemode_active,
-              color: AppColors.primaryBlue,
+              color: AppColors.brandBlue,
               onTap: () => context.push(AppRoutes.droneList),
             ),
             _buildMenuButton(
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
               context,
               title: 'Settings',
               icon: Icons.settings,
-              color: AppColors.grey2,
+              color: AppColors.textWhite70,
               onTap: () => context.push(AppRoutes.settings),
             ),
             _buildMenuButton(

@@ -65,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   CircleAvatar(
                     radius: 60,
-                    backgroundColor: AppColors.darkGrey,
+                    backgroundColor: AppColors.darkSlate,
                     backgroundImage: _getProfileImage(user?.photoURL),
                   ),
                   Positioned(
@@ -74,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
-                        color: AppColors.primaryBlue,
+                        color: AppColors.brandBlue,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(

@@ -36,7 +36,7 @@ class _DroneListPageState extends State<DroneListPage> {
               final drone = model.drones[index];
               return Card(
                 child: ListTile(
-                  leading: const Icon(Icons.airplanemode_active, color: AppColors.primaryBlue),
+                  leading: const Icon(Icons.airplanemode_active, color: AppColors.brandBlue),
                   title: Text(drone.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("${drone.modelType} • ${drone.status}"),
                   trailing: Text("${drone.batteryLevel.toInt()}%"),

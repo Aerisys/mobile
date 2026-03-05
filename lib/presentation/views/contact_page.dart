@@ -28,7 +28,7 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               const Text(
                 "Entrez l'adresse email de la personne que vous souhaitez ajouter.",
-                style: TextStyle(fontSize: 14, color: AppColors.grey2),
+                style: TextStyle(fontSize: 14, color: AppColors.textWhite70),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -68,7 +68,7 @@ class _ContactPageState extends State<ContactPage> {
                 scaffoldMessenger.showSnackBar(
                   const SnackBar(
                     content: Text("Demande envoyée !"),
-                    backgroundColor: AppColors.primaryBlue,
+                    backgroundColor: AppColors.brandBlue,
                   ),
                 );
               } else if (context.mounted) {
@@ -239,7 +239,7 @@ class _ContactPageState extends State<ContactPage> {
                           isSharing
                               ? Icons.location_on
                               : Icons.location_on_outlined,
-                          color: isSharing ? AppColors.success : AppColors.primaryBlue,
+                          color: isSharing ? AppColors.success : AppColors.brandBlue,
                         ),
                         onPressed: () => _showLocationMenu(
                           context,
@@ -325,7 +325,7 @@ class _ContactPageState extends State<ContactPage> {
     if (type == 'location') {
       subtitle = "Veut connaître votre position";
       typeIcon = Icons.location_on;
-      iconColor = AppColors.primaryBlue;
+      iconColor = AppColors.brandBlue;
     } else {
       subtitle = "Veut vous ajouter en ami";
       typeIcon = Icons.person_add;
@@ -414,12 +414,12 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: AppColors.grey1.withValues(alpha: 0.5)),
+          Icon(icon, size: 60, color: AppColors.textWhite70.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
             text,
             style: TextStyle(
-              color: AppColors.grey1.withValues(alpha: 0.8),
+              color: AppColors.textWhite70.withValues(alpha: 0.8),
               fontSize: 16,
             ),
           ),
@@ -456,7 +456,7 @@ class _ContactPageState extends State<ContactPage> {
               const SizedBox(height: 16),
 
               ListTile(
-                leading: const Icon(Icons.search, color: AppColors.primaryBlue),
+                leading: const Icon(Icons.search, color: AppColors.brandBlue),
                 title: const Text("Demander sa position"),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -487,7 +487,7 @@ class _ContactPageState extends State<ContactPage> {
                 )
               else
                 const ListTile(
-                  leading: Icon(Icons.info_outline, color: AppColors.grey2),
+                  leading: Icon(Icons.info_outline, color: AppColors.textWhite70),
                   title: Text("Vous ne partagez pas votre position"),
                   subtitle: Text("Cet ami ne peut pas vous voir"),
                 ),

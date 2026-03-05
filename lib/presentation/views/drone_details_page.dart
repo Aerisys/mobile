@@ -25,7 +25,7 @@ class DroneDetailsPage extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [AppColors.darkBlue, AppColors.lightBlue],
+                colors: [AppColors.darkSlate, AppColors.brandBlue],
               ),
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(40),
@@ -63,7 +63,7 @@ class DroneDetailsPage extends StatelessWidget {
 
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryBlue,
+                    backgroundColor: AppColors.brandBlue,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
@@ -81,8 +81,8 @@ class DroneDetailsPage extends StatelessWidget {
 
   Widget _buildInfoTile(String label, String value, IconData icon) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.primaryBlue),
-      title: Text(label, style: const TextStyle(color: AppColors.grey2, fontSize: 14)),
+      leading: Icon(icon, color: AppColors.brandBlue),
+      title: Text(label, style: const TextStyle(color: AppColors.textWhite70, fontSize: 14)),
       subtitle: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }
@@ -94,13 +94,13 @@ class DroneDetailsPage extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text("Battery Health", style: TextStyle(color: AppColors.grey2)),
+          child: Text("Battery Health", style: TextStyle(color: AppColors.textWhite70)),
         ),
         ListTile(
           leading: Icon(Icons.battery_charging_full, color: color),
           title: LinearProgressIndicator(
             value: level / 100,
-            backgroundColor: AppColors.lightGrey,
+            backgroundColor: AppColors.black,
             color: color,
             minHeight: 10,
           ),

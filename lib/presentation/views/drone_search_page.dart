@@ -107,7 +107,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                             Text(
                               _isConnected ? 'Connecté avec succès!' : 'Recherche en cours....',
                               style: TextStyle(
-                                color: _isConnected ? AppColors.textSuccess : AppColors.textWhite,
+                                color: _isConnected ? AppColors.success : AppColors.textWhite,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),

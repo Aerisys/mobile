@@ -54,7 +54,7 @@ class _LocationPageState extends State<LocationPage> {
                       point: model.currentPosition!,
                       width: 50,
                       height: 50,
-                      child: const Icon(Icons.my_location, color: AppColors.primaryBlue, size: 30),
+                      child: const Icon(Icons.my_location, color: AppColors.brandBlue, size: 30),
                     ),
 
                   // Friend/Drone markers from your ViewModel logic
