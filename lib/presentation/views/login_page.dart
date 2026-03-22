@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                             hintText: 'Email...',
                             filled: true,
-                            fillColor: AppColors.textWhite70,
+                            fillColor: AppColors.textWhite,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 16,
