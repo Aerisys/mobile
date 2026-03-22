@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
+import '../components/atoms/aerisys_button.dart';
 
 class DroneDetailsPage extends StatelessWidget {
   final DroneModel drone;
@@ -62,15 +63,9 @@ class DroneDetailsPage extends StatelessWidget {
                 _buildBatterySection(drone.batteryLevel),
                 const SizedBox(height: 40),
 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.brandBlue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: () {
-                  },
-                  child: const Text("START MISSION", style: TextStyle(fontSize: 18)),
+                AerisysButton.primary(
+                  text: "START MISSION",
+                  onPressed: () {},
                 ),
               ],
             ),

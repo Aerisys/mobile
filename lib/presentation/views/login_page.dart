@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 import '../view_models/auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -101,19 +102,16 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         // Social Buttons
-                        _SocialLoginButton(
-                          icon: FontAwesomeIcons.google,
+                        AerisysButton.social(
+                          icon: const FaIcon(FontAwesomeIcons.google, color: AppColors.error),
                           text: 'Continuer avec Google',
                           onPressed: () {}, // TODO: Implement Google Sign In
-                          iconColor:
-                              AppColors.error, // Approximation for Google logo color
                         ),
                         const SizedBox(height: 16),
-                        _SocialLoginButton(
-                          icon: FontAwesomeIcons.apple,
+                        AerisysButton.social(
+                          icon: const FaIcon(FontAwesomeIcons.apple, color: AppColors.black),
                           text: 'Continuer avec Apple',
                           onPressed: () {}, // TODO: Implement Apple Sign In
-                          iconColor: AppColors.black,
                         ),
 
                         const SizedBox(height: 24),
@@ -214,12 +212,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ],
                               ),
                             ),
-                            TextButton(
+                            AerisysButton.text(
+                              text: 'Mot de passe oublié ?',
                               onPressed: () {}, // TODO: Forgot password
-                              child: const Text(
-                                'Mot de passe oublié ?',
-                                style: TextStyle(color: AppColors.brandBlue),
-                              ),
                             ),
                           ],
                         ),
@@ -227,62 +222,40 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
 
                         // Action Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: viewModel.isLoading
-                                ? null
-                                : () async {
-                                    FocusScope.of(context).unfocus();
+                        AerisysButton.primary(
+                          text: 'Commencer',
+                          isLoading: viewModel.isLoading,
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
 
-                                    final bool success = await context
-                                        .read<AuthViewModel>()
-                                        .login(
-                                          _emailController.text,
-                                          _passwordController.text,
-                                        );
+                            final bool success = await context
+                                .read<AuthViewModel>()
+                                .login(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                );
 
-                                    if (!context.mounted) return;
+                            if (!context.mounted) return;
 
-                                    if (success) {
-                                      if (!context.mounted) return;
-                                      context.go(AppRoutes.permissions);
-                                    } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            viewModel.errorMessage!,
-                                            style: const TextStyle(
-                                              color: AppColors.textWhite,
-                                            ),
-                                          ),
-                                          backgroundColor: AppColors.error,
-                                        ),
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.brandBlue,
-                              foregroundColor: AppColors.textWhite,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: viewModel.isLoading
-                                ? const CircularProgressIndicator(
-                                    color: AppColors.textWhite,
-                                  )
-                                : const Text(
-                                    'Commencer',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                            if (success) {
+                              if (!context.mounted) return;
+                              context.go(AppRoutes.permissions);
+                            } else {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    viewModel.errorMessage!,
+                                    style: const TextStyle(
+                                      color: AppColors.textWhite,
                                     ),
                                   ),
-                          ),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                            }
+                          },
                         ),
 
                         const SizedBox(height: 24),
@@ -295,15 +268,9 @@ class _LoginPageState extends State<LoginPage> {
                               "Vous n'avez pas de compte ? ",
                               style: TextStyle(color: AppColors.textWhite),
                             ),
-                            GestureDetector(
-                              onTap: () => context.go(AppRoutes.register),
-                              child: const Text(
-                                'Créer',
-                                style: TextStyle(
-                                  color: AppColors.brandBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            AerisysButton.text(
+                              text: 'Créer',
+                              onPressed: () => context.go(AppRoutes.register),
                             ),
                           ],
                         ),
@@ -317,54 +284,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final VoidCallback onPressed;
-  final Color iconColor;
-
-  const _SocialLoginButton({
-    required this.icon,
-    required this.text,
-    required this.onPressed,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textWhite,
-          foregroundColor: AppColors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-        ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FaIcon(icon, color: iconColor),
-            const SizedBox(width: 12),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

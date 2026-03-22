@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_icon_button.dart';
 import '../view_models/contact_view_model.dart';
 
 class ContactPage extends StatefulWidget {
@@ -50,11 +52,12 @@ class _ContactPageState extends State<ContactPage> {
           ),
         ),
         actions: [
-          TextButton(
+          AerisysButton.text(
+            text: "Annuler",
             onPressed: () => Navigator.pop(context),
-            child: const Text("Annuler"),
           ),
-          FilledButton(
+          AerisysButton.filled(
+            text: "Envoyer",
             onPressed: () async {
               final navigator = Navigator.of(context);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -81,7 +84,6 @@ class _ContactPageState extends State<ContactPage> {
                 );
               }
             },
-            child: const Text("Envoyer"),
           ),
         ],
       ),
@@ -93,10 +95,10 @@ class _ContactPageState extends State<ContactPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Communauté"), centerTitle: false),
       floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton.extended(
-              onPressed: () => _showAddDialog(context),
+          ? AerisysButton.fab(
+              text: "Ajouter",
               icon: const Icon(Icons.person_add),
-              label: const Text("Ajouter"),
+              onPressed: () => _showAddDialog(context),
             )
           : null,
 
@@ -234,7 +236,7 @@ class _ContactPageState extends State<ContactPage> {
                             )
                           : null,
 
-                      trailing: IconButton(
+                      trailing: AerisysIconButton(
                         icon: Icon(
                           isSharing
                               ? Icons.location_on
@@ -373,11 +375,8 @@ class _ContactPageState extends State<ContactPage> {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton.filledTonal(
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.error.withValues(alpha: 0.1),
-                  foregroundColor: AppColors.error,
-                ),
+              AerisysIconButton.filledTonal(
+                baseColor: AppColors.error,
                 icon: const Icon(Icons.close),
                 onPressed: () {
                   if (type == 'location') {
@@ -388,11 +387,9 @@ class _ContactPageState extends State<ContactPage> {
                 },
               ),
               const SizedBox(width: 8),
-              IconButton.filled(
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.success,
-                  foregroundColor: AppColors.textWhite,
-                ),
+              AerisysIconButton.filled(
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.textWhite,
                 icon: const Icon(Icons.check),
                 onPressed: () {
                   if (type == 'location') {

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 import '../view_models/auth_view_model.dart';
 import '../view_models/map_view_model.dart';
 
@@ -114,60 +115,51 @@ class _SettingsPageState extends State<SettingsPage> {
 
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: viewModel.isLoading
-                    ? null
-                    : () async {
-                        final success = await context
-                            .read<AuthViewModel>()
-                            .updateProfile(
-                              newName: _nameController.text,
-                              newImageFile: _selectedImage,
-                            );
+              child: AerisysButton.filled(
+                text: viewModel.isLoading
+                    ? "Enregistrement..."
+                    : "Sauvegarder les modifications",
+                icon: const Icon(Icons.save),
+                isLoading: viewModel.isLoading,
+                onPressed: () async {
+                  final success = await context
+                      .read<AuthViewModel>()
+                      .updateProfile(
+                        newName: _nameController.text,
+                        newImageFile: _selectedImage,
+                      );
 
-                        if (context.mounted) {
-                          if (success) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Profil mis à jour !"),
-                                backgroundColor: AppColors.success,
-                              ),
-                            );
-                            setState(() {
-                              _selectedImage = null;
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(viewModel.errorMessage!),
-                                backgroundColor: AppColors.error,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                icon: viewModel.isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.textWhite,
-                          strokeWidth: 2,
+                  if (context.mounted) {
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Profil mis à jour !"),
+                          backgroundColor: AppColors.success,
                         ),
-                      )
-                    : const Icon(Icons.save),
-                label: Text(
-                  viewModel.isLoading
-                      ? "Enregistrement..."
-                      : "Sauvegarder les modifications",
-                ),
+                      );
+                      setState(() {
+                        _selectedImage = null;
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(viewModel.errorMessage!),
+                          backgroundColor: AppColors.error,
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
             ),
 
             const SizedBox(height: 24),
             const Divider(),
 
-            TextButton.icon(
+            AerisysButton.text(
+              text: "Se déconnecter",
+              icon: const Icon(Icons.logout, color: AppColors.error),
+              foregroundColor: AppColors.error,
               onPressed: () async {
                 final bool? confirm = await showDialog<bool>(
                   context: context,
@@ -177,16 +169,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       "Voulez-vous vraiment vous déconnecter ?",
                     ),
                     actions: [
-                      TextButton(
+                      AerisysButton.text(
+                        text: "Annuler",
                         onPressed: () => Navigator.pop(context, false),
-                        child: const Text("Annuler"),
                       ),
-                      TextButton(
+                      AerisysButton.text(
+                        text: "Se déconnecter",
+                        foregroundColor: AppColors.error,
                         onPressed: () => Navigator.pop(context, true),
-                        child: const Text(
-                          "Se déconnecter",
-                          style: TextStyle(color: AppColors.error),
-                        ),
                       ),
                     ],
                   ),
@@ -204,11 +194,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
-              icon: const Icon(Icons.logout, color: AppColors.error),
-              label: const Text(
-                "Se déconnecter",
-                style: TextStyle(color: AppColors.error),
-              ),
             ),
           ],
         ),

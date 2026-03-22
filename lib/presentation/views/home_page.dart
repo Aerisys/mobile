@@ -5,6 +5,8 @@ import '../view_models/drone_view_model.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_icon_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -185,23 +187,10 @@ class HomePage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             height: 50,
-            child: ElevatedButton(
+            child: AerisysButton.filled(
+              text: 'Voir',
+              backgroundColor: AppColors.darkSlate,
               onPressed: () => context.push(AppRoutes.droneList),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkSlate,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Voir',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
             ),
           ),
         ],
@@ -296,7 +285,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildNavItem({required IconData icon, required VoidCallback onTap}) {
-    return IconButton(
+    return AerisysIconButton(
       icon: Icon(icon, color: AppColors.white, size: 28),
       onPressed: onTap,
     );

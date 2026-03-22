@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 
 class RemoteConnectionPage extends StatelessWidget {
   const RemoteConnectionPage({super.key});
@@ -136,45 +137,21 @@ class RemoteConnectionPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton.icon(
+                            AerisysButton.text(
+                              text: 'Aide',
+                              icon: const Icon(Icons.help_outline, color: AppColors.textWhite),
+                              foregroundColor: AppColors.textWhite,
                               onPressed: () {
                                 // TODO: Handle Help
                               },
-                              icon: const Icon(
-                                Icons.help_outline,
-                                color: AppColors.textWhite,
-                              ),
-                              label: const Text(
-                                'Aide',
-                                style: TextStyle(
-                                  color: AppColors.textWhite,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
                             ),
-                            TextButton(
+                            AerisysButton.text(
+                              text: 'Passer cette étape',
+                              foregroundColor: AppColors.textWhite,
+                              trailingIcon: const Icon(Icons.arrow_forward, color: AppColors.textWhite),
                               onPressed: () {
                                 context.go(AppRoutes.droneSearch);
                               },
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Passer cette étape',
-                                    style: TextStyle(
-                                      color: AppColors.textWhite,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: AppColors.textWhite,
-                                  ),
-                                ],
-                              ),
                             ),
                           ],
                         ),

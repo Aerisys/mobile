@@ -4,6 +4,7 @@ import '../../core/routes/app_router.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -100,30 +101,14 @@ class WelcomePage extends StatelessWidget {
                   const Spacer(flex: 1),
                   
                   // Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await authNotifier.completeOnboarding();
-                        if (context.mounted) {
-                          context.go(AppRoutes.login);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.brandBlue, // Matches the blue from the image
-                        foregroundColor: AppColors.textWhite,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      child: const Text('Commencer'),
-                    ),
+                  AerisysButton.primary(
+                    text: 'Commencer',
+                    onPressed: () async {
+                      await authNotifier.completeOnboarding();
+                      if (context.mounted) {
+                        context.go(AppRoutes.login);
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
                 ],

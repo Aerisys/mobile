@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 import '../view_models/auth_view_model.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -110,18 +111,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Column(
                           children: [
                              // Social Buttons
-                            _SocialLoginButton(
-                              icon: FontAwesomeIcons.google,
+                            AerisysButton.social(
+                              icon: const FaIcon(FontAwesomeIcons.google, color: AppColors.error),
                               text: 'Continuer avec Google',
                               onPressed: () {}, // TODO: Implement Google Sign In
-                              iconColor: AppColors.error, // Approximation for Google logo color
                             ),
                             const SizedBox(height: 16),
-                            _SocialLoginButton(
-                              icon: FontAwesomeIcons.apple,
+                            AerisysButton.social(
+                              icon: const FaIcon(FontAwesomeIcons.apple, color: AppColors.black),
                               text: 'Continuer avec Apple',
                               onPressed: () {}, // TODO: Implement Apple Sign In
-                              iconColor: AppColors.black,
                             ),
 
                             const SizedBox(height: 24),
@@ -191,64 +190,50 @@ class _RegisterPageState extends State<RegisterPage> {
                             const SizedBox(height: 24),
 
                             // Action Button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton(
-                                onPressed: viewModel.isLoading
-                                    ? null
-                                    : () async {
-                                        FocusScope.of(context).unfocus();
+                            AerisysButton.primary(
+                              text: 'Commencer',
+                              isLoading: viewModel.isLoading,
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
 
-                                        if (_passwordController.text !=
-                                            _confirmPasswordController.text) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                "Les mots de passe ne correspondent pas.",
-                                                style: TextStyle(color: AppColors.textWhite),
-                                              ),
-                                              backgroundColor: AppColors.error,
-                                            ),
-                                          );
-                                          return;
-                                        }
+                                if (_passwordController.text !=
+                                    _confirmPasswordController.text) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Les mots de passe ne correspondent pas.",
+                                        style: TextStyle(color: AppColors.textWhite),
+                                      ),
+                                      backgroundColor: AppColors.error,
+                                    ),
+                                  );
+                                  return;
+                                }
 
-                                        final bool success = await context
-                                            .read<AuthViewModel>()
-                                            .register(
-                                              _emailController.text,
-                                              _passwordController.text,
-                                            );
+                                final bool success = await context
+                                    .read<AuthViewModel>()
+                                    .register(
+                                      _emailController.text,
+                                      _passwordController.text,
+                                    );
 
-                                        if (!context.mounted) return;
+                                if (!context.mounted) return;
 
-                                        if (success) {
-                                          if (!context.mounted) return;
-                                          context.go(AppRoutes.permissions);
-                                        } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                viewModel.errorMessage ?? "Erreur inconnue",
-                                                style: const TextStyle(color: AppColors.textWhite),
-                                              ),
-                                              backgroundColor: AppColors.error,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.brandBlue,
-                                  foregroundColor: AppColors.textWhite,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: viewModel.isLoading
-                                  ? const CircularProgressIndicator(color: AppColors.textWhite)
-                                  : const Text('Commencer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              ),
+                                if (success) {
+                                  if (!context.mounted) return;
+                                  context.go(AppRoutes.permissions);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        viewModel.errorMessage ?? "Erreur inconnue",
+                                        style: const TextStyle(color: AppColors.textWhite),
+                                      ),
+                                      backgroundColor: AppColors.error,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                             const SizedBox(height: 24),
 
@@ -257,15 +242,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text("Vous avez déjà un compte ? ", style: TextStyle(color: AppColors.textWhite),),
-                                GestureDetector(
-                                   onTap: () => context.go(AppRoutes.login),
-                                   child: const Text(
-                                    'Se connecter', 
-                                    style: TextStyle(
-                                      color: AppColors.brandBlue, 
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
+                                AerisysButton.text(
+                                  text: 'Se connecter',
+                                  onPressed: () => context.go(AppRoutes.login),
                                 ),
                               ],
                             ),
@@ -305,54 +284,6 @@ class _RegisterPageState extends State<RegisterPage> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
-}
-
-class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final VoidCallback onPressed;
-  final Color iconColor;
-
-  const _SocialLoginButton({
-    required this.icon,
-    required this.text,
-    required this.onPressed,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textWhite,
-          foregroundColor: AppColors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-        ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FaIcon(icon, color: iconColor),
-            const SizedBox(width: 12),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-          ],
         ),
       ),
     );

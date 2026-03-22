@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
 
 class PermissionsPage extends StatefulWidget {
   const PermissionsPage({super.key});
@@ -83,28 +84,12 @@ class _PermissionsPageState extends State<PermissionsPage> {
               const Spacer(),
 
               // Action Button
-              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the next loading step 
-                    context.go(AppRoutes.remoteConnection);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.brandBlue,
-                    foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Continuer',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500, // Slightly lighter font weight than 'Bold'
-                    ),
-                  ),
-                ),
+              AerisysButton.primary(
+                text: 'Continuer',
+                onPressed: () {
+                  // Navigate to the next loading step 
+                  context.go(AppRoutes.remoteConnection);
+                },
               ),
               const SizedBox(height: 20),
             ],
