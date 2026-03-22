@@ -7,6 +7,7 @@ import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_loader.dart';
 import '../view_models/auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -59,8 +60,18 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
 
-          SafeArea(
-            child: Center(
+          if (viewModel.isLoading)
+            const Center(child: AerisysLoader())
+          else
+            _buildMainContent(context, viewModel),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainContent(BuildContext context, AuthViewModel viewModel) {
+    return SafeArea(
+      child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 500),
                 child: SingleChildScrollView(
@@ -279,12 +290,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-            ),
-              ),
-            ),
+            ),                   
           ),
-        ],
-      ),
+        ),
     );
   }
 }
