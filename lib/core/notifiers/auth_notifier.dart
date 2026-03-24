@@ -23,4 +23,13 @@ class AuthNotifier extends ChangeNotifier {
     await _preferencesService.setHasSeenWelcome(true);
     notifyListeners();
   }
+
+  bool get hasCompletedSetup {
+    return _preferencesService.getBool('setup_done') ?? false;
+  }
+
+  void completeSetup() {
+    _preferencesService.setBool('setup_done', true);
+    notifyListeners();
+  }
 }

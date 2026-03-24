@@ -12,4 +12,11 @@ class PreferencesService {
   Future<void> setHasSeenWelcome(bool value) async {
     await _prefs.setBool(_hasSeenWelcomeKey, value);
   }
+  
+  bool? getBool(String key) {
+    return _prefs.getBool(key);
+  }
+  Future<void> setBool(String key, bool value) async {
+    await _prefs.setBool(key, value);
+  }
 }

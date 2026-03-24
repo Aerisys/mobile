@@ -116,7 +116,12 @@ class _LoginPageState extends State<LoginPage> {
                         AerisysButton.social(
                           icon: const FaIcon(FontAwesomeIcons.google, color: AppColors.error),
                           text: 'Continuer avec Google',
-                          onPressed: () {}, // TODO: Implement Google Sign In
+                          onPressed: () async {
+                            final success = await viewModel.signInWithGoogle();
+                            if (success && context.mounted) {
+                              context.go(AppRoutes.home);
+                            }
+                          }, 
                         ),
                         const SizedBox(height: 16),
                         AerisysButton.social(

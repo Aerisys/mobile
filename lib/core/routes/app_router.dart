@@ -32,12 +32,11 @@ final List<String> unauthenticatedRoutes = [
 
 final GoRouter appRouter = GoRouter(
   refreshListenable: authNotifier,
-  initialLocation: AppRoutes.login,
-  redirect: (context, state) async {
-    final loggedIn = authNotifier.isAuthenticated;
-    final loggingIn = state.matchedLocation == AppRoutes.login;
-    final hasSeenWelcome = authNotifier.hasSeenWelcome;
-
+  initialLocation: AppRoutes.welcome,
+  redirect: (context, state) {
+    final bool loggedIn = authNotifier.isAuthenticated;
+    final bool hasSeenWelcome = authNotifier.hasSeenWelcome;
+    
     if (!hasSeenWelcome && state.matchedLocation != AppRoutes.welcome) {
       return AppRoutes.welcome;
     }
@@ -49,9 +48,19 @@ final GoRouter appRouter = GoRouter(
       return null;
     }
 
-    if (loggingIn) {
-      // The user just logged in. Send them to permissions instead of home.
-      return AppRoutes.permissions;
+    final bool needsSetup = !authNotifier.hasCompletedSetup; 
+
+    if (needsSetup) {
+      if (state.matchedLocation != AppRoutes.permissions) {
+        return AppRoutes.permissions;
+      }
+      return null;
+    }
+
+    if (state.matchedLocation == AppRoutes.login || 
+        state.matchedLocation == AppRoutes.welcome ||
+        state.matchedLocation == AppRoutes.register) {
+      return AppRoutes.home;
     }
 
     return null;

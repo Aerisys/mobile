@@ -6,6 +6,7 @@ import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../../core/routes/app_router.dart';
 
 class PermissionsPage extends StatefulWidget {
   const PermissionsPage({super.key});
@@ -87,7 +88,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
               AerisysButton.primary(
                 text: 'Continuer',
                 onPressed: () {
-                  // Navigate to the next loading step 
+                  authNotifier.completeSetup();
                   context.go(AppRoutes.remoteConnection);
                 },
               ),
