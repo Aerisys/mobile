@@ -40,6 +40,7 @@ class _ContactPageState extends State<ContactPage> {
                 decoration: const InputDecoration(
                   labelText: "Email de l'ami",
                   hintText: "exemple@gmail.com",
+                  hintStyle: TextStyle(color: Colors.grey),
                   prefixIcon: Icon(Icons.mail_outline),
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(

@@ -82,6 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
                        // Logo and Title
                        Image.asset(
                         AppAssets.logoAERISYS,
+                        color: AppColors.white,
                         height: 80,
                       ),
                       const Text(
@@ -278,6 +279,7 @@ class _RegisterPageState extends State<RegisterPage> {
       style: const TextStyle(color: AppColors.black),
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.grey),
         filled: true,
         fillColor: AppColors.textWhite,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

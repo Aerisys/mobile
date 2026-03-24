@@ -154,6 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: const TextStyle(color: AppColors.black),
                           decoration: InputDecoration(
                             hintText: 'Email...',
+                            hintStyle: const TextStyle(color: Colors.grey),
                             filled: true,
                             fillColor: AppColors.textWhite,
                             contentPadding: const EdgeInsets.symmetric(
@@ -173,6 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: const TextStyle(color: AppColors.black),
                           decoration: InputDecoration(
                             hintText: 'Mot de passe...',
+                            hintStyle: const TextStyle(color: Colors.grey),
                             filled: true,
                             fillColor: AppColors.textWhite,
                             contentPadding: const EdgeInsets.symmetric(

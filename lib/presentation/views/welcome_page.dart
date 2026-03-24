@@ -55,7 +55,7 @@ class WelcomePage extends StatelessWidget {
                   // If you have the asset, replace this Icon with Image.asset('assets/logo.png')
                   Image.asset(
                     AppAssets.logoAERISYS,
-                    color: AppColors.brandBlue,
+                    color: AppColors.white,
                     height: 80,
                   ),
                   const SizedBox(height: 16),
@@ -79,6 +79,7 @@ class WelcomePage extends StatelessWidget {
                     'Prêt à voir le monde\nsous un nouvel angle?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: 'Hanson',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textWhite,

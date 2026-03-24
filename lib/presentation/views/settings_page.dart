@@ -98,6 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 prefixIcon: const Icon(Icons.email),
                 border: const OutlineInputBorder(),
                 hintText: user?.email ?? "Non renseigné",
+                hintStyle: const TextStyle(color: Colors.grey),
               ),
             ),
             const SizedBox(height: 16),
@@ -106,6 +107,8 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: _nameController,
               decoration: const InputDecoration(
                 labelText: "Nom d'affichage",
+                hintText: "Votre nom",
+                hintStyle: TextStyle(color: Colors.grey),
                 prefixIcon: Icon(Icons.person),
                 border: OutlineInputBorder(),
               ),
