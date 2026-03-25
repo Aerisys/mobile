@@ -6,6 +6,7 @@ enum _AerisysIconButtonType {
   standard,
   filled,
   filledTonal,
+  outlined,
 }
 
 class AerisysIconButton extends StatelessWidget {
@@ -40,6 +41,14 @@ class AerisysIconButton extends StatelessWidget {
         backgroundColor = (baseColor ?? AppColors.error).withValues(alpha: 0.1),
         foregroundColor = baseColor ?? AppColors.error;
 
+  const AerisysIconButton.outlined({
+    super.key,
+    required this.icon,
+    this.onPressed,
+    this.backgroundColor = AppColors.darkSlate,
+    this.foregroundColor = AppColors.white,
+  }) : _type = _AerisysIconButtonType.outlined;
+
   @override
   Widget build(BuildContext context) {
     switch (_type) {
@@ -49,6 +58,8 @@ class AerisysIconButton extends StatelessWidget {
         return _buildFilled();
       case _AerisysIconButtonType.filledTonal:
         return _buildFilledTonal();
+      case _AerisysIconButtonType.outlined:
+        return _buildOutlined();
     }
   }
 
@@ -79,6 +90,22 @@ class AerisysIconButton extends StatelessWidget {
         foregroundColor: foregroundColor,
       ),
       onPressed: onPressed,
+    );
+  }
+
+  Widget _buildOutlined() {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.glassBorder),
+        ),
+        child: icon,
+      ),
     );
   }
 }

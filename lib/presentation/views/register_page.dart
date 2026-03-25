@@ -7,7 +7,10 @@ import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_card.dart';
+import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/auth_view_model.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -101,25 +104,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 20),
 
                       // Main Card Container
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(24.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.black, // Solid black card per mockup
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.glassBorder),
-                        ),
+                      AerisysCard(
                         child: Column(
                           children: [
                              // Social Buttons
                             AerisysButton.social(
-                              icon: const FaIcon(FontAwesomeIcons.google, color: AppColors.error),
+                              icon: const AerisysIcon(FontAwesomeIcons.google, color: AppColors.error),
                               text: 'Continuer avec Google',
                               onPressed: () {}, // TODO: Implement Google Sign In
                             ),
                             const SizedBox(height: 16),
                             AerisysButton.social(
-                              icon: const FaIcon(FontAwesomeIcons.apple, color: AppColors.black),
+                              icon: const AerisysIcon(FontAwesomeIcons.apple, color: AppColors.black),
                               text: 'Continuer avec Apple',
                               onPressed: () {}, // TODO: Implement Apple Sign In
                             ),
@@ -147,14 +143,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: _buildTextField(
+                                  child: AerisysTextField(
                                     controller: _nameController,
                                     hintText: 'Nom',
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
-                                  child: _buildTextField(
+                                  child: AerisysTextField(
                                     controller: _firstNameController,
                                     hintText: 'Prénom',
                                   ),
@@ -162,13 +158,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            _buildTextField(
+                            AerisysTextField(
                               controller: _emailController,
                               hintText: 'Email',
                               keyboardType: TextInputType.emailAddress,
                             ),
                             const SizedBox(height: 16),
-                            _buildTextField(
+                            AerisysTextField(
                               controller: _dobController,
                               hintText: 'Date de naissance',
                               keyboardType: TextInputType.datetime,
@@ -176,13 +172,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                readOnly: false, // Set to true if using date picker
                             ),
                              const SizedBox(height: 16),
-                            _buildTextField(
+                            AerisysTextField(
                               controller: _passwordController,
                               hintText: 'Mot de passe...',
                               obscureText: true,
                             ),
                              const SizedBox(height: 16),
-                            _buildTextField(
+                            AerisysTextField(
                               controller: _confirmPasswordController,
                               hintText: 'confirmer mot de passe',
                               obscureText: true,
@@ -261,33 +257,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ],
       )
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    bool obscureText = false,
-    TextInputType? keyboardType,
-    bool readOnly = false,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      readOnly: readOnly,
-      keyboardType: keyboardType,
-      style: const TextStyle(color: AppColors.black),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: AppColors.textWhite,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class DroneDetailsPage extends StatelessWidget {
   final DroneModel drone;
@@ -77,7 +78,7 @@ class DroneDetailsPage extends StatelessWidget {
 
   Widget _buildInfoTile(String label, String value, IconData icon) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.brandBlue),
+      leading: AerisysIcon(icon, color: AppColors.brandBlue),
       title: Text(label, style: const TextStyle(color: AppColors.textWhite70, fontSize: 14)),
       subtitle: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
     );
@@ -93,7 +94,7 @@ class DroneDetailsPage extends StatelessWidget {
           child: Text("Battery Health", style: TextStyle(color: AppColors.textWhite70)),
         ),
         ListTile(
-          leading: Icon(Icons.battery_charging_full, color: color),
+          leading: AerisysIcon(Icons.battery_charging_full, color: color),
           title: LinearProgressIndicator(
             value: level / 100,
             backgroundColor: AppColors.black,

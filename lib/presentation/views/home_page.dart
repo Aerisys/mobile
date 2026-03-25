@@ -7,6 +7,7 @@ import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
 import '../components/atoms/aerisys_icon_button.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -68,14 +69,14 @@ class HomePage extends StatelessWidget {
         ),
         Row(
           children: [
-            _buildIconButton(
-              icon: Icons.settings_outlined,
-              onTap: () => context.push(AppRoutes.settings),
+            AerisysIconButton.outlined(
+              icon: const AerisysIcon(Icons.settings_outlined, color: AppColors.white, size: 24),
+              onPressed: () => context.push(AppRoutes.settings),
             ),
             const SizedBox(width: 12),
-            _buildIconButton(
-              icon: Icons.notifications_outlined,
-              onTap: () {}, 
+            AerisysIconButton.outlined(
+              icon: const AerisysIcon(Icons.notifications_outlined, color: AppColors.white, size: 24),
+              onPressed: () {}, 
             ),
           ],
         ),
@@ -83,20 +84,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButton({required IconData icon, required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.darkSlate,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, color: AppColors.white, size: 24),
-      ),
-    );
-  }
+  // Removed _buildIconButton as we now use AerisysIconButton.outlined
 
   Widget _buildDroneCard(BuildContext context, DroneModel drone) {
     return Container(
@@ -136,7 +124,7 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi, color: AppColors.success, size: 20),
+              const AerisysIcon(Icons.wifi, color: AppColors.success, size: 20),
               const SizedBox(width: 8),
               Text(
                 drone.status,
@@ -218,7 +206,7 @@ class HomePage extends StatelessWidget {
               color: AppColors.darkSlate,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: iconColor, size: 20),
+            child: AerisysIcon(icon, color: iconColor, size: 20),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -286,7 +274,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNavItem({required IconData icon, required VoidCallback onTap}) {
     return AerisysIconButton(
-      icon: Icon(icon, color: AppColors.white, size: 28),
+      icon: AerisysIcon(icon, color: AppColors.white, size: 28),
       onPressed: onTap,
     );
   }
@@ -301,7 +289,7 @@ class HomePage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.white, size: 28),
+          AerisysIcon(icon, color: AppColors.white, size: 28),
           const SizedBox(width: 8),
           Text(
             label,

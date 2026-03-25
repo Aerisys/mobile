@@ -7,8 +7,11 @@ import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_card.dart';
 import '../components/atoms/aerisys_loader.dart';
+import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/auth_view_model.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -102,19 +105,12 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 30),
 
                   // Main Card Container
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.black, // Solid black card per mockup
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.glassBorder),
-                    ),
+                  AerisysCard(
                     child: Column(
                       children: [
                         // Social Buttons
                         AerisysButton.social(
-                          icon: const FaIcon(FontAwesomeIcons.google, color: AppColors.error),
+                          icon: const AerisysIcon(FontAwesomeIcons.google, color: AppColors.error),
                           text: 'Continuer avec Google',
                           onPressed: () async {
                             final success = await viewModel.signInWithGoogle();
@@ -125,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 16),
                         AerisysButton.social(
-                          icon: const FaIcon(FontAwesomeIcons.apple, color: AppColors.black),
+                          icon: const AerisysIcon(FontAwesomeIcons.apple, color: AppColors.black),
                           text: 'Continuer avec Apple',
                           onPressed: () {}, // TODO: Implement Apple Sign In
                         ),
@@ -153,44 +149,16 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
 
                         // Input Fields
-                        TextField(
+                        AerisysTextField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: const TextStyle(color: AppColors.black),
-                          decoration: InputDecoration(
-                            hintText: 'Email...',
-                            hintStyle: const TextStyle(color: Colors.grey),
-                            filled: true,
-                            fillColor: AppColors.textWhite,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          hintText: 'Email...',
                         ),
                         const SizedBox(height: 16),
-                        TextField(
+                        AerisysTextField(
                           controller: _passwordController,
                           obscureText: true,
-                          style: const TextStyle(color: AppColors.black),
-                          decoration: InputDecoration(
-                            hintText: 'Mot de passe...',
-                            hintStyle: const TextStyle(color: Colors.grey),
-                            filled: true,
-                            fillColor: AppColors.textWhite,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          hintText: 'Mot de passe...',
                         ),
 
                         const SizedBox(height: 16),

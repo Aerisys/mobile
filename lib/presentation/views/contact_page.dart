@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
 import '../components/atoms/aerisys_icon_button.dart';
+import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/contact_view_model.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -33,21 +35,13 @@ class _ContactPageState extends State<ContactPage> {
                 style: TextStyle(fontSize: 14, color: AppColors.textWhite70),
               ),
               const SizedBox(height: 16),
-              TextField(
+              AerisysTextField(
                 controller: emailController,
                 autofocus: true,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email de l'ami",
-                  hintText: "exemple@gmail.com",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  prefixIcon: Icon(Icons.mail_outline),
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                ),
+                labelText: "Email de l'ami",
+                hintText: "exemple@gmail.com",
+                prefixIcon: const AerisysIcon(Icons.mail_outline),
               ),
             ],
           ),
@@ -98,7 +92,7 @@ class _ContactPageState extends State<ContactPage> {
       floatingActionButton: _selectedIndex == 0
           ? AerisysButton.fab(
               text: "Ajouter",
-              icon: const Icon(Icons.person_add),
+              icon: const AerisysIcon(Icons.person_add),
               onPressed: () => _showAddDialog(context),
             )
           : null,
@@ -117,8 +111,8 @@ class _ContactPageState extends State<ContactPage> {
         },
         destinations: [
           const NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
+            icon: AerisysIcon(Icons.people_outline),
+            selectedIcon: AerisysIcon(Icons.people),
             label: 'Mes Amis',
           ),
 
@@ -140,12 +134,12 @@ class _ContactPageState extends State<ContactPage> {
                     icon: Badge(
                       isLabelVisible: count > 0,
                       label: Text('$count'),
-                      child: const Icon(Icons.notifications_outlined),
+                      child: const AerisysIcon(Icons.notifications_outlined),
                     ),
                     selectedIcon: Badge(
                       isLabelVisible: count > 0,
                       label: Text('$count'),
-                      child: const Icon(Icons.notifications),
+                      child: const AerisysIcon(Icons.notifications),
                     ),
                     label: 'Demandes',
                   );
@@ -220,7 +214,7 @@ class _ContactPageState extends State<ContactPage> {
                       subtitle: isSharing
                           ? const Row(
                               children: [
-                                Icon(
+                                AerisysIcon(
                                   Icons.circle,
                                   size: 10,
                                   color: AppColors.success,
@@ -238,7 +232,7 @@ class _ContactPageState extends State<ContactPage> {
                           : null,
 
                       trailing: AerisysIconButton(
-                        icon: Icon(
+                        icon: AerisysIcon(
                           isSharing
                               ? Icons.location_on
                               : Icons.location_on_outlined,
@@ -362,7 +356,7 @@ class _ContactPageState extends State<ContactPage> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(typeIcon, size: 14, color: iconColor),
+                  child: AerisysIcon(typeIcon, size: 14, color: iconColor),
                 ),
               ),
             ],
@@ -378,7 +372,7 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               AerisysIconButton.filledTonal(
                 baseColor: AppColors.error,
-                icon: const Icon(Icons.close),
+                icon: const AerisysIcon(Icons.close),
                 onPressed: () {
                   if (type == 'location') {
                     viewModel.refuseLocationRequest(uid);
@@ -391,7 +385,7 @@ class _ContactPageState extends State<ContactPage> {
               AerisysIconButton.filled(
                 backgroundColor: AppColors.success,
                 foregroundColor: AppColors.textWhite,
-                icon: const Icon(Icons.check),
+                icon: const AerisysIcon(Icons.check),
                 onPressed: () {
                   if (type == 'location') {
                     viewModel.acceptLocationRequest(uid, request);
@@ -412,7 +406,7 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: AppColors.textWhite70.withValues(alpha: 0.5)),
+          AerisysIcon(icon, size: 60, color: AppColors.textWhite70.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
             text,
@@ -454,7 +448,7 @@ class _ContactPageState extends State<ContactPage> {
               const SizedBox(height: 16),
 
               ListTile(
-                leading: const Icon(Icons.search, color: AppColors.brandBlue),
+                leading: const AerisysIcon(Icons.search, color: AppColors.brandBlue),
                 title: const Text("Demander sa position"),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -475,7 +469,7 @@ class _ContactPageState extends State<ContactPage> {
 
               if (isSharing)
                 ListTile(
-                  leading: const Icon(Icons.wrong_location, color: AppColors.error),
+                  leading: const AerisysIcon(Icons.wrong_location, color: AppColors.error),
                   title: const Text("Arrêter de partager ma position"),
                   subtitle: const Text("Il ne vous verra plus sur la carte"),
                   onTap: () async {
@@ -485,7 +479,7 @@ class _ContactPageState extends State<ContactPage> {
                 )
               else
                 const ListTile(
-                  leading: Icon(Icons.info_outline, color: AppColors.textWhite70),
+                  leading: AerisysIcon(Icons.info_outline, color: AppColors.textWhite70),
                   title: Text("Vous ne partagez pas votre position"),
                   subtitle: Text("Cet ami ne peut pas vous voir"),
                 ),

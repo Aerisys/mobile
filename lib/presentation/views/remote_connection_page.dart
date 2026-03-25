@@ -5,6 +5,7 @@ import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class RemoteConnectionPage extends StatelessWidget {
   const RemoteConnectionPage({super.key});
@@ -77,7 +78,7 @@ class RemoteConnectionPage extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () => context.go(AppRoutes.home),
-                              child: const Icon(
+                              child: const AerisysIcon(
                                 Icons.close,
                                 color: AppColors.textWhite,
                                 size: 24,
@@ -111,7 +112,7 @@ class RemoteConnectionPage extends StatelessWidget {
                               ),
                             ),
                             // Plug Icon
-                            const Icon(
+                            const AerisysIcon(
                               Icons.power_outlined,
                               color: AppColors.textWhite,
                               size: 60,
@@ -139,7 +140,7 @@ class RemoteConnectionPage extends StatelessWidget {
                           children: [
                             AerisysButton.text(
                               text: 'Aide',
-                              icon: const Icon(Icons.help_outline, color: AppColors.textWhite),
+                              icon: const AerisysIcon(Icons.help_outline, color: AppColors.textWhite),
                               foregroundColor: AppColors.textWhite,
                               onPressed: () {
                                 // TODO: Handle Help
@@ -148,7 +149,7 @@ class RemoteConnectionPage extends StatelessWidget {
                             AerisysButton.text(
                               text: 'Passer cette étape',
                               foregroundColor: AppColors.textWhite,
-                              trailingIcon: const Icon(Icons.arrow_forward, color: AppColors.textWhite),
+                              trailingIcon: const AerisysIcon(Icons.arrow_forward, color: AppColors.textWhite),
                               onPressed: () {
                                 context.go(AppRoutes.droneSearch);
                               },

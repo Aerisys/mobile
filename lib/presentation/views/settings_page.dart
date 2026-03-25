@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/auth_view_model.dart';
 import '../view_models/map_view_model.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -78,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: AppColors.brandBlue,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: const AerisysIcon(
                         Icons.camera_alt,
                         color: AppColors.textWhite,
                         size: 20,
@@ -90,28 +92,20 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 24),
 
-            TextField(
+            AerisysTextField(
               controller: _emailController,
               enabled: false,
-              decoration: InputDecoration(
-                labelText: "Email",
-                prefixIcon: const Icon(Icons.email),
-                border: const OutlineInputBorder(),
-                hintText: user?.email ?? "Non renseigné",
-                hintStyle: const TextStyle(color: Colors.grey),
-              ),
+              labelText: "Email",
+              prefixIcon: const AerisysIcon(Icons.email),
+              hintText: user?.email ?? "Non renseigné",
             ),
             const SizedBox(height: 16),
 
-            TextField(
+            AerisysTextField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: "Nom d'affichage",
-                hintText: "Votre nom",
-                hintStyle: TextStyle(color: Colors.grey),
-                prefixIcon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-              ),
+              labelText: "Nom d'affichage",
+              hintText: "Votre nom",
+              prefixIcon: const AerisysIcon(Icons.person),
             ),
 
             const SizedBox(height: 32),
@@ -122,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 text: viewModel.isLoading
                     ? "Enregistrement..."
                     : "Sauvegarder les modifications",
-                icon: const Icon(Icons.save),
+                icon: const AerisysIcon(Icons.save),
                 isLoading: viewModel.isLoading,
                 onPressed: () async {
                   final success = await context
@@ -161,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
             AerisysButton.text(
               text: "Se déconnecter",
-              icon: const Icon(Icons.logout, color: AppColors.error),
+              icon: const AerisysIcon(Icons.logout, color: AppColors.error),
               foregroundColor: AppColors.error,
               onPressed: () async {
                 final bool? confirm = await showDialog<bool>(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class DroneSearchPage extends StatefulWidget {
   const DroneSearchPage({super.key});
@@ -100,7 +101,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(
+                            const AerisysIcon(
                               Icons.help_outline,
                               color: AppColors.textWhite,
                               size: 26,
@@ -118,7 +119,7 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                                 // Close/cancel navigation
                                 context.go(AppRoutes.home);
                               },
-                              child: const Icon(
+                              child: const AerisysIcon(
                                 Icons.close,
                                 color: AppColors.textWhite,
                                 size: 26,
