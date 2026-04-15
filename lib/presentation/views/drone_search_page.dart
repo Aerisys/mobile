@@ -106,12 +106,16 @@ class _DroneSearchPageState extends State<DroneSearchPage> {
                               color: AppColors.textWhite,
                               size: 26,
                             ),
-                            Text(
-                              _isConnected ? 'Connecté avec succès!' : 'Recherche en cours....',
-                              style: TextStyle(
-                                color: _isConnected ? AppColors.success : AppColors.textWhite,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                            Expanded(
+                              child: Text(
+                                _isConnected ? 'Connecté avec succès!' : 'Recherche en cours....',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: _isConnected ? AppColors.success : AppColors.textWhite,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             GestureDetector(

@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             final success = await viewModel.signInWithGoogle();
                             if (success && context.mounted) {
-                              context.go(AppRoutes.home);
+                              context.go(AppRoutes.appareils);
                             }
                           }, 
                         ),
@@ -164,39 +164,36 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 16),
 
                         // Options Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: Checkbox(
-                                      value: _rememberMe,
-                                      onChanged: (val) {
-                                        setState(() {
-                                          _rememberMe = val ?? false;
-                                        });
-                                      },
-                                      side: const BorderSide(
-                                        color: AppColors.textWhite70,
-                                      ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _rememberMe = val ?? false;
+                                      });
+                                    },
+                                    side: const BorderSide(
+                                      color: AppColors.textWhite70,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Flexible(
-                                    child: Text(
-                                      'Se rappeler de moi',
-                                      style: TextStyle(
-                                        color: AppColors.textWhite,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Se rappeler de moi',
+                                  style: TextStyle(
+                                    color: AppColors.textWhite,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                             AerisysButton.text(
                               text: 'Mot de passe oublié ?',
@@ -247,8 +244,9 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
 
                         // Footer
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             const Text(
                               "Vous n'avez pas de compte ? ",

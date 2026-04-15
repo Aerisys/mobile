@@ -166,20 +166,20 @@ class BatteryPage extends StatelessWidget {
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((LineBarSpot touchedSpot) {
                 return LineTooltipItem(
-                  'Niveau de batterie\\n',
+                  'Niveau de batterie\n',
                   const TextStyle(
                     color: AppColors.darkSlate,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
-                  children: [
+                  children: const [
                     TextSpan(
                       text: '1m21s (14h31) : ', // Hardcoded mock to match the exact image
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                     ),
                     TextSpan(
-                      text: '\${touchedSpot.y.toInt()}%',
-                      style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                      text: '85%', // Matching the mock drone status
+                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
                     ),
                   ],
                 );

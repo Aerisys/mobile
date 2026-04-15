@@ -6,6 +6,7 @@ import '../../presentation/views/battery_page.dart';
 import '../../presentation/views/drone_list_page.dart';
 import '../../presentation/views/drone_search_page.dart';
 import '../../presentation/views/home_page.dart';
+import '../../presentation/views/appareils_page.dart';
 import '../../presentation/views/location_map.dart';
 import '../../presentation/views/login_page.dart';
 import '../../presentation/views/permissions_page.dart';
@@ -60,7 +61,7 @@ final GoRouter appRouter = GoRouter(
     if (state.matchedLocation == AppRoutes.login || 
         state.matchedLocation == AppRoutes.welcome ||
         state.matchedLocation == AppRoutes.register) {
-      return AppRoutes.home;
+      return AppRoutes.appareils;
     }
 
     return null;
@@ -75,6 +76,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.register,
       name: 'register',
       builder: (context, state) => const RegisterPage(),
+    ),
+        GoRoute(
+      path: AppRoutes.appareils,
+      name: 'appareils',
+      builder: (context, state) => const AppareilsPage(),
     ),
     GoRoute(
       path: AppRoutes.home,

@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/routes/app_router.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
@@ -235,16 +236,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             const SizedBox(height: 24),
 
                              // Footer
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Vous avez déjà un compte ? ", style: TextStyle(color: AppColors.textWhite),),
-                                AerisysButton.text(
-                                  text: 'Se connecter',
-                                  onPressed: () => context.go(AppRoutes.login),
-                                ),
-                              ],
-                            ),
+                             Wrap(
+                               alignment: WrapAlignment.center,
+                               crossAxisAlignment: WrapCrossAlignment.center,
+                               children: [
+                                 const Text("Vous avez déjà un compte ? ", style: TextStyle(color: AppColors.textWhite),),
+                                 AerisysButton.text(
+                                   text: 'Se connecter',
+                                   onPressed: () => context.go(AppRoutes.login),
+                                 ),
+                               ],
+                             ),
 
                           ],
                         ),

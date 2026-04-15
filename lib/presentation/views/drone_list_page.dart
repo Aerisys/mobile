@@ -24,9 +24,9 @@ class _DroneListPageState extends State<DroneListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Drones")),
+      appBar: AppBar(title: const Text("Mes Drones")),
       body: Consumer<DroneViewModel>(
-        builder: (context, model, child) {
+      builder: (context, model, child) {
           if (model.isLoading) return const Center(child: CircularProgressIndicator());
 
           return ListView.builder(
@@ -40,11 +40,11 @@ class _DroneListPageState extends State<DroneListPage> {
                   title: Text(drone.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("${drone.modelType} • ${drone.status}"),
                   trailing: Text("${drone.batteryLevel.toInt()}%"),
-                  onTap: () => context.push(AppRoutes.home),
-                ),
-              );
-            },
-          );
+              onTap: () => context.push(AppRoutes.home),
+            ),
+        );
+      },
+    );
         },
       ),
     );

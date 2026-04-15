@@ -45,6 +45,7 @@ flutter:
   assets:
     - assets/images/drone-dji.png
     - assets/images/logo_AERISYS.png
+    - assets/images/Manette-dji.png
 
   fonts:
     - family: Hanson

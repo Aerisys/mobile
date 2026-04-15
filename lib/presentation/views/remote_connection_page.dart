@@ -135,8 +135,11 @@ class RemoteConnectionPage extends StatelessWidget {
                         const SizedBox(height: 32),
 
                         // Footer Actions
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 16,
+                          runSpacing: 16,
                           children: [
                             AerisysButton.text(
                               text: 'Aide',
