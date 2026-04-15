@@ -31,7 +31,7 @@ class _DroneListPageState extends State<DroneListPage> {
 
           return ListView.builder(
             itemCount: model.drones.length,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
             itemBuilder: (context, index) {
               final drone = model.drones[index];
               return Card(

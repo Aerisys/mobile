@@ -6,7 +6,7 @@ import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_icon.dart';
 import '../components/molecules/aerisys_top_bar.dart';
 import '../components/molecules/drone_preview.dart';
-import '../components/organisms/aerisys_bottom_nav_bar.dart';
+import '../components/molecules/drone_preview.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,40 +23,29 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F9),
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
-              child: Column(
-                children: [
-                  AerisysTopBar(title: activeDrone.name),
-                  const SizedBox(height: 30),
-                  DronePreview(drone: activeDrone),
-                  const SizedBox(height: 30),
-                  
-                  GestureDetector(
-                    onTap: () => context.push(AppRoutes.battery, extra: activeDrone),
-                    child: _buildBatteryCard(activeDrone.batteryLevel.toInt()),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  _buildStatsRow(),
-                  const SizedBox(height: 16),
-                  _buildRecordingCard(),
-                ],
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
+          child: Column(
+            children: [
+              AerisysTopBar(title: activeDrone.name),
+              const SizedBox(height: 30),
+              DronePreview(drone: activeDrone),
+              const SizedBox(height: 30),
+              
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.battery, extra: activeDrone),
+                child: _buildBatteryCard(activeDrone.batteryLevel.toInt()),
               ),
-            ),
+              
+              const SizedBox(height: 16),
+              _buildStatsRow(),
+              const SizedBox(height: 16),
+              _buildRecordingCard(),
+            ],
           ),
-          
-          const Positioned(
-            left: 20,
-            right: 20,
-            bottom: 30,
-            child: AerisysBottomNavBar(activeItem: NavItemType.home),
-          ),
-        ],
+        ),
       ),
     );
   }

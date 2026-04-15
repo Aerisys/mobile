@@ -12,4 +12,5 @@ class AppRoutes {
   static const String remoteConnection = '/remote-connection';
   static const String droneSearch = '/drone-search';
   static const String appareils = '/appareils';
+  static const String camera = '/camera';
 }

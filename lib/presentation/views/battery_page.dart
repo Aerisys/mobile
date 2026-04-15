@@ -5,7 +5,7 @@ import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 import '../components/molecules/aerisys_top_bar.dart';
 import '../components/molecules/drone_preview.dart';
-import '../components/organisms/aerisys_bottom_nav_bar.dart';
+import '../components/molecules/drone_preview.dart';
 
 class BatteryPage extends StatelessWidget {
   final DroneModel drone;
@@ -16,31 +16,20 @@ class BatteryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F9),
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
-              child: Column(
-                children: [
-                  AerisysTopBar(title: drone.name),
-                  const SizedBox(height: 30),
-                  DronePreview(drone: drone),
-                  const SizedBox(height: 30),
-                  _buildBatteryChartCard(),
-                ],
-              ),
-            ),
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
+          child: Column(
+            children: [
+              AerisysTopBar(title: drone.name),
+              const SizedBox(height: 30),
+              DronePreview(drone: drone),
+              const SizedBox(height: 30),
+              _buildBatteryChartCard(),
+            ],
           ),
-          
-          const Positioned(
-            left: 20,
-            right: 20,
-            bottom: 30,
-            child: AerisysBottomNavBar(),
-          ),
-        ],
+        ),
       ),
     );
   }

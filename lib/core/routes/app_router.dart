@@ -18,6 +18,7 @@ import '../di.dart';
 import '../notifiers/auth_notifier.dart';
 import '../services/auth_service.dart';
 import '../services/preferences_service.dart';
+import '../../presentation/layouts/main_layout.dart';
 import 'app_routes.dart';
 
 final authNotifier = AuthNotifier(getIt<IAuthService>(), getIt<PreferencesService>());
@@ -67,6 +68,7 @@ final GoRouter appRouter = GoRouter(
     return null;
   },
   routes: [
+    // Unauthenticated / Auth routes (outside the ShellRoute)
     GoRoute(
       path: AppRoutes.login,
       name: 'login',
@@ -76,44 +78,6 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.register,
       name: 'register',
       builder: (context, state) => const RegisterPage(),
-    ),
-        GoRoute(
-      path: AppRoutes.appareils,
-      name: 'appareils',
-      builder: (context, state) => const AppareilsPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.home,
-      name: 'home',
-      builder: (context, state) => const HomePage(),
-    ),
-    GoRoute(
-      path: AppRoutes.contact,
-      name: 'contact',
-      builder: (context, state) => const ContactPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.settings,
-      name: 'settings',
-      builder: (context, state) => const SettingsPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.location,
-      name: 'location',
-      builder: (context, state) => const LocationPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.droneList,
-      name: 'droneList',
-      builder: (context, state) => const DroneListPage(),
-    ),
-    GoRoute(
-      path: AppRoutes.battery,
-      name: 'battery',
-      builder: (context, state) {
-        final drone = state.extra as DroneModel;
-        return BatteryPage(drone: drone);
-      },
     ),
     GoRoute(
       path: AppRoutes.welcome,
@@ -134,6 +98,53 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.droneSearch,
       name: 'droneSearch',
       builder: (context, state) => const DroneSearchPage(),
+    ),
+
+    // Main authenticated routes (inside the ShellRoute)
+    ShellRoute(
+      builder: (context, state, child) {
+        return MainLayout(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: AppRoutes.appareils,
+          name: 'appareils',
+          builder: (context, state) => const AppareilsPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.home,
+          name: 'home',
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: AppRoutes.contact,
+          name: 'contact',
+          builder: (context, state) => const ContactPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.settings,
+          name: 'settings',
+          builder: (context, state) => const SettingsPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.location,
+          name: 'location',
+          builder: (context, state) => const LocationPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.droneList,
+          name: 'droneList',
+          builder: (context, state) => const DroneListPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.battery,
+          name: 'battery',
+          builder: (context, state) {
+            final drone = state.extra as DroneModel;
+            return BatteryPage(drone: drone);
+          },
+        ),
+      ],
     ),
   ],
 );

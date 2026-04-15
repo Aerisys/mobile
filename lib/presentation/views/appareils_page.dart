@@ -5,7 +5,7 @@ import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 import '../components/atoms/aerisys_icon.dart';
-import '../components/organisms/aerisys_bottom_nav_bar.dart';
+import '../components/atoms/aerisys_icon.dart';
 
 class AppareilsPage extends StatelessWidget {
   const AppareilsPage({super.key});
@@ -23,64 +23,53 @@ class AppareilsPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F9),
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  _buildHeader(context),
-                  const SizedBox(height: 40),
-                  
-                  const Text(
-                    'Choisissez un appareil',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.darkSlate,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Drone Selection Card
-                  _buildDeviceCard(
-                    context: context,
-                    title: 'Drone',
-                    subtitle: activeDrone.name,
-                    imagePath: AppAssets.droneDji,
-                    onTap: () => context.push(AppRoutes.home),
-                  ),
-                  
-                  const SizedBox(height: 16),
-
-                  // Remote Selection Card
-                  _buildDeviceCard(
-                    context: context,
-                    title: 'Télécommande',
-                    subtitle: 'Télécommande pour drone',
-                    imagePath: AppAssets.manetteDji,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Page manette en cours de développement')),
-                      );
-                    },
-                  ),
-                ],
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              _buildHeader(context),
+              const SizedBox(height: 40),
+              
+              const Text(
+                'Choisissez un appareil',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkSlate,
+                ),
               ),
-            ),
+              const SizedBox(height: 20),
+
+              // Drone Selection Card
+              _buildDeviceCard(
+                context: context,
+                title: 'Drone',
+                subtitle: activeDrone.name,
+                imagePath: AppAssets.droneDji,
+                onTap: () => context.push(AppRoutes.home),
+              ),
+              
+              const SizedBox(height: 16),
+
+              // Remote Selection Card
+              _buildDeviceCard(
+                context: context,
+                title: 'Télécommande',
+                subtitle: 'Télécommande pour drone',
+                imagePath: AppAssets.manetteDji,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Page manette en cours de développement')),
+                  );
+                },
+              ),
+            ],
           ),
-          
-          const Positioned(
-            left: 20,
-            right: 20,
-            bottom: 30,
-            child: AerisysBottomNavBar(activeItem: NavItemType.droneList), 
-          ),
-        ],
+        ),
       ),
     );
   }

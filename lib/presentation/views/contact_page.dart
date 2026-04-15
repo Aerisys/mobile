@@ -101,54 +101,6 @@ class _ContactPageState extends State<ContactPage> {
         index: _selectedIndex,
         children: [_buildFriendsList(context), _buildRequestsList(context)],
       ),
-
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        destinations: [
-          const NavigationDestination(
-            icon: AerisysIcon(Icons.people_outline),
-            selectedIcon: AerisysIcon(Icons.people),
-            label: 'Mes Amis',
-          ),
-
-          StreamBuilder<QuerySnapshot>(
-            stream: context.read<ContactViewModel>().getFriendRequestsStream(),
-            builder: (context, snapshotFriends) {
-              return StreamBuilder<QuerySnapshot>(
-                stream: context
-                    .read<ContactViewModel>()
-                    .getLocationRequestsStream(),
-                builder: (context, snapshotLoc) {
-                  int count = 0;
-                  if (snapshotFriends.hasData)
-                    count += snapshotFriends.data!.docs.length;
-                  if (snapshotLoc.hasData)
-                    count += snapshotLoc.data!.docs.length;
-
-                  return NavigationDestination(
-                    icon: Badge(
-                      isLabelVisible: count > 0,
-                      label: Text('$count'),
-                      child: const AerisysIcon(Icons.notifications_outlined),
-                    ),
-                    selectedIcon: Badge(
-                      isLabelVisible: count > 0,
-                      label: Text('$count'),
-                      child: const AerisysIcon(Icons.notifications),
-                    ),
-                    label: 'Demandes',
-                  );
-                },
-              );
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -171,7 +123,7 @@ class _ContactPageState extends State<ContactPage> {
             final contacts = snapshot.data!.docs;
 
             return ListView.builder(
-              padding: const EdgeInsets.only(bottom: 80),
+              padding: const EdgeInsets.only(bottom: 120),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contactDoc =
@@ -293,6 +245,7 @@ class _ContactPageState extends State<ContactPage> {
             }
 
             return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
               itemCount: mixedRequests.length,
               itemBuilder: (context, index) {
                 final request = mixedRequests[index];

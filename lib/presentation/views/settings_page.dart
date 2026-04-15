@@ -59,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Mon Profil"), centerTitle: true),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
         child: Column(
           children: [
             GestureDetector(
