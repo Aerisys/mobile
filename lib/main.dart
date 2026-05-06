@@ -3,13 +3,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/di.dart';
 import 'core/routes/app_router.dart';
 import 'core/themes/app_theme.dart';
+import 'data/models/dashboard_settings.dart';
 import 'firebase_options.dart';
 import 'presentation/view_models/auth_view_model.dart';
 import 'presentation/view_models/contact_view_model.dart';
+import 'presentation/view_models/drone_view_model.dart';
+import 'presentation/view_models/graphique_view_model.dart';
 import 'presentation/view_models/home_view_model.dart';
 import 'presentation/view_models/map_view_model.dart';
 
@@ -27,7 +31,8 @@ void main() async {
     sound: true,
   );
 
-  configureDependencies();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  configureDependencies(sharedPreferences);
 
   runApp(
     MultiProvider(
@@ -36,6 +41,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<MapViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<DroneViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<GraphiqueViewModel>()),
+        Provider(create: (_) => getIt<DashboardSettingsRepository>()),
       ],
       child: const Aerisys(),
     ),
