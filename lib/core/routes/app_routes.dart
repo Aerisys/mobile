@@ -13,4 +13,5 @@ class AppRoutes {
   static const String droneSearch = '/drone-search';
   static const String appareils = '/appareils';
   static const String camera = '/camera';
+  static const String editWidgets = '/edit-widgets';
 }

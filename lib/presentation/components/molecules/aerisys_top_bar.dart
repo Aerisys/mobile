@@ -50,7 +50,9 @@ class AerisysTopBar extends StatelessWidget {
           elevation: 4,
           offset: const Offset(0, 48),
           onSelected: (value) {
-            if (value == 'settings') {
+            if (value == 'edit') {
+              context.push(AppRoutes.editWidgets);
+            } else if (value == 'settings') {
               context.push(AppRoutes.settings);
             } else if (value == 'locate') {
               context.push(AppRoutes.location);

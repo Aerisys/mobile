@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/drone_model.dart';
+import '../../data/models/dashboard_widget_model.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_colors.dart';
 import '../components/atoms/aerisys_icon.dart';
 import '../components/molecules/aerisys_top_bar.dart';
 import '../components/molecules/drone_preview.dart';
 import '../components/molecules/drone_preview.dart';
+import '../view_models/dashboard_view_model.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,6 +24,8 @@ class HomePage extends StatelessWidget {
       status: 'Connecté',
     );
 
+    final viewModel = context.watch<DashboardViewModel>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F9),
       body: SafeArea(
@@ -34,15 +39,37 @@ class HomePage extends StatelessWidget {
               DronePreview(drone: activeDrone),
               const SizedBox(height: 30),
               
-              GestureDetector(
-                onTap: () => context.push(AppRoutes.battery, extra: activeDrone),
-                child: _buildBatteryCard(activeDrone.batteryLevel.toInt()),
-              ),
+              if (viewModel.topSlot != null) ...[
+                GestureDetector(
+                  onTap: viewModel.topSlot == DashboardWidgetType.battery 
+                      ? () => context.push(AppRoutes.battery, extra: activeDrone)
+                      : null,
+                  child: _buildDynamicWideWidget(viewModel.topSlot!, activeDrone),
+                ),
+                const SizedBox(height: 16),
+              ],
               
-              const SizedBox(height: 16),
-              _buildStatsRow(),
-              const SizedBox(height: 16),
-              _buildRecordingCard(),
+              GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.8,
+                ),
+                itemCount: viewModel.smallSlots.length,
+                itemBuilder: (context, index) {
+                  final type = viewModel.smallSlots[index];
+                  if (type == null) return const SizedBox.shrink();
+                  
+                  return _buildStatItem(
+                    icon: type.icon,
+                    title: type.name,
+                    value: _getDummyValueFor(type),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -141,7 +168,7 @@ class HomePage extends StatelessWidget {
     String? subtitle,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -164,22 +191,28 @@ class HomePage extends StatelessWidget {
             ),
             child: AerisysIcon(icon, color: AppColors.darkSlate, size: 24),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             title,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
               color: AppColors.darkSlate,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 16),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: AppColors.darkSlate,
+          const SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: AppColors.darkSlate,
+              ),
             ),
           ),
           if (subtitle != null) ...[
@@ -192,6 +225,88 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ]
+        ],
+      ),
+    );
+  }
+
+  String _getDummyValueFor(DashboardWidgetType type) {
+    switch (type) {
+      case DashboardWidgetType.pressure: return '1022hPa';
+      case DashboardWidgetType.speed: return '58km/h';
+      case DashboardWidgetType.distance: return '15km';
+      case DashboardWidgetType.wind: return '15km/h';
+      case DashboardWidgetType.cpu: return '45°C';
+      case DashboardWidgetType.droneState: return 'OK';
+      case DashboardWidgetType.altitude: return '120m';
+      case DashboardWidgetType.flightTime: return '22min';
+      case DashboardWidgetType.videoTime: return '12:30';
+      case DashboardWidgetType.motor1:
+      case DashboardWidgetType.motor2:
+      case DashboardWidgetType.motor3:
+      case DashboardWidgetType.motor4: return '3200rpm';
+      case DashboardWidgetType.battery: return '85%';
+    }
+  }
+
+  Widget _buildDynamicWideWidget(DashboardWidgetType type, DroneModel drone) {
+    if (type == DashboardWidgetType.battery) {
+      return _buildBatteryCard(drone.batteryLevel.toInt());
+    } else if (type == DashboardWidgetType.videoTime) {
+      return _buildRecordingCard();
+    }
+    
+    // Generic wide widget
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6F7F9),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: AerisysIcon(type.icon, color: AppColors.darkSlate, size: 28),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  type.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.darkSlate,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _getDummyValueFor(type),
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.darkSlate,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

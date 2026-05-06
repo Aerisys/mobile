@@ -14,6 +14,7 @@ import 'presentation/view_models/contact_view_model.dart';
 import 'presentation/view_models/drone_view_model.dart';
 import 'presentation/view_models/home_view_model.dart';
 import 'presentation/view_models/map_view_model.dart';
+import 'presentation/view_models/dashboard_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +46,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => getIt<ContactViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<MapViewModel>()),
         ChangeNotifierProvider(create: (_) => getIt<HomeViewModel>()),
-        ChangeNotifierProvider(create: (_) => getIt<DroneViewModel>())
+        ChangeNotifierProvider(create: (_) => getIt<DroneViewModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<DashboardViewModel>()),
       ],
       child: const Aerisys(),
     ),
