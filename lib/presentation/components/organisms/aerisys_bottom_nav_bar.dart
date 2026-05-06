@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_assets.dart';
 import '../atoms/aerisys_icon_button.dart';
 import '../atoms/aerisys_icon.dart';
 
@@ -45,7 +46,9 @@ class AerisysBottomNavBar extends StatelessWidget {
             type: NavItemType.camera,
             icon: Icons.camera_alt_outlined,
             label: 'Caméra',
-            onTap: () {},
+            onTap: () {
+              if (activeItem != NavItemType.camera) context.push(AppRoutes.camera);
+            },
           ),
           _buildItem(
             context,
@@ -59,11 +62,10 @@ class AerisysBottomNavBar extends StatelessWidget {
           _buildItem(
             context,
             type: NavItemType.droneList,
-            icon: Icons.airplanemode_active,
+            imagePath: AppAssets.droneLogoNavbar,
             label: 'Appareils',
             onTap: () {
-              // Usually context.push(AppRoutes.droneList)
-              if (activeItem != NavItemType.droneList) context.push(AppRoutes.droneList);
+              context.push(AppRoutes.appareils);
             },
           ),
           _buildItem(
@@ -82,37 +84,55 @@ class AerisysBottomNavBar extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, {
     required NavItemType type,
-    required IconData icon,
+    IconData? icon,
+    String? imagePath,
     required String label,
     required VoidCallback onTap,
   }) {
+    Widget buildIcon() {
+      if (imagePath != null) {
+        return ColorFiltered(
+          colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+          child: Image.asset(
+            imagePath,
+            width: 28,
+            height: 28,
+          ),
+        );
+      }
+      return AerisysIcon(icon!, color: AppColors.white, size: 28);
+    }
+
     if (activeItem == type) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AerisysIcon(icon, color: AppColors.white, size: 28),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+      return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.white.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildIcon(),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
     
     return AerisysIconButton(
-      icon: AerisysIcon(icon, color: AppColors.white, size: 28),
+      icon: buildIcon(),
       onPressed: onTap,
     );
   }

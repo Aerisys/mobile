@@ -14,6 +14,7 @@ import '../../presentation/views/register_page.dart';
 import '../../presentation/views/remote_connection_page.dart';
 import '../../presentation/views/settings_page.dart';
 import '../../presentation/views/welcome_page.dart';
+import '../../presentation/views/camera_page.dart';
 import '../di.dart';
 import '../notifiers/auth_notifier.dart';
 import '../services/auth_service.dart';
@@ -143,6 +144,11 @@ final GoRouter appRouter = GoRouter(
             final drone = state.extra as DroneModel;
             return BatteryPage(drone: drone);
           },
+        ),
+        GoRoute(
+          path: AppRoutes.camera,
+          name: 'camera',
+          builder: (context, state) => const CameraPage(),
         ),
       ],
     ),

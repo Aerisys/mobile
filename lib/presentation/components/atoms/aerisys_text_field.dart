@@ -28,7 +28,7 @@ class AerisysTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    Widget textField = TextField(
       controller: controller,
       obscureText: obscureText,
       readOnly: readOnly,
@@ -37,7 +37,6 @@ class AerisysTextField extends StatelessWidget {
       keyboardType: keyboardType,
       style: const TextStyle(color: AppColors.black),
       decoration: InputDecoration(
-        labelText: labelText,
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
         prefixIcon: prefixIcon,
@@ -53,5 +52,28 @@ class AerisysTextField extends StatelessWidget {
         ),
       ),
     );
+
+    if (labelText != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              labelText!,
+              style: const TextStyle(
+                color: AppColors.textWhite,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          textField,
+        ],
+      );
+    }
+
+    return textField;
   }
 }

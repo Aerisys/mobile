@@ -4,4 +4,5 @@ class AppAssets {
   static const String logoAERISYS = 'assets/images/logo_AERISYS.png';
   static const String droneDji = 'assets/images/drone-dji.png';
   static const String manetteDji = 'assets/images/Manette-dji.png';
+  static const String droneLogoNavbar = 'assets/images/drone_logo_navbar.png';
 }
