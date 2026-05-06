@@ -13,6 +13,7 @@ import 'services/auth_service.dart';
 import 'services/local_database_service.dart';
 import 'services/notification_service.dart';
 import 'services/preferences_service.dart';
+import 'services/usb_service.dart';
 import 'services/user_service.dart';
 
 final getIt = GetIt.instance;
@@ -45,4 +46,5 @@ void configureDependencies(SharedPreferences sharedPreferences) {
       getIt<DashboardSettingsRepository>(),
     ),
   );
+  getIt.registerLazySingleton<UsbService>(() => UsbService());
 }

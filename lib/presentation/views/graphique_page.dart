@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/di.dart';
+import '../../core/services/usb_service.dart';
 import '../components/battery_bar_widget.dart';
 import '../components/line_graph_widget.dart';
 import '../components/motor_bar_widget.dart';
 import '../view_models/graphique_view_model.dart';
+import 'esp32_test_page.dart';
 
 class GraphiquePage extends StatelessWidget {
   const GraphiquePage({super.key});
@@ -31,26 +33,91 @@ class _GraphiqueView extends StatelessWidget {
         title: const Text("Télémétrie Drone"),
         actions: [
           IconButton(
+            icon: const Icon(Icons.usb),
+            onPressed: () async {
+              final usb = getIt<UsbService>();
+
+              final devices = await usb.listDevices();
+
+              if (devices.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Aucun périphérique USB")),
+                );
+                return;
+              }
+
+              await usb.connect(devices.first);
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("USB connecté")));
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.tune),
             onPressed: () => _openSelector(context),
           ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () async {
-              final path = await getIt<GraphiqueViewModel>().saveData();
+              final path = await vm.saveData();
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("CSV sauvegardé dans : $path")),
               );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.developer_board),
+            tooltip: "Test ESP32",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const Esp32TestPage()),
+              );
+            },
+          ),
         ],
       ),
-      body: ReorderableListView(
-        padding: const EdgeInsets.all(12),
-        onReorder: vm.reorder,
-        children: vm.order.where((key) => vm.visible[key]!).map((key) {
-          return _buildCard(key, vm);
-        }).toList(),
+      body: Column(
+        children: [
+          /// panneau debug USB
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            color: Colors.black87,
+            child: StreamBuilder<String>(
+              stream: getIt<UsbService>().dataStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Text(
+                    "USB : aucune donnée",
+                    style: TextStyle(color: Colors.white),
+                  );
+                }
+
+                return Text(
+                  "USB DATA : ${snapshot.data}",
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontFamily: "monospace",
+                  ),
+                );
+              },
+            ),
+          ),
+
+          Expanded(
+            child: ReorderableListView(
+              padding: const EdgeInsets.all(12),
+              onReorder: vm.reorder,
+              children: vm.order
+                  .where((key) => vm.visible[key]!)
+                  .map((key) => _buildCard(key, vm))
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -84,6 +151,7 @@ class _GraphiqueView extends StatelessWidget {
           title: "Batterie",
           child: BatteryBarWidget(battery: vm.battery),
         );
+
       default:
         return SizedBox(key: ValueKey(key));
     }
@@ -99,7 +167,6 @@ class _GraphiqueView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
-        // On enveloppe le contenu du BottomSheet avec l'instance existante du VM
         return ChangeNotifierProvider.value(
           value: vm,
           child: Consumer<GraphiqueViewModel>(
@@ -164,13 +231,13 @@ class _GraphCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onDoubleTap: () {
-          final currentVm = getIt<GraphiqueViewModel>();
+          final vm = context.read<GraphiqueViewModel>();
 
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => ChangeNotifierProvider.value(
-                value: currentVm,
+                value: vm,
                 child: Scaffold(
                   appBar: AppBar(title: Text(title)),
                   body: Padding(
