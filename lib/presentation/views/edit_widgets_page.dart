@@ -10,19 +10,20 @@ import '../components/atoms/aerisys_icon.dart';
 import '../components/atoms/dashed_border_painter.dart';
 import '../components/molecules/drone_preview.dart';
 import '../components/organisms/widget_picker_sheet.dart';
+import '../view_models/drone_view_model.dart';
 
 class EditWidgetsPage extends StatelessWidget {
   const EditWidgetsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // In a real app we might get the drone from a ViewModel.
-    final activeDrone = DroneModel(
-      id: '1',
-      name: 'Super drone 30000',
-      modelType: 'DJI Mavic',
-      batteryLevel: 85,
-      status: 'Connecté',
+    final droneViewModel = context.watch<DroneViewModel>();
+    final activeDrone = droneViewModel.selectedDrone ?? DroneModel(
+      id: '0',
+      name: 'Aucun appareil',
+      modelType: '-',
+      batteryLevel: 0,
+      status: 'Inconnu',
     );
 
     final viewModel = context.watch<DashboardViewModel>();

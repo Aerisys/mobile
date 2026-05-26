@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/drone_model.dart';
 import '../components/atoms/aerisys_icon.dart';
-import '../components/atoms/aerisys_icon.dart';
+import '../view_models/drone_view_model.dart';
 
 class AppareilsPage extends StatelessWidget {
   const AppareilsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Shared drone model for consistency
-    final activeDrone = DroneModel(
-      id: '1',
-      name: 'Super drone 30000',
-      modelType: 'DJI Mavic',
-      batteryLevel: 85,
-      status: 'Connecté',
+    final droneViewModel = context.watch<DroneViewModel>();
+    final activeDrone = droneViewModel.selectedDrone ?? DroneModel(
+      id: '0',
+      name: 'Aucun appareil',
+      modelType: '-',
+      batteryLevel: 0,
+      status: 'Inconnu',
     );
 
     return Scaffold(

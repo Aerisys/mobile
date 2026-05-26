@@ -13,18 +13,20 @@ import '../components/organisms/speed_chart_dialog.dart';
 import '../components/organisms/rpm_chart_dialog.dart';
 import '../components/organisms/pressure_chart_dialog.dart';
 import '../view_models/dashboard_view_model.dart';
+import '../view_models/drone_view_model.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final activeDrone = DroneModel(
-      id: '1',
-      name: 'Super drone 30000',
-      modelType: 'DJI Mavic',
-      batteryLevel: 85,
-      status: 'Connecté',
+    final droneViewModel = context.watch<DroneViewModel>();
+    final activeDrone = droneViewModel.selectedDrone ?? DroneModel(
+      id: '0',
+      name: 'Aucun appareil',
+      modelType: '-',
+      batteryLevel: 0,
+      status: 'Inconnu',
     );
 
     final viewModel = context.watch<DashboardViewModel>();

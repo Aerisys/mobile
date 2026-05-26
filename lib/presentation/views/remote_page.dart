@@ -4,19 +4,21 @@ import '../components/molecules/aerisys_top_bar.dart';
 import '../components/atoms/aerisys_icon.dart';
 import '../../core/themes/app_assets.dart';
 import '../../core/themes/app_colors.dart';
+import 'package:provider/provider.dart';
+import '../view_models/drone_view_model.dart';
 
 class RemotePage extends StatelessWidget {
   const RemotePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Shared drone model for consistency
-    final activeDrone = DroneModel(
-      id: '1',
-      name: 'Super drone 30000',
-      modelType: 'DJI Mavic',
-      batteryLevel: 85,
-      status: 'Connecté',
+    final droneViewModel = context.watch<DroneViewModel>();
+    final activeDrone = droneViewModel.selectedDrone ?? DroneModel(
+      id: '0',
+      name: 'Aucun appareil',
+      modelType: '-',
+      batteryLevel: 0,
+      status: 'Inconnu',
     );
 
     return Scaffold(

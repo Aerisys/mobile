@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/themes/app_colors.dart';
 import '../../core/themes/app_assets.dart';
+import '../../data/models/drone_model.dart';
 import '../view_models/map_view_model.dart';
+import '../view_models/drone_view_model.dart';
 
 class LocationPage extends StatefulWidget {
   const LocationPage({super.key});
@@ -29,6 +31,14 @@ class _LocationPageState extends State<LocationPage> {
       body: Consumer<MapViewModel>(
         builder: (context, model, child) {
           final position = model.currentPosition ?? const LatLng(45.75, 4.85);
+          final droneViewModel = context.watch<DroneViewModel>();
+          final activeDrone = droneViewModel.selectedDrone ?? DroneModel(
+            id: '0',
+            name: 'Aucun appareil',
+            modelType: '-',
+            batteryLevel: 0,
+            status: 'Inconnu',
+          );
 
           return Stack(
             children: [
@@ -91,7 +101,7 @@ class _LocationPageState extends State<LocationPage> {
                 bottom: 20,
                 left: 20,
                 right: 20,
-                child: _buildBottomPanel(),
+                child: _buildBottomPanel(activeDrone),
               ),
             ],
           );
@@ -161,7 +171,7 @@ class _LocationPageState extends State<LocationPage> {
     );
   }
 
-  Widget _buildBottomPanel() {
+  Widget _buildBottomPanel(DroneModel activeDrone) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -198,9 +208,9 @@ class _LocationPageState extends State<LocationPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Super drone 3000',
-                      style: TextStyle(
+                    Text(
+                      activeDrone.name,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: AppColors.darkSlate,
@@ -245,14 +255,14 @@ class _LocationPageState extends State<LocationPage> {
                   children: [
                     const Text(
                       'Batterie',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkSlate,
                       ),
                     ),
                     Text(
-                      '85%',
+                      '${activeDrone.batteryLevel.toInt()}%',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade500,
@@ -265,7 +275,7 @@ class _LocationPageState extends State<LocationPage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
-                    value: 0.85,
+                    value: activeDrone.batteryLevel / 100,
                     minHeight: 8,
                     backgroundColor: const Color(0xFFF3F4F6),
                     valueColor: const AlwaysStoppedAnimation<Color>(AppColors.darkSlate),

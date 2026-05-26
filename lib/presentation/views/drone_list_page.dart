@@ -40,8 +40,11 @@ class _DroneListPageState extends State<DroneListPage> {
                   title: Text(drone.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("${drone.modelType} • ${drone.status}"),
                   trailing: Text("${drone.batteryLevel.toInt()}%"),
-              onTap: () => context.push(AppRoutes.home),
-            ),
+                  onTap: () {
+                    model.selectDrone(drone);
+                    context.push(AppRoutes.home);
+                  },
+                ),
         );
       },
     );
