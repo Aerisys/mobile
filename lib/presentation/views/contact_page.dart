@@ -8,6 +8,9 @@ import '../components/atoms/aerisys_icon_button.dart';
 import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/contact_view_model.dart';
 import '../components/atoms/aerisys_icon.dart';
+import '../components/molecules/aerisys_top_bar.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/routes/app_routes.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -88,7 +91,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Communauté"), centerTitle: false),
+      backgroundColor: const Color(0xFFF6F7F9),
       floatingActionButton: _selectedIndex == 0
           ? AerisysButton.fab(
               text: "Ajouter",
@@ -96,10 +99,25 @@ class _ContactPageState extends State<ContactPage> {
               onPressed: () => _showAddDialog(context),
             )
           : null,
-
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [_buildFriendsList(context), _buildRequestsList(context)],
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: AerisysTopBar(
+                title: 'Communauté',
+                onBack: () => context.go(AppRoutes.appareils),
+              ),
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: [_buildFriendsList(context), _buildRequestsList(context)],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -161,7 +179,13 @@ class _ContactPageState extends State<ContactPage> {
                               )
                             : null,
                       ),
-                      title: Text(displayName),
+                      title: Text(
+                        displayName,
+                        style: const TextStyle(
+                          color: AppColors.darkSlate,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
 
                       subtitle: isSharing
                           ? const Row(
@@ -284,9 +308,7 @@ class _ContactPageState extends State<ContactPage> {
 
     return Card(
       elevation: 0,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -316,9 +338,15 @@ class _ContactPageState extends State<ContactPage> {
           ),
           title: Text(
             name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkSlate,
+            ),
           ),
-          subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+          subtitle: Text(
+            subtitle,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
 
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
