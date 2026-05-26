@@ -16,6 +16,7 @@ import '../../presentation/views/settings_page.dart';
 import '../../presentation/views/welcome_page.dart';
 import '../../presentation/views/camera_page.dart';
 import '../../presentation/views/edit_widgets_page.dart';
+import '../../presentation/views/remote_page.dart';
 import '../di.dart';
 import '../notifiers/auth_notifier.dart';
 import '../services/auth_service.dart';
@@ -155,6 +156,11 @@ final GoRouter appRouter = GoRouter(
           path: AppRoutes.editWidgets,
           name: 'editWidgets',
           builder: (context, state) => const EditWidgetsPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.remote,
+          name: 'remote',
+          builder: (context, state) => const RemotePage(),
         ),
       ],
     ),

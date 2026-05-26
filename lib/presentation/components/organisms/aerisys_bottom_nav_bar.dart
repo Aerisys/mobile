@@ -9,8 +9,8 @@ import '../atoms/aerisys_icon.dart';
 
 enum NavItemType {
   camera,
-  home,
-  droneList,
+  accueil, // The House Icon
+  droneList, // The Drone Icon (Appareils)
   contact,
 }
 
@@ -46,36 +46,28 @@ class AerisysBottomNavBar extends StatelessWidget {
             type: NavItemType.camera,
             icon: Icons.camera_alt_outlined,
             label: 'Caméra',
-            onTap: () {
-              if (activeItem != NavItemType.camera) context.push(AppRoutes.camera);
-            },
+            onTap: () => context.go(AppRoutes.camera), // USE GO!
           ),
           _buildItem(
             context,
-            type: NavItemType.home,
+            type: NavItemType.accueil,
             icon: Icons.home_outlined,
             label: 'Accueil',
-            onTap: () {
-              if (activeItem != NavItemType.home) context.push(AppRoutes.home);
-            },
+            onTap: () => context.go(AppRoutes.appareils), // USE GO!
           ),
           _buildItem(
             context,
             type: NavItemType.droneList,
             imagePath: AppAssets.droneLogoNavbar,
             label: 'Appareils',
-            onTap: () {
-              context.push(AppRoutes.appareils);
-            },
+            onTap: () => context.go(AppRoutes.droneList), // USE GO!
           ),
           _buildItem(
             context,
             type: NavItemType.contact,
             icon: Icons.person_outline,
             label: 'Profil',
-            onTap: () {
-              if (activeItem != NavItemType.contact) context.push(AppRoutes.contact);
-            },
+            onTap: () => context.go(AppRoutes.contact), // USE GO!
           ),
         ],
       ),
@@ -89,40 +81,44 @@ class AerisysBottomNavBar extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
   }) {
+    final isSelected = activeItem == type;
+
+    final Color elementColor = isSelected ? AppColors.darkSlate : AppColors.white;
+
     Widget buildIcon() {
       if (imagePath != null) {
         return ColorFiltered(
-          colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(elementColor, BlendMode.srcIn),
           child: Image.asset(
             imagePath,
-            width: 28,
-            height: 28,
+            width: 24, 
+            height: 24,
           ),
         );
       }
-      return AerisysIcon(icon!, color: AppColors.white, size: 28);
+      return AerisysIcon(icon!, color: elementColor, size: 24);
     }
 
-    if (activeItem == type) {
+    if (isSelected) {
       return GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.2),
+            color: AppColors.textWhite70,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               buildIcon(),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
-                  color: AppColors.white,
+                style: TextStyle(
+                  color: elementColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 13,
                 ),
               ),
             ],
@@ -131,9 +127,12 @@ class AerisysBottomNavBar extends StatelessWidget {
       );
     }
     
-    return AerisysIconButton(
-      icon: buildIcon(),
-      onPressed: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: buildIcon(),
+      ),
     );
   }
 }

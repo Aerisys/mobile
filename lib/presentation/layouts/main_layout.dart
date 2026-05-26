@@ -13,35 +13,36 @@ class MainLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine the active item based on the current URI
+    // matchedLocation gets the exact string from app_routes.dart (e.g. '/drone' or '/appareils')
     final String location = GoRouterState.of(context).matchedLocation;
     
     NavItemType? activeItem;
-    if (location == AppRoutes.home) {
-      activeItem = NavItemType.home;
-    } else if (location == AppRoutes.appareils || location == AppRoutes.droneList) {
+    
+    // 1. If on Appareils Choice Page OR Dashboard -> Highlight the House Icon
+    if (location == AppRoutes.appareils || location == AppRoutes.home) {
+      activeItem = NavItemType.accueil; 
+    } 
+    // 2. If on the Drone List -> Highlight the Drone Icon
+    else if (location == AppRoutes.droneList) {
       activeItem = NavItemType.droneList;
-    } else if (location == AppRoutes.contact) {
+    } 
+    // 3. If on Contact -> Highlight Profile
+    else if (location == AppRoutes.contact) {
       activeItem = NavItemType.contact;
-    } else if (location == AppRoutes.camera) {
-      // Assuming a camera route exists or matches something
+    } 
+    // 4. If on Camera -> Highlight Camera
+    else if (location == AppRoutes.camera) {
       activeItem = NavItemType.camera;
     }
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Content
-          child,
-          
-          // Persistent Floating Bottom Nav Bar
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 30,
-            child: AerisysBottomNavBar(activeItem: activeItem),
-          ),
-        ],
+      extendBody: true, 
+      body: child, 
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 16.0),
+          child: AerisysBottomNavBar(activeItem: activeItem),
+        ),
       ),
     );
   }

@@ -14,4 +14,5 @@ class AppRoutes {
   static const String appareils = '/appareils';
   static const String camera = '/camera';
   static const String editWidgets = '/edit-widgets';
+  static const String remote = '/remote';
 }

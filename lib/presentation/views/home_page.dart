@@ -9,6 +9,9 @@ import '../components/atoms/aerisys_icon.dart';
 import '../components/molecules/aerisys_top_bar.dart';
 import '../components/molecules/drone_preview.dart';
 import '../components/molecules/drone_preview.dart';
+import '../components/organisms/speed_chart_dialog.dart';
+import '../components/organisms/rpm_chart_dialog.dart';
+import '../components/organisms/pressure_chart_dialog.dart';
 import '../view_models/dashboard_view_model.dart';
 
 class HomePage extends StatelessWidget {
@@ -40,11 +43,35 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 30),
               
               if (viewModel.topSlot != null) ...[
-                GestureDetector(
-                  onTap: viewModel.topSlot == DashboardWidgetType.battery 
-                      ? () => context.push(AppRoutes.battery, extra: activeDrone)
-                      : null,
-                  child: _buildDynamicWideWidget(viewModel.topSlot!, activeDrone),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () {
+                      if (viewModel.topSlot == DashboardWidgetType.battery) {
+                        context.push(AppRoutes.battery, extra: activeDrone);
+                      } else if (viewModel.topSlot == DashboardWidgetType.speed) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const SpeedChartDialog(),
+                        );
+                      } else if (viewModel.topSlot == DashboardWidgetType.droneState) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const RpmChartDialog(),
+                        );
+                      } else if (viewModel.topSlot == DashboardWidgetType.pressure) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const PressureChartDialog(),
+                        );
+                      }
+                    },
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: _buildDynamicWideWidget(viewModel.topSlot!, activeDrone),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -63,11 +90,66 @@ class HomePage extends StatelessWidget {
                   final type = viewModel.smallSlots[index];
                   if (type == null) return const SizedBox.shrink();
                   
-                  return _buildStatItem(
+                  Widget item = _buildStatItem(
                     icon: type.icon,
                     title: type.name,
                     value: _getDummyValueFor(type),
                   );
+                  
+                  if (type == DashboardWidgetType.speed) {
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const SpeedChartDialog(),
+                          );
+                        },
+                        child: IgnorePointer(
+                          ignoring: true, // Let InkWell handle the tap
+                          child: item,
+                        ),
+                      ),
+                    );
+                  } else if (type == DashboardWidgetType.droneState) {
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const RpmChartDialog(),
+                          );
+                        },
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: item,
+                        ),
+                      ),
+                    );
+                  } else if (type == DashboardWidgetType.pressure) {
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const PressureChartDialog(),
+                          );
+                        },
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: item,
+                        ),
+                      ),
+                    );
+                  }
+                  
+                  return item;
                 },
               ),
             ],

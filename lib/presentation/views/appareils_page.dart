@@ -61,11 +61,7 @@ class AppareilsPage extends StatelessWidget {
                 title: 'Télécommande',
                 subtitle: 'Télécommande pour drone',
                 imagePath: AppAssets.manetteDji,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Page manette en cours de développement')),
-                  );
-                },
+                onTap: () => context.push(AppRoutes.remote),
               ),
             ],
           ),

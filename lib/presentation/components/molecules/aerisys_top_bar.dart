@@ -72,11 +72,6 @@ class AerisysTopBar extends StatelessWidget {
               text: 'Parametres',
             ),
             _buildMenuItem(
-              value: 'info',
-              icon: Icons.info_outline,
-              text: 'Informations',
-            ),
-            _buildMenuItem(
               value: 'locate',
               icon: Icons.my_location,
               text: 'Localiser l\'appareil',
