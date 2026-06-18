@@ -1,0 +1,145 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../core/routes/app_routes.dart';
+import '../../core/themes/app_assets.dart';
+import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
+import '../../core/routes/app_router.dart';
+
+class PermissionsPage extends StatefulWidget {
+  const PermissionsPage({super.key});
+
+  @override
+  State<PermissionsPage> createState() => _PermissionsPageState();
+}
+
+class _PermissionsPageState extends State<PermissionsPage> {
+  // Initial states matching the mockup precisely
+  bool _notificationsEnabled = true;
+  bool _localNetworkEnabled = false;
+  bool _bluetoothEnabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // The background color matches the slate blue in the mockup
+      backgroundColor: AppColors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 60),
+
+              // Logo & Title
+              Column(
+                children: [
+                  Image.asset(
+                    AppAssets.logoAERISYS,
+                    color: AppColors.brandBlue,
+                    height: 80,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Autorisations',
+                    style: TextStyle(
+                      fontFamily: 'Hanson',
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.brandBlue,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 60),
+
+              // Permissions List
+              _buildPermissionTile(
+                title: 'Notifications',
+                subtitle: 'Autoriser les alertes de l\'app',
+                value: _notificationsEnabled,
+                onChanged: (val) => setState(() => _notificationsEnabled = val),
+              ),
+              const SizedBox(height: 32),
+              
+              _buildPermissionTile(
+                title: 'Reseaux locaux',
+                subtitle: 'Permettre l\'accès aux appareils proches',
+                value: _localNetworkEnabled,
+                onChanged: (val) => setState(() => _localNetworkEnabled = val),
+              ),
+              const SizedBox(height: 32),
+              
+              _buildPermissionTile(
+                title: 'Bluetooth',
+                subtitle: 'Connecter l\'app aux appareils Bluetooth',
+                value: _bluetoothEnabled,
+                onChanged: (val) => setState(() => _bluetoothEnabled = val),
+              ),
+
+              const Spacer(),
+
+              // Action Button
+              AerisysButton.primary(
+                text: 'Continuer',
+                onPressed: () {
+                  authNotifier.completeSetup();
+                  context.go(AppRoutes.remoteConnection);
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPermissionTile({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: AppColors.brandBlue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  color: AppColors.black,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        CupertinoSwitch(
+          value: value,
+          onChanged: onChanged,
+          activeTrackColor: AppColors.brandBlue,
+          inactiveTrackColor: AppColors.black,
+        ),
+      ],
+    );
+  }
+}

@@ -5,4 +5,14 @@ class AppRoutes {
   static const String register = '/register';
   static const String settings = '/settings';
   static const String location = '/location';
+  static const String droneList = '/drone';
+  static const String battery = '/battery';
+  static const String welcome = '/welcome';
+  static const String permissions = '/permissions';
+  static const String remoteConnection = '/remote-connection';
+  static const String droneSearch = '/drone-search';
+  static const String appareils = '/appareils';
+  static const String camera = '/camera';
+  static const String editWidgets = '/edit-widgets';
+  static const String remote = '/remote';
 }

@@ -13,6 +13,7 @@ dependencies:
   firebase_core: ^4.3.0
   firebase_messaging: ^16.1.0
   firebase_storage: ^13.0.5
+  google_sign_in: ^6.2.1
   flutter:
     sdk: flutter
   flutter_map: ^8.2.2
@@ -26,6 +27,8 @@ dependencies:
   provider: ^6.1.5+1
   rxdart: ^0.28.0
   shared_preferences: ^2.5.4
+  font_awesome_flutter: ^10.12.0
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -40,4 +43,12 @@ flutter:
 
   uses-material-design: true
   assets:
-    - assets/images/HereBro.png
+    - assets/images/drone-dji.png
+    - assets/images/logo_AERISYS.png
+    - assets/images/Manette-dji.png
+    - assets/images/drone_logo_navbar.png
+
+  fonts:
+    - family: Hanson
+      fonts:
+        - asset: assets/fonts/Hanson-Bold.ttf

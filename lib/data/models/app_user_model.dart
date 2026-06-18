@@ -11,6 +11,8 @@ class AppUser {
   final Timestamp createdAt;
   final Timestamp updatedAt;
   final String? fcmToken;
+  final bool hasCompletedOnboarding;
+  
 
   AppUser({
     required this.uid,
@@ -21,6 +23,7 @@ class AppUser {
     required this.createdAt,
     required this.updatedAt,
     this.fcmToken,
+    this.hasCompletedOnboarding = false,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {

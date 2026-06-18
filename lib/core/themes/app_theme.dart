@@ -6,37 +6,39 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.mainBackground,
-      primaryColor: AppColors.mainColor,
+      scaffoldBackgroundColor: AppColors.darkSlate,
+      primaryColor: AppColors.brandBlue,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.mainColor,
-        secondary: AppColors.secondaryColor,
+        primary: AppColors.brandBlue,
+        secondary: AppColors.brandBlue,
         error: AppColors.error,
-        surface: AppColors.secondaryBackground,
+        surface: AppColors.black,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.secondaryBackground,
+        backgroundColor: AppColors.black,
         elevation: 0,
         titleTextStyle: TextStyle(
-          color: AppColors.mainText,
-          fontSize: 20,
+          fontFamily: 'Hanson',
+          color: AppColors.textWhite,
+          fontSize: 36,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: AppColors.mainText),
+        iconTheme: IconThemeData(color: AppColors.textWhite),
       ),
       textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: AppColors.mainText),
-        bodyMedium: TextStyle(color: AppColors.secondaryText),
-        bodySmall: TextStyle(color: AppColors.secondaryText),
+        bodyLarge: TextStyle(color: AppColors.textWhite),
+        bodyMedium: TextStyle(color: AppColors.textWhite70),
+        bodySmall: TextStyle(color: AppColors.textWhite70),
         titleLarge: TextStyle(
-          color: AppColors.mainText,
+          fontFamily: 'Hanson',
+          color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.secondaryButton,
-          foregroundColor: AppColors.mainText,
+          backgroundColor: AppColors.brandBlue,
+          foregroundColor: AppColors.textWhite,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
@@ -44,39 +46,39 @@ class AppTheme {
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.mainColor,
-        foregroundColor: AppColors.black,
+        backgroundColor: AppColors.brandBlue,
+        foregroundColor: AppColors.textWhite,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.secondaryBackground,
-        hintStyle: const TextStyle(color: AppColors.secondaryText),
+        fillColor: AppColors.black,
+        hintStyle: const TextStyle(color: AppColors.textWhite70),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.grey1),
+          borderSide: const BorderSide(color: AppColors.glassBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.mainColor),
+          borderSide: const BorderSide(color: AppColors.brandBlue),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.secondaryBackground,
-        indicatorColor: AppColors.mainColor,
+        backgroundColor: AppColors.black,
+        indicatorColor: AppColors.brandBlue,
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: AppColors.black);
+            return const IconThemeData(color: AppColors.textWhite);
           }
-          return const IconThemeData(color: AppColors.secondaryText);
+          return const IconThemeData(color: AppColors.textWhite70);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
-              color: AppColors.mainText,
+              color: AppColors.textWhite,
               fontWeight: FontWeight.bold,
             );
           }
-          return const TextStyle(color: AppColors.secondaryText);
+          return const TextStyle(color: AppColors.textWhite70);
         }),
       ),
     );

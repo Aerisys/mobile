@@ -28,9 +28,9 @@ class NotificationService {
     if (notification == null) return;
 
     const androidDetails = AndroidNotificationDetails(
-      'herebro_channel',
-      'HereBro Notifications',
-      channelDescription: 'Notifications de HereBro',
+      'aerisys_channel',
+      'Aerisys Notifications',
+      channelDescription: 'Notifications de Aerisys',
       importance: Importance.max,
       priority: Priority.high,
     );

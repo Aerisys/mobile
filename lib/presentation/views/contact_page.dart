@@ -2,7 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/themes/app_colors.dart';
+import '../components/atoms/aerisys_button.dart';
+import '../components/atoms/aerisys_icon_button.dart';
+import '../components/atoms/aerisys_text_field.dart';
 import '../view_models/contact_view_model.dart';
+import '../components/atoms/aerisys_icon.dart';
+import '../components/molecules/aerisys_top_bar.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/routes/app_routes.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -27,33 +35,27 @@ class _ContactPageState extends State<ContactPage> {
             children: [
               const Text(
                 "Entrez l'adresse email de la personne que vous souhaitez ajouter.",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: AppColors.textWhite70),
               ),
               const SizedBox(height: 16),
-              TextField(
+              AerisysTextField(
                 controller: emailController,
                 autofocus: true,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email de l'ami",
-                  hintText: "exemple@gmail.com",
-                  prefixIcon: Icon(Icons.mail_outline),
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                ),
+                labelText: "Email de l'ami",
+                hintText: "exemple@gmail.com",
+                prefixIcon: const AerisysIcon(Icons.mail_outline),
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(
+          AerisysButton.text(
+            text: "Annuler",
             onPressed: () => Navigator.pop(context),
-            child: const Text("Annuler"),
           ),
-          FilledButton(
+          AerisysButton.filled(
+            text: "Envoyer",
             onPressed: () async {
               final navigator = Navigator.of(context);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -67,7 +69,7 @@ class _ContactPageState extends State<ContactPage> {
                 scaffoldMessenger.showSnackBar(
                   const SnackBar(
                     content: Text("Demande envoyée !"),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.brandBlue,
                   ),
                 );
               } else if (context.mounted) {
@@ -75,12 +77,11 @@ class _ContactPageState extends State<ContactPage> {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text(error ?? "Erreur"),
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               }
             },
-            child: const Text("Envoyer"),
           ),
         ],
       ),
@@ -90,66 +91,33 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Communauté"), centerTitle: false),
+      backgroundColor: const Color(0xFFF6F7F9),
       floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton.extended(
+          ? AerisysButton.fab(
+              text: "Ajouter",
+              icon: const AerisysIcon(Icons.person_add),
               onPressed: () => _showAddDialog(context),
-              icon: const Icon(Icons.person_add),
-              label: const Text("Ajouter"),
             )
           : null,
-
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [_buildFriendsList(context), _buildRequestsList(context)],
-      ),
-
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
-            label: 'Mes Amis',
-          ),
-
-          StreamBuilder<QuerySnapshot>(
-            stream: context.read<ContactViewModel>().getFriendRequestsStream(),
-            builder: (context, snapshotFriends) {
-              return StreamBuilder<QuerySnapshot>(
-                stream: context
-                    .read<ContactViewModel>()
-                    .getLocationRequestsStream(),
-                builder: (context, snapshotLoc) {
-                  int count = 0;
-                  if (snapshotFriends.hasData)
-                    count += snapshotFriends.data!.docs.length;
-                  if (snapshotLoc.hasData)
-                    count += snapshotLoc.data!.docs.length;
-
-                  return NavigationDestination(
-                    icon: Badge(
-                      isLabelVisible: count > 0,
-                      label: Text('$count'),
-                      child: const Icon(Icons.notifications_outlined),
-                    ),
-                    selectedIcon: Badge(
-                      isLabelVisible: count > 0,
-                      label: Text('$count'),
-                      child: const Icon(Icons.notifications),
-                    ),
-                    label: 'Demandes',
-                  );
-                },
-              );
-            },
-          ),
-        ],
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: AerisysTopBar(
+                title: 'Communauté',
+                onBack: () => context.go(AppRoutes.appareils),
+              ),
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: [_buildFriendsList(context), _buildRequestsList(context)],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -173,7 +141,7 @@ class _ContactPageState extends State<ContactPage> {
             final contacts = snapshot.data!.docs;
 
             return ListView.builder(
-              padding: const EdgeInsets.only(bottom: 80),
+              padding: const EdgeInsets.only(bottom: 120),
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contactDoc =
@@ -211,21 +179,27 @@ class _ContactPageState extends State<ContactPage> {
                               )
                             : null,
                       ),
-                      title: Text(displayName),
+                      title: Text(
+                        displayName,
+                        style: const TextStyle(
+                          color: AppColors.darkSlate,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
 
                       subtitle: isSharing
                           ? const Row(
                               children: [
-                                Icon(
+                                AerisysIcon(
                                   Icons.circle,
                                   size: 10,
-                                  color: Colors.green,
+                                  color: AppColors.success,
                                 ),
                                 SizedBox(width: 4),
                                 Text(
                                   "Voit votre position",
                                   style: TextStyle(
-                                    color: Colors.green,
+                                    color: AppColors.success,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -233,12 +207,12 @@ class _ContactPageState extends State<ContactPage> {
                             )
                           : null,
 
-                      trailing: IconButton(
-                        icon: Icon(
+                      trailing: AerisysIconButton(
+                        icon: AerisysIcon(
                           isSharing
                               ? Icons.location_on
                               : Icons.location_on_outlined,
-                          color: isSharing ? Colors.green : Colors.blue,
+                          color: isSharing ? AppColors.success : AppColors.brandBlue,
                         ),
                         onPressed: () => _showLocationMenu(
                           context,
@@ -295,6 +269,7 @@ class _ContactPageState extends State<ContactPage> {
             }
 
             return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
               itemCount: mixedRequests.length,
               itemBuilder: (context, index) {
                 final request = mixedRequests[index];
@@ -324,18 +299,16 @@ class _ContactPageState extends State<ContactPage> {
     if (type == 'location') {
       subtitle = "Veut connaître votre position";
       typeIcon = Icons.location_on;
-      iconColor = Colors.blue;
+      iconColor = AppColors.brandBlue;
     } else {
       subtitle = "Veut vous ajouter en ami";
       typeIcon = Icons.person_add;
-      iconColor = Colors.orange;
+      iconColor = AppColors.warning;
     }
 
     return Card(
       elevation: 0,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -358,26 +331,29 @@ class _ContactPageState extends State<ContactPage> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(typeIcon, size: 14, color: iconColor),
+                  child: AerisysIcon(typeIcon, size: 14, color: iconColor),
                 ),
               ),
             ],
           ),
           title: Text(
             name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkSlate,
+            ),
           ),
-          subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+          subtitle: Text(
+            subtitle,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
 
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton.filledTonal(
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withValues(alpha: 0.1),
-                  foregroundColor: Colors.red,
-                ),
-                icon: const Icon(Icons.close),
+              AerisysIconButton.filledTonal(
+                baseColor: AppColors.error,
+                icon: const AerisysIcon(Icons.close),
                 onPressed: () {
                   if (type == 'location') {
                     viewModel.refuseLocationRequest(uid);
@@ -387,12 +363,10 @@ class _ContactPageState extends State<ContactPage> {
                 },
               ),
               const SizedBox(width: 8),
-              IconButton.filled(
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-                icon: const Icon(Icons.check),
+              AerisysIconButton.filled(
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.textWhite,
+                icon: const AerisysIcon(Icons.check),
                 onPressed: () {
                   if (type == 'location') {
                     viewModel.acceptLocationRequest(uid, request);
@@ -413,12 +387,12 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: Colors.grey.withValues(alpha: 0.5)),
+          AerisysIcon(icon, size: 60, color: AppColors.textWhite70.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text(
             text,
             style: TextStyle(
-              color: Colors.grey.withValues(alpha: 0.8),
+              color: AppColors.textWhite70.withValues(alpha: 0.8),
               fontSize: 16,
             ),
           ),
@@ -455,7 +429,7 @@ class _ContactPageState extends State<ContactPage> {
               const SizedBox(height: 16),
 
               ListTile(
-                leading: const Icon(Icons.search, color: Colors.blue),
+                leading: const AerisysIcon(Icons.search, color: AppColors.brandBlue),
                 title: const Text("Demander sa position"),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -476,7 +450,7 @@ class _ContactPageState extends State<ContactPage> {
 
               if (isSharing)
                 ListTile(
-                  leading: const Icon(Icons.wrong_location, color: Colors.red),
+                  leading: const AerisysIcon(Icons.wrong_location, color: AppColors.error),
                   title: const Text("Arrêter de partager ma position"),
                   subtitle: const Text("Il ne vous verra plus sur la carte"),
                   onTap: () async {
@@ -486,7 +460,7 @@ class _ContactPageState extends State<ContactPage> {
                 )
               else
                 const ListTile(
-                  leading: Icon(Icons.info_outline, color: Colors.grey),
+                  leading: AerisysIcon(Icons.info_outline, color: AppColors.textWhite70),
                   title: Text("Vous ne partagez pas votre position"),
                   subtitle: Text("Cet ami ne peut pas vous voir"),
                 ),

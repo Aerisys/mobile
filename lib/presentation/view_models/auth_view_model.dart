@@ -34,6 +34,32 @@ class AuthViewModel extends CommonViewModel {
     }
   }
 
+
+  Future<bool> signInWithGoogle() async {
+    isLoading = true;
+    errorMessage = null;
+
+    try {
+      final userCredential = await _auth.signInWithGoogle();
+
+      if (userCredential == null) {
+        isLoading = false;
+        return false;
+      }
+
+      isLoading = false;
+      return true;
+    } on FirebaseAuthException catch (e) {
+      isLoading = false;
+      errorMessage = AuthExceptionCode.getMessageFromCode(e.code);
+      return false;
+    } catch (e) {
+      isLoading = false;
+      errorMessage = "La connexion avec Google a échoué.";
+      return false;
+    }
+  }
+
   Future<bool> register(String email, String password) async {
     isLoading = true;
 

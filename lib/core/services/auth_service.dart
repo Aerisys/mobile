@@ -1,28 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart'; 
 
 import '../../data/models/app_user_model.dart';
 import 'user_service.dart';
 
 abstract class IAuthService {
   Stream<User?> get authStateChanges;
-
   Future<void> signInWithEmail(String email, String password);
-
   Future<void> signOut();
-
-  /// Creates a new user with the provided email and password.
-  /// Throws a [FirebaseAuthException] if the operation fails.
-  /// @param email The email address of the new user. Trimmed and converted to lowercase.
-  /// @param password The password for the new user.
   Future<void> createUserWithEmailAndPassword(String email, String password);
-
+  Future<UserCredential?> signInWithGoogle();
   User? get currentUser;
 }
 
 class AuthService implements IAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final IAppUserService _appUserService;
+  
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   AuthService(this._appUserService);
 
@@ -36,11 +32,49 @@ class AuthService implements IAuthService {
       email: email,
       password: password.trim(),
     );
-    _appUserService.updateUser(_appUserService.currentAppUser!);
+    if (_appUserService.currentAppUser != null) {
+      _appUserService.updateUser(_appUserService.currentAppUser!);
+    }
+  }
+  
+  @override
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    
+    if (googleUser == null) return null; 
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential userCredential = 
+        await _firebaseAuth.signInWithCredential(credential);
+
+    if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+      final user = userCredential.user;
+      if (user != null) {
+        final newAppUser = AppUser(
+          uid: user.uid,
+          displayName: user.displayName ?? 'Utilisateur Aerisys',
+          email: user.email ?? '',
+          photoURL: user.photoURL ?? '',
+          position: null,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+        );
+        await _appUserService.createUser(newAppUser);
+      }
+    }
+
+    return userCredential;
   }
 
   @override
   Future<void> signOut() async {
+    await _googleSignIn.signOut(); 
     await _firebaseAuth.signOut();
   }
 
